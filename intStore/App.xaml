@@ -4,6 +4,13 @@
              xmlns:local="clr-namespace:intStore"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+
+
+                <ResourceDictionary Source="Style/StyleBtn.xaml"/>
+                <ResourceDictionary Source="Style/StyleTextBox.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

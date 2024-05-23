@@ -5,32 +5,211 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:intStore"
         mc:Ignorable="d"
-        Title="Login" Height="650" Width="450"
+        Title="Login" Height="650" Width="850"
         WindowStyle="None"
         Background="Transparent"
         AllowsTransparency="True"
         WindowStartupLocation="CenterScreen">
 
-    <Border Background="AliceBlue" CornerRadius="35">
+    <Border Background="AliceBlue" CornerRadius="35" MouseDown="Border_MouseDown">
         <Grid>
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="380" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="30" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <Border Grid.Row="0" Grid.Column="1" Background="#b8ebad" CornerRadius="35 35 0 0">
-            </Border>
-            <Button Grid.Row="5" Background="#33bb5e">
-                
-            </Button>
+            <Border Background="#b8ebad" CornerRadius="35 0 0 35">
+                <Grid>
+                    <Grid.ColumnDefinitions >
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions >
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                   
 
+                    <Border>
+                        
+                    </Border>
+                   
+                </Grid>
+            </Border>
+            <Border Grid.Column="1">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="650" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <TabControl Background="Transparent" BorderBrush="Transparent" Grid.Row="1" Margin="30">
+                        <TabItem Header="Авторизация" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <Border Background="AliceBlue" CornerRadius="15">
+                                <Border.Effect>
+                                    <DropShadowEffect Color="Gray" Direction="90" ShadowDepth="3" BlurRadius="15" Opacity="0.5" />
+                                </Border.Effect>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="200" />
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+                                    <StackPanel Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                        <Image Source="\Images\av2.png" Height="64" Width="64" Margin="0 0 0 5"/>
+                                        <TextBlock Text="Интернет-Магазин" Foreground="#b8edad" 
+                                                    FontSize="36" FontWeight="Bold">
+                                            <TextBlock.Effect>
+                                                <DropShadowEffect Color="Black" Direction="320" ShadowDepth="5" BlurRadius="10" Opacity="0.5" />
+                                            </TextBlock.Effect>
+                                        </TextBlock>
+
+                                        <TextBlock VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0 10"
+                                                    Foreground="White" FontSize="14" Text="Свежесть и качество к вашему столу каждый день!">
+                                            <TextBlock.Effect>
+                                                <DropShadowEffect Color="Black" Direction="180" ShadowDepth="1" BlurRadius="5" Opacity="0.8" />
+                                            </TextBlock.Effect>
+                                        </TextBlock>
+                                    </StackPanel>
+
+                                    <Grid Width="350" HorizontalAlignment="Center" Grid.Row="1">
+                                        <TextBlock x:Name="searchPlaceholder" Margin="15 0" VerticalAlignment="Center" Foreground="Gray" 
+                                                            IsHitTestVisible="False" Panel.ZIndex="1" Text="Логин...">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Text.Length, ElementName=txtFilterUsername}" Value="0">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+
+                                        <TextBox x:Name="txtFilterUsername" Style="{StaticResource textboxUsername}" Height="40"/>
+
+                                    </Grid>
+
+                                    <Grid Width="350" HorizontalAlignment="Center" Grid.Row="2">
+                                        <TextBlock x:Name="searchPlaceholder1" Margin="15 0" VerticalAlignment="Center" Foreground="Gray" 
+                                                            IsHitTestVisible="False" Panel.ZIndex="1" Text="Пароль...">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Text.Length, ElementName=txtFilterPassword}" Value="0">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+
+                                        <TextBox x:Name="txtFilterPassword" Style="{StaticResource textboxPassword}" Height="40"/>
+
+                                    </Grid>
+
+
+                                    <Button Grid.Row="4" Height="35" Width="200" Style="{StaticResource SecondaryButton}" Content="Войти"/>
+                                </Grid>
+                            </Border>
+                        </TabItem>
+                        <TabItem Header="Регистрация" Background="AliceBlue" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <Border Background="AliceBlue" CornerRadius="15">
+                                <Border.Effect>
+                                    <DropShadowEffect Color="Gray" Direction="90" ShadowDepth="3" BlurRadius="15" Opacity="0.5" />
+                                </Border.Effect>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="200" />
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+                                    <StackPanel Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                        <Image Source="\Images\av2.png" Height="64" Width="64" Margin="0 0 0 5"/>
+                                        <TextBlock Text="Регистрация" Foreground="AliceBlue" 
+                                                FontSize="36" FontWeight="Bold" HorizontalAlignment="Center">
+                                            <TextBlock.Effect>
+                                                <DropShadowEffect Color="Black" Direction="320" ShadowDepth="5" BlurRadius="10" Opacity="0.5" />
+                                            </TextBlock.Effect>
+                                        </TextBlock>
+                                    </StackPanel>
+
+                                    <Grid Width="350" HorizontalAlignment="Center" Grid.Row="1">
+                                        <TextBlock x:Name="searchPlaceholderReg" Margin="15 0" VerticalAlignment="Center" Foreground="Gray" 
+                                IsHitTestVisible="False" Panel.ZIndex="1" Text="Логин...">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Text.Length, ElementName=txtFilterUsernameReg}" Value="0">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+
+                                        <TextBox x:Name="txtFilterUsernameReg" Style="{StaticResource textboxUsername}" Height="40"/>
+
+                                    </Grid>
+                                    <Grid Width="350" HorizontalAlignment="Center" Grid.Row="2">
+                                        <TextBlock x:Name="searchPlaceholder1Reg" Margin="15 0" VerticalAlignment="Center" Foreground="Gray" 
+                                                     IsHitTestVisible="False" Panel.ZIndex="1" Text="Пароль...">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Text.Length, ElementName=txtFilterEmailReg}" Value="0">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+
+                                        <TextBox x:Name="txtFilterEmailReg" Style="{StaticResource textboxPassword}" Height="40"/>
+
+                                    </Grid>
+
+
+                                    <Grid Width="350" HorizontalAlignment="Center" Grid.Row="3">
+                                        <TextBlock x:Name="searchPlaceholder1EmailReg" Margin="15 0" VerticalAlignment="Center" Foreground="Gray" 
+                                            IsHitTestVisible="False" Panel.ZIndex="1" Text="Почта...">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Text.Length, ElementName=txtFilterPasswordReg}" Value="0">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+
+                                        <TextBox x:Name="txtFilterPasswordReg" Style="{StaticResource textboxPassword}" Height="40"/>
+
+                                    </Grid>
+
+
+                                    <Button Grid.Row="4" Height="35" Width="200" Style="{StaticResource SecondaryButton}" Content="Войти"/>
+                                </Grid>
+                            </Border>
+                        </TabItem>
+                    </TabControl>
+                </Grid>
+            </Border>
+            <Button Style="{StaticResource ExitButtonStyle}"  Height="30" Width="30" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="15" Click="BtnClose_Click" >
+                <Image Source="/Images/CloseBtn.png" />
+                <Button.Effect>
+                    <DropShadowEffect Color="Red" Direction="300" ShadowDepth="2" BlurRadius="5" Opacity="0.4" />
+                </Button.Effect>
+            </Button>
         </Grid>
     </Border>
 </Window>
