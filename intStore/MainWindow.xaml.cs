@@ -1,4 +1,5 @@
-﻿using System;
+﻿using intStore.View;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,11 +27,6 @@ namespace intStore
             
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
         private void BtnClose_Click(object sender, RoutedEventArgs e)
         {
             Close();
@@ -43,6 +39,40 @@ namespace intStore
                 this.DragMove(); 
             }
 
+        }
+
+        private void NextBtn_Click(object sender, RoutedEventArgs e)
+        {
+            InternetStoreWindow internetStoreWindow = new InternetStoreWindow();
+            internetStoreWindow.Show();
+        }
+
+        private void NextReg_Click(object sender, RoutedEventArgs e)
+        {
+            string tabName = "Reg";
+
+            foreach (TabItem tabItem in mainTabControl.Items)
+            {
+                if (tabItem.Name == tabName)
+                {
+                    mainTabControl.SelectedItem = tabItem;
+                    break;
+                }
+            }
+        }
+
+        private void BackAuthor_Click(object sender, RoutedEventArgs e)
+        {
+            string tabName = "Author";
+
+            foreach (TabItem tabItem in mainTabControl.Items)
+            {
+                if (tabItem.Name == tabName)
+                {
+                    mainTabControl.SelectedItem = tabItem;
+                    break;
+                }
+            }
         }
     }
 }

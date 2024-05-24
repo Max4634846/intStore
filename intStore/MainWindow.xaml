@@ -9,7 +9,8 @@
         WindowStyle="None"
         Background="Transparent"
         AllowsTransparency="True"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen"
+        Icon="\Images\av2.png">
 
     <Border Background="AliceBlue" CornerRadius="35" MouseDown="Border_MouseDown">
         <Grid>
@@ -20,7 +21,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <Border Background="#b8ebad" CornerRadius="35 0 0 35">
+            <Border Background="#33bb5e" CornerRadius="35 0 0 35">
                 <Grid>
                     <Grid.ColumnDefinitions >
                         <ColumnDefinition Width="*"/>
@@ -28,12 +29,14 @@
                     <Grid.RowDefinitions >
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
-                   
 
-                    <Border>
-                        
-                    </Border>
-                   
+
+                    <Ellipse Width="300" Height="300">
+                        <Ellipse.Fill>
+                            <ImageBrush ImageSource="\Images\LoginFon.jpg" Stretch="UniformToFill" />
+                        </Ellipse.Fill>
+                    </Ellipse>
+
                 </Grid>
             </Border>
             <Border Grid.Column="1">
@@ -43,22 +46,23 @@
                         <RowDefinition Height="650" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
-                    <TabControl Background="Transparent" BorderBrush="Transparent" Grid.Row="1" Margin="30">
-                        <TabItem Header="Авторизация" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TabControl Background="Transparent" BorderBrush="Transparent" Grid.Row="1" Margin="30" x:Name="mainTabControl">
+                        <TabItem Header="Авторизация" VerticalAlignment="Center" HorizontalAlignment="Center" x:Name="Author" Visibility="Collapsed">
                             <Border Background="AliceBlue" CornerRadius="15">
-                                <Border.Effect>
-                                    <DropShadowEffect Color="Gray" Direction="90" ShadowDepth="3" BlurRadius="15" Opacity="0.5" />
-                                </Border.Effect>
                                 <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="200" />
                                         <RowDefinition Height="*" />
                                         <RowDefinition Height="*" />
                                         <RowDefinition Height="*" />
+                                        <RowDefinition Height="*" />
                                     </Grid.RowDefinitions>
-                                    <StackPanel Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                    <StackPanel Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.ColumnSpan="2" Margin="37,0,0,0">
                                         <Image Source="\Images\av2.png" Height="64" Width="64" Margin="0 0 0 5"/>
-                                        <TextBlock Text="Интернет-Магазин" Foreground="#b8edad" 
+                                        <TextBlock Text="Интернет-Магазин" Foreground="White" 
                                                     FontSize="36" FontWeight="Bold">
                                             <TextBlock.Effect>
                                                 <DropShadowEffect Color="Black" Direction="320" ShadowDepth="5" BlurRadius="10" Opacity="0.5" />
@@ -68,12 +72,12 @@
                                         <TextBlock VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0 10"
                                                     Foreground="White" FontSize="14" Text="Свежесть и качество к вашему столу каждый день!">
                                             <TextBlock.Effect>
-                                                <DropShadowEffect Color="Black" Direction="180" ShadowDepth="1" BlurRadius="5" Opacity="0.8" />
+                                                <DropShadowEffect Color="Black" Direction="320" ShadowDepth="1" BlurRadius="2" Opacity="1" />
                                             </TextBlock.Effect>
                                         </TextBlock>
                                     </StackPanel>
 
-                                    <Grid Width="350" HorizontalAlignment="Center" Grid.Row="1">
+                                    <Grid Width="350" HorizontalAlignment="Left" Grid.Row="1" Grid.ColumnSpan="2" Margin="27,0,0,90" Grid.RowSpan="2">
                                         <TextBlock x:Name="searchPlaceholder" Margin="15 0" VerticalAlignment="Center" Foreground="Gray" 
                                                             IsHitTestVisible="False" Panel.ZIndex="1" Text="Логин...">
                                             <TextBlock.Style>
@@ -92,7 +96,7 @@
 
                                     </Grid>
 
-                                    <Grid Width="350" HorizontalAlignment="Center" Grid.Row="2">
+                                    <Grid Width="350" HorizontalAlignment="Left" Grid.Row="2" Grid.ColumnSpan="2" Margin="27,0,0,0">
                                         <TextBlock x:Name="searchPlaceholder1" Margin="15 0" VerticalAlignment="Center" Foreground="Gray" 
                                                             IsHitTestVisible="False" Panel.ZIndex="1" Text="Пароль...">
                                             <TextBlock.Style>
@@ -112,18 +116,16 @@
                                     </Grid>
 
 
-                                    <Button Grid.Row="4" Height="35" Width="200" Style="{StaticResource SecondaryButton}" Content="Войти"/>
+                                    <Button Grid.Row="3" Height="35" Width="200" Style="{StaticResource SecondaryButton}" Content="Войти" Click="NextBtn_Click" Grid.ColumnSpan="2"/>
+                                    <Button Grid.Row="3" Content="Регистрация" Background="Transparent" FontSize="10"  Foreground="#33bb5e" BorderThickness="0" Margin="0,68,0,1" Width="60" Click="NextReg_Click"/>
                                 </Grid>
                             </Border>
                         </TabItem>
-                        <TabItem Header="Регистрация" Background="AliceBlue" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <TabItem Header="Регистрация" Background="AliceBlue" VerticalAlignment="Center" HorizontalAlignment="Center" x:Name="Reg" Visibility="Collapsed" >
                             <Border Background="AliceBlue" CornerRadius="15">
-                                <Border.Effect>
-                                    <DropShadowEffect Color="Gray" Direction="90" ShadowDepth="3" BlurRadius="15" Opacity="0.5" />
-                                </Border.Effect>
                                 <Grid>
                                     <Grid.RowDefinitions>
-                                        <RowDefinition Height="200" />
+                                        <RowDefinition Height="150" />
                                         <RowDefinition Height="*" />
                                         <RowDefinition Height="*" />
                                         <RowDefinition Height="*" />
@@ -131,7 +133,7 @@
                                     </Grid.RowDefinitions>
                                     <StackPanel Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center">
                                         <Image Source="\Images\av2.png" Height="64" Width="64" Margin="0 0 0 5"/>
-                                        <TextBlock Text="Регистрация" Foreground="AliceBlue" 
+                                        <TextBlock Text="Регистрация" Foreground="White" 
                                                 FontSize="36" FontWeight="Bold" HorizontalAlignment="Center">
                                             <TextBlock.Effect>
                                                 <DropShadowEffect Color="Black" Direction="320" ShadowDepth="5" BlurRadius="10" Opacity="0.5" />
@@ -197,7 +199,9 @@
                                     </Grid>
 
 
-                                    <Button Grid.Row="4" Height="35" Width="200" Style="{StaticResource SecondaryButton}" Content="Войти"/>
+                                    <Button Grid.Row="4" Height="35" Width="200" Style="{StaticResource SecondaryButton}" Content="Зарегистрироваться" VerticalAlignment="Top" Margin="0 5"/>
+                                    <Button Grid.Row="4" Background="Transparent" Foreground="#33bb5e" Content="Войти" Width="60" Height="20" BorderThickness="0" FontSize="10" 
+                                            Click="BackAuthor_Click"/>
                                 </Grid>
                             </Border>
                         </TabItem>
