@@ -1,4 +1,5 @@
-﻿using intStore.View;
+﻿using intStore.Models;
+using intStore.View;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,10 +22,11 @@ namespace intStore
     /// </summary>
     public partial class MainWindow : Window
     {
+        private AuthService authService;
         public MainWindow()
         {
             InitializeComponent();
-            
+            authService = new AuthService();
         }
 
         private void BtnClose_Click(object sender, RoutedEventArgs e)
@@ -39,12 +41,6 @@ namespace intStore
                 this.DragMove(); 
             }
 
-        }
-
-        private void NextBtn_Click(object sender, RoutedEventArgs e)
-        {
-            InternetStoreWindow internetStoreWindow = new InternetStoreWindow();
-            internetStoreWindow.Show();
         }
 
         private void NextReg_Click(object sender, RoutedEventArgs e)
@@ -73,6 +69,42 @@ namespace intStore
                     break;
                 }
             }
+        }
+
+        private void LoginBtn_Click(object sender, RoutedEventArgs e)
+        {
+            string email = txtFilterUsername.Text;
+            string password = txtFilterPassword.Text;
+
+            var customer = authService.Login(email, password);
+            if (customer != null)
+            {
+                MessageBox.Show("Вход в систему прошел успешно!");
+                var internetStore = new InternetStoreWindow(customer);
+                internetStore.Show();
+                this.Close();
+            }
+            else
+            {
+                MessageBox.Show("Неверный адрес электронной почты или пароль.");
+            }
+        }
+
+        private void RegBtn_Click(object sender, RoutedEventArgs e)
+        {
+            string username = txtFilterUsernameReg.Text;
+            string email = txtFilterEmailReg.Text;
+            string password = txtFilterPasswordReg.Text;
+
+            //if(string.IsNullOrWhiteSpace(username) && string.IsNullOrWhiteSpace(email) && string.IsNullOrWhiteSpace(password))
+            //{
+            //    MessageBox.Show("Данные были введены не корректно!");
+            //    return;
+            //}
+
+            authService.Register(username, email, password);
+            MessageBox.Show("Регистрация прошла успешно!");
+
         }
     }
 }

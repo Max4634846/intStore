@@ -10,16 +10,9 @@
 namespace intStore
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class Goods
+    public partial class GetProductById_Result
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Goods()
-        {
-            this.OrdersWithCart = new HashSet<OrdersWithCart>();
-        }
-    
         public int id_Product { get; set; }
         public Nullable<int> id_Categories { get; set; }
         public string NameProduct { get; set; }
@@ -30,10 +23,5 @@ namespace intStore
         public Nullable<System.DateTime> DateProduct { get; set; }
         public string ImageProduct { get; set; }
         public Nullable<int> id_Shipment { get; set; }
-    
-        public virtual Categories Categories { get; set; }
-        public virtual Shipment Shipment { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<OrdersWithCart> OrdersWithCart { get; set; }
     }
 }

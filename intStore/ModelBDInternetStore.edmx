@@ -1,0 +1,900 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="InternetStoreModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Cart">
+          <Key>
+            <PropertyRef Name="id_Cart" />
+          </Key>
+          <Property Name="id_Cart" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="id_Customer" Type="int" />
+          <Property Name="id_OrdersWithCart" Type="int" />
+          <Property Name="Quantity" Type="int" />
+        </EntityType>
+        <EntityType Name="Categories">
+          <Key>
+            <PropertyRef Name="id_Categories" />
+          </Key>
+          <Property Name="id_Categories" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NameCategories" Type="nvarchar(max)" />
+          <Property Name="Desciptions" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="Customers">
+          <Key>
+            <PropertyRef Name="id_Customers" />
+          </Key>
+          <Property Name="id_Customers" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" />
+          <Property Name="Email" Type="nvarchar" MaxLength="150" />
+          <Property Name="Phone" Type="nvarchar" MaxLength="16" />
+          <Property Name="Address" Type="nvarchar(max)" />
+          <Property Name="RegisterDate" Type="date" />
+          <Property Name="Password" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="Goods">
+          <Key>
+            <PropertyRef Name="id_Product" />
+          </Key>
+          <Property Name="id_Product" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="id_Categories" Type="int" />
+          <Property Name="NameProduct" Type="nvarchar(max)" />
+          <Property Name="Description" Type="nvarchar(max)" />
+          <Property Name="Weight" Type="float" />
+          <Property Name="Price" Type="money" />
+          <Property Name="Quantity" Type="int" />
+          <Property Name="DateProduct" Type="date" />
+          <Property Name="ImageProduct" Type="nvarchar(max)" />
+          <Property Name="id_Shipment" Type="int" />
+        </EntityType>
+        <EntityType Name="Orders">
+          <Key>
+            <PropertyRef Name="id_Order" />
+          </Key>
+          <Property Name="id_Order" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="id_Customer" Type="int" />
+          <Property Name="OrderDate" Type="date" />
+          <Property Name="id_StatusOrders" Type="int" />
+          <Property Name="TotalAmount" Type="money" />
+          <Property Name="id_Payments" Type="int" />
+        </EntityType>
+        <EntityType Name="OrdersWithCart">
+          <Key>
+            <PropertyRef Name="id_OrderWithCart" />
+          </Key>
+          <Property Name="id_OrderWithCart" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="id_Product" Type="int" />
+          <Property Name="Quantity" Type="int" />
+        </EntityType>
+        <EntityType Name="Payments">
+          <Key>
+            <PropertyRef Name="id_Payments" />
+          </Key>
+          <Property Name="id_Payments" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MethodName" Type="nvarchar(max)" />
+          <Property Name="Description" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="Shipment">
+          <Key>
+            <PropertyRef Name="id_Shipment" />
+          </Key>
+          <Property Name="id_Shipment" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="id_Supplier" Type="int" />
+          <Property Name="Date" Type="date" />
+          <Property Name="id_StatuShipment" Type="int" />
+          <Property Name="Weight" Type="float" />
+          <Property Name="Cost" Type="money" />
+        </EntityType>
+        <EntityType Name="StatuOrders">
+          <Key>
+            <PropertyRef Name="id_StatusOrders" />
+          </Key>
+          <Property Name="id_StatusOrders" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NameStatus" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="StatusShipment">
+          <Key>
+            <PropertyRef Name="id_Status" />
+          </Key>
+          <Property Name="id_Status" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NameStatus" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="Suppliers">
+          <Key>
+            <PropertyRef Name="id_Supplier" />
+          </Key>
+          <Property Name="id_Supplier" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NameSupplier" Type="nvarchar(max)" />
+          <Property Name="PhoneSupplier" Type="nvarchar" MaxLength="16" />
+          <Property Name="Email" Type="nvarchar" MaxLength="150" />
+          <Property Name="ContactName" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <Association Name="FK_Cart_Customers">
+          <End Role="Customers" Type="Self.Customers" Multiplicity="0..1" />
+          <End Role="Cart" Type="Self.Cart" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customers">
+              <PropertyRef Name="id_Customers" />
+            </Principal>
+            <Dependent Role="Cart">
+              <PropertyRef Name="id_Customer" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Cart_OrdersWithCart">
+          <End Role="OrdersWithCart" Type="Self.OrdersWithCart" Multiplicity="0..1" />
+          <End Role="Cart" Type="Self.Cart" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OrdersWithCart">
+              <PropertyRef Name="id_OrderWithCart" />
+            </Principal>
+            <Dependent Role="Cart">
+              <PropertyRef Name="id_OrdersWithCart" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Goods_Categories">
+          <End Role="Categories" Type="Self.Categories" Multiplicity="0..1" />
+          <End Role="Goods" Type="Self.Goods" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Categories">
+              <PropertyRef Name="id_Categories" />
+            </Principal>
+            <Dependent Role="Goods">
+              <PropertyRef Name="id_Categories" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Goods_Shipment">
+          <End Role="Shipment" Type="Self.Shipment" Multiplicity="0..1" />
+          <End Role="Goods" Type="Self.Goods" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Shipment">
+              <PropertyRef Name="id_Shipment" />
+            </Principal>
+            <Dependent Role="Goods">
+              <PropertyRef Name="id_Shipment" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Orders_Customers">
+          <End Role="Customers" Type="Self.Customers" Multiplicity="0..1" />
+          <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customers">
+              <PropertyRef Name="id_Customers" />
+            </Principal>
+            <Dependent Role="Orders">
+              <PropertyRef Name="id_Customer" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Orders_Payments">
+          <End Role="Payments" Type="Self.Payments" Multiplicity="0..1" />
+          <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Payments">
+              <PropertyRef Name="id_Payments" />
+            </Principal>
+            <Dependent Role="Orders">
+              <PropertyRef Name="id_Payments" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Orders_StatuOrders">
+          <End Role="StatuOrders" Type="Self.StatuOrders" Multiplicity="0..1" />
+          <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="StatuOrders">
+              <PropertyRef Name="id_StatusOrders" />
+            </Principal>
+            <Dependent Role="Orders">
+              <PropertyRef Name="id_StatusOrders" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrdersWithCart_Goods">
+          <End Role="Goods" Type="Self.Goods" Multiplicity="0..1" />
+          <End Role="OrdersWithCart" Type="Self.OrdersWithCart" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Goods">
+              <PropertyRef Name="id_Product" />
+            </Principal>
+            <Dependent Role="OrdersWithCart">
+              <PropertyRef Name="id_Product" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Shipment_StatusShipment">
+          <End Role="StatusShipment" Type="Self.StatusShipment" Multiplicity="0..1" />
+          <End Role="Shipment" Type="Self.Shipment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="StatusShipment">
+              <PropertyRef Name="id_Status" />
+            </Principal>
+            <Dependent Role="Shipment">
+              <PropertyRef Name="id_StatuShipment" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Shipment_Suppliers">
+          <End Role="Suppliers" Type="Self.Suppliers" Multiplicity="0..1" />
+          <End Role="Shipment" Type="Self.Shipment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Suppliers">
+              <PropertyRef Name="id_Supplier" />
+            </Principal>
+            <Dependent Role="Shipment">
+              <PropertyRef Name="id_Supplier" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="fn_diagramobjects" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int" />
+        <Function Name="GetProductById" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ProductId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_alterdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="version" Type="int" Mode="In" />
+          <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+        </Function>
+        <Function Name="sp_creatediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="version" Type="int" Mode="In" />
+          <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+        </Function>
+        <Function Name="sp_dropdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_helpdiagramdefinition" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_helpdiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_renamediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="new_diagramname" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="sp_upgraddiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <EntityContainer Name="InternetStoreModelStoreContainer">
+          <EntitySet Name="Cart" EntityType="Self.Cart" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Categories" EntityType="Self.Categories" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Customers" EntityType="Self.Customers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Goods" EntityType="Self.Goods" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Orders" EntityType="Self.Orders" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OrdersWithCart" EntityType="Self.OrdersWithCart" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Payments" EntityType="Self.Payments" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Shipment" EntityType="Self.Shipment" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="StatuOrders" EntityType="Self.StatuOrders" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="StatusShipment" EntityType="Self.StatusShipment" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Suppliers" EntityType="Self.Suppliers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Cart_Customers" Association="Self.FK_Cart_Customers">
+            <End Role="Customers" EntitySet="Customers" />
+            <End Role="Cart" EntitySet="Cart" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Cart_OrdersWithCart" Association="Self.FK_Cart_OrdersWithCart">
+            <End Role="OrdersWithCart" EntitySet="OrdersWithCart" />
+            <End Role="Cart" EntitySet="Cart" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Goods_Categories" Association="Self.FK_Goods_Categories">
+            <End Role="Categories" EntitySet="Categories" />
+            <End Role="Goods" EntitySet="Goods" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Goods_Shipment" Association="Self.FK_Goods_Shipment">
+            <End Role="Shipment" EntitySet="Shipment" />
+            <End Role="Goods" EntitySet="Goods" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Orders_Customers" Association="Self.FK_Orders_Customers">
+            <End Role="Customers" EntitySet="Customers" />
+            <End Role="Orders" EntitySet="Orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Orders_Payments" Association="Self.FK_Orders_Payments">
+            <End Role="Payments" EntitySet="Payments" />
+            <End Role="Orders" EntitySet="Orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Orders_StatuOrders" Association="Self.FK_Orders_StatuOrders">
+            <End Role="StatuOrders" EntitySet="StatuOrders" />
+            <End Role="Orders" EntitySet="Orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrdersWithCart_Goods" Association="Self.FK_OrdersWithCart_Goods">
+            <End Role="Goods" EntitySet="Goods" />
+            <End Role="OrdersWithCart" EntitySet="OrdersWithCart" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Shipment_StatusShipment" Association="Self.FK_Shipment_StatusShipment">
+            <End Role="StatusShipment" EntitySet="StatusShipment" />
+            <End Role="Shipment" EntitySet="Shipment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Shipment_Suppliers" Association="Self.FK_Shipment_Suppliers">
+            <End Role="Suppliers" EntitySet="Suppliers" />
+            <End Role="Shipment" EntitySet="Shipment" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="InternetStoreModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Cart">
+          <Key>
+            <PropertyRef Name="id_Cart" />
+          </Key>
+          <Property Name="id_Cart" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id_Customer" Type="Int32" />
+          <Property Name="id_OrdersWithCart" Type="Int32" />
+          <Property Name="Quantity" Type="Int32" />
+          <NavigationProperty Name="Customers" Relationship="Self.FK_Cart_Customers" FromRole="Cart" ToRole="Customers" />
+          <NavigationProperty Name="OrdersWithCart" Relationship="Self.FK_Cart_OrdersWithCart" FromRole="Cart" ToRole="OrdersWithCart" />
+        </EntityType>
+        <EntityType Name="Categories">
+          <Key>
+            <PropertyRef Name="id_Categories" />
+          </Key>
+          <Property Name="id_Categories" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NameCategories" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Desciptions" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Goods" Relationship="Self.FK_Goods_Categories" FromRole="Categories" ToRole="Goods" />
+        </EntityType>
+        <EntityType Name="Customers">
+          <Key>
+            <PropertyRef Name="id_Customers" />
+          </Key>
+          <Property Name="id_Customers" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Phone" Type="String" MaxLength="16" FixedLength="false" Unicode="true" />
+          <Property Name="Address" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="RegisterDate" Type="DateTime" Precision="0" />
+          <Property Name="Password" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Cart" Relationship="Self.FK_Cart_Customers" FromRole="Customers" ToRole="Cart" />
+          <NavigationProperty Name="Orders" Relationship="Self.FK_Orders_Customers" FromRole="Customers" ToRole="Orders" />
+        </EntityType>
+        <EntityType Name="Goods">
+          <Key>
+            <PropertyRef Name="id_Product" />
+          </Key>
+          <Property Name="id_Product" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id_Categories" Type="Int32" />
+          <Property Name="NameProduct" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Weight" Type="Double" />
+          <Property Name="Price" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="Quantity" Type="Int32" />
+          <Property Name="DateProduct" Type="DateTime" Precision="0" />
+          <Property Name="ImageProduct" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="id_Shipment" Type="Int32" />
+          <NavigationProperty Name="Categories" Relationship="Self.FK_Goods_Categories" FromRole="Goods" ToRole="Categories" />
+          <NavigationProperty Name="Shipment" Relationship="Self.FK_Goods_Shipment" FromRole="Goods" ToRole="Shipment" />
+          <NavigationProperty Name="OrdersWithCart" Relationship="Self.FK_OrdersWithCart_Goods" FromRole="Goods" ToRole="OrdersWithCart" />
+        </EntityType>
+        <EntityType Name="Orders">
+          <Key>
+            <PropertyRef Name="id_Order" />
+          </Key>
+          <Property Name="id_Order" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id_Customer" Type="Int32" />
+          <Property Name="OrderDate" Type="DateTime" Precision="0" />
+          <Property Name="id_StatusOrders" Type="Int32" />
+          <Property Name="TotalAmount" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="id_Payments" Type="Int32" />
+          <NavigationProperty Name="Customers" Relationship="Self.FK_Orders_Customers" FromRole="Orders" ToRole="Customers" />
+          <NavigationProperty Name="Payments" Relationship="Self.FK_Orders_Payments" FromRole="Orders" ToRole="Payments" />
+          <NavigationProperty Name="StatuOrders" Relationship="Self.FK_Orders_StatuOrders" FromRole="Orders" ToRole="StatuOrders" />
+        </EntityType>
+        <EntityType Name="OrdersWithCart">
+          <Key>
+            <PropertyRef Name="id_OrderWithCart" />
+          </Key>
+          <Property Name="id_OrderWithCart" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id_Product" Type="Int32" />
+          <Property Name="Quantity" Type="Int32" />
+          <NavigationProperty Name="Cart" Relationship="Self.FK_Cart_OrdersWithCart" FromRole="OrdersWithCart" ToRole="Cart" />
+          <NavigationProperty Name="Goods" Relationship="Self.FK_OrdersWithCart_Goods" FromRole="OrdersWithCart" ToRole="Goods" />
+        </EntityType>
+        <EntityType Name="Payments">
+          <Key>
+            <PropertyRef Name="id_Payments" />
+          </Key>
+          <Property Name="id_Payments" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MethodName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Orders" Relationship="Self.FK_Orders_Payments" FromRole="Payments" ToRole="Orders" />
+        </EntityType>
+        <EntityType Name="Shipment">
+          <Key>
+            <PropertyRef Name="id_Shipment" />
+          </Key>
+          <Property Name="id_Shipment" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id_Supplier" Type="Int32" />
+          <Property Name="Date" Type="DateTime" Precision="0" />
+          <Property Name="id_StatuShipment" Type="Int32" />
+          <Property Name="Weight" Type="Double" />
+          <Property Name="Cost" Type="Decimal" Precision="19" Scale="4" />
+          <NavigationProperty Name="Goods" Relationship="Self.FK_Goods_Shipment" FromRole="Shipment" ToRole="Goods" />
+          <NavigationProperty Name="StatusShipment" Relationship="Self.FK_Shipment_StatusShipment" FromRole="Shipment" ToRole="StatusShipment" />
+          <NavigationProperty Name="Suppliers" Relationship="Self.FK_Shipment_Suppliers" FromRole="Shipment" ToRole="Suppliers" />
+        </EntityType>
+        <EntityType Name="StatuOrders">
+          <Key>
+            <PropertyRef Name="id_StatusOrders" />
+          </Key>
+          <Property Name="id_StatusOrders" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NameStatus" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Orders" Relationship="Self.FK_Orders_StatuOrders" FromRole="StatuOrders" ToRole="Orders" />
+        </EntityType>
+        <EntityType Name="StatusShipment">
+          <Key>
+            <PropertyRef Name="id_Status" />
+          </Key>
+          <Property Name="id_Status" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NameStatus" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Shipment" Relationship="Self.FK_Shipment_StatusShipment" FromRole="StatusShipment" ToRole="Shipment" />
+        </EntityType>
+        <EntityType Name="Suppliers">
+          <Key>
+            <PropertyRef Name="id_Supplier" />
+          </Key>
+          <Property Name="id_Supplier" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NameSupplier" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneSupplier" Type="String" MaxLength="16" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="ContactName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Shipment" Relationship="Self.FK_Shipment_Suppliers" FromRole="Suppliers" ToRole="Shipment" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <Association Name="FK_Cart_Customers">
+          <End Role="Customers" Type="Self.Customers" Multiplicity="0..1" />
+          <End Role="Cart" Type="Self.Cart" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customers">
+              <PropertyRef Name="id_Customers" />
+            </Principal>
+            <Dependent Role="Cart">
+              <PropertyRef Name="id_Customer" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Cart_OrdersWithCart">
+          <End Role="OrdersWithCart" Type="Self.OrdersWithCart" Multiplicity="0..1" />
+          <End Role="Cart" Type="Self.Cart" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OrdersWithCart">
+              <PropertyRef Name="id_OrderWithCart" />
+            </Principal>
+            <Dependent Role="Cart">
+              <PropertyRef Name="id_OrdersWithCart" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Goods_Categories">
+          <End Role="Categories" Type="Self.Categories" Multiplicity="0..1" />
+          <End Role="Goods" Type="Self.Goods" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Categories">
+              <PropertyRef Name="id_Categories" />
+            </Principal>
+            <Dependent Role="Goods">
+              <PropertyRef Name="id_Categories" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Orders_Customers">
+          <End Role="Customers" Type="Self.Customers" Multiplicity="0..1" />
+          <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customers">
+              <PropertyRef Name="id_Customers" />
+            </Principal>
+            <Dependent Role="Orders">
+              <PropertyRef Name="id_Customer" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Goods_Shipment">
+          <End Role="Shipment" Type="Self.Shipment" Multiplicity="0..1" />
+          <End Role="Goods" Type="Self.Goods" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Shipment">
+              <PropertyRef Name="id_Shipment" />
+            </Principal>
+            <Dependent Role="Goods">
+              <PropertyRef Name="id_Shipment" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrdersWithCart_Goods">
+          <End Role="Goods" Type="Self.Goods" Multiplicity="0..1" />
+          <End Role="OrdersWithCart" Type="Self.OrdersWithCart" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Goods">
+              <PropertyRef Name="id_Product" />
+            </Principal>
+            <Dependent Role="OrdersWithCart">
+              <PropertyRef Name="id_Product" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Orders_Payments">
+          <End Role="Payments" Type="Self.Payments" Multiplicity="0..1" />
+          <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Payments">
+              <PropertyRef Name="id_Payments" />
+            </Principal>
+            <Dependent Role="Orders">
+              <PropertyRef Name="id_Payments" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Orders_StatuOrders">
+          <End Role="StatuOrders" Type="Self.StatuOrders" Multiplicity="0..1" />
+          <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="StatuOrders">
+              <PropertyRef Name="id_StatusOrders" />
+            </Principal>
+            <Dependent Role="Orders">
+              <PropertyRef Name="id_StatusOrders" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Shipment_StatusShipment">
+          <End Role="StatusShipment" Type="Self.StatusShipment" Multiplicity="0..1" />
+          <End Role="Shipment" Type="Self.Shipment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="StatusShipment">
+              <PropertyRef Name="id_Status" />
+            </Principal>
+            <Dependent Role="Shipment">
+              <PropertyRef Name="id_StatuShipment" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Shipment_Suppliers">
+          <End Role="Suppliers" Type="Self.Suppliers" Multiplicity="0..1" />
+          <End Role="Shipment" Type="Self.Shipment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Suppliers">
+              <PropertyRef Name="id_Supplier" />
+            </Principal>
+            <Dependent Role="Shipment">
+              <PropertyRef Name="id_Supplier" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="InternetStoreEntities1" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Cart" EntityType="Self.Cart" />
+          <EntitySet Name="Categories" EntityType="Self.Categories" />
+          <EntitySet Name="Customers" EntityType="Self.Customers" />
+          <EntitySet Name="Goods" EntityType="Self.Goods" />
+          <EntitySet Name="Orders" EntityType="Self.Orders" />
+          <EntitySet Name="OrdersWithCart" EntityType="Self.OrdersWithCart" />
+          <EntitySet Name="Payments" EntityType="Self.Payments" />
+          <EntitySet Name="Shipment" EntityType="Self.Shipment" />
+          <EntitySet Name="StatuOrders" EntityType="Self.StatuOrders" />
+          <EntitySet Name="StatusShipment" EntityType="Self.StatusShipment" />
+          <EntitySet Name="Suppliers" EntityType="Self.Suppliers" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+          <AssociationSet Name="FK_Cart_Customers" Association="Self.FK_Cart_Customers">
+            <End Role="Customers" EntitySet="Customers" />
+            <End Role="Cart" EntitySet="Cart" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Cart_OrdersWithCart" Association="Self.FK_Cart_OrdersWithCart">
+            <End Role="OrdersWithCart" EntitySet="OrdersWithCart" />
+            <End Role="Cart" EntitySet="Cart" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Goods_Categories" Association="Self.FK_Goods_Categories">
+            <End Role="Categories" EntitySet="Categories" />
+            <End Role="Goods" EntitySet="Goods" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Orders_Customers" Association="Self.FK_Orders_Customers">
+            <End Role="Customers" EntitySet="Customers" />
+            <End Role="Orders" EntitySet="Orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Goods_Shipment" Association="Self.FK_Goods_Shipment">
+            <End Role="Shipment" EntitySet="Shipment" />
+            <End Role="Goods" EntitySet="Goods" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrdersWithCart_Goods" Association="Self.FK_OrdersWithCart_Goods">
+            <End Role="Goods" EntitySet="Goods" />
+            <End Role="OrdersWithCart" EntitySet="OrdersWithCart" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Orders_Payments" Association="Self.FK_Orders_Payments">
+            <End Role="Payments" EntitySet="Payments" />
+            <End Role="Orders" EntitySet="Orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Orders_StatuOrders" Association="Self.FK_Orders_StatuOrders">
+            <End Role="StatuOrders" EntitySet="StatuOrders" />
+            <End Role="Orders" EntitySet="Orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Shipment_StatusShipment" Association="Self.FK_Shipment_StatusShipment">
+            <End Role="StatusShipment" EntitySet="StatusShipment" />
+            <End Role="Shipment" EntitySet="Shipment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Shipment_Suppliers" Association="Self.FK_Shipment_Suppliers">
+            <End Role="Suppliers" EntitySet="Suppliers" />
+            <End Role="Shipment" EntitySet="Shipment" />
+          </AssociationSet>
+          <FunctionImport Name="GetProductById" ReturnType="Collection(InternetStoreModel.GetProductById_Result)">
+            <Parameter Name="ProductId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_alterdiagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="version" Mode="In" Type="Int32" />
+            <Parameter Name="definition" Mode="In" Type="Binary" />
+          </FunctionImport>
+          <FunctionImport Name="sp_creatediagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="version" Mode="In" Type="Int32" />
+            <Parameter Name="definition" Mode="In" Type="Binary" />
+          </FunctionImport>
+          <FunctionImport Name="sp_dropdiagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_helpdiagramdefinition" ReturnType="Collection(InternetStoreModel.sp_helpdiagramdefinition_Result)">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_helpdiagrams" ReturnType="Collection(InternetStoreModel.sp_helpdiagrams_Result)">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_renamediagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="new_diagramname" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_upgraddiagrams" />
+        </EntityContainer>
+        <ComplexType Name="GetProductById_Result">
+          <Property Type="Int32" Name="id_Product" Nullable="false" />
+          <Property Type="Int32" Name="id_Categories" Nullable="true" />
+          <Property Type="String" Name="NameProduct" Nullable="true" />
+          <Property Type="String" Name="Description" Nullable="true" />
+          <Property Type="Double" Name="Weight" Nullable="true" />
+          <Property Type="Decimal" Name="Price" Nullable="true" Precision="19" />
+          <Property Type="Int32" Name="Quantity" Nullable="true" />
+          <Property Type="DateTime" Name="DateProduct" Nullable="true" />
+          <Property Type="String" Name="ImageProduct" Nullable="true" />
+          <Property Type="Int32" Name="id_Shipment" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="sp_helpdiagramdefinition_Result">
+          <Property Type="Int32" Name="version" Nullable="true" />
+          <Property Type="Binary" Name="definition" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="sp_helpdiagrams_Result">
+          <Property Type="String" Name="Database" Nullable="true" MaxLength="128" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="128" />
+          <Property Type="Int32" Name="ID" Nullable="false" />
+          <Property Type="String" Name="Owner" Nullable="true" MaxLength="128" />
+          <Property Type="Int32" Name="OwnerID" Nullable="false" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="InternetStoreModelStoreContainer" CdmEntityContainer="InternetStoreEntities1">
+          <EntitySetMapping Name="Cart">
+            <EntityTypeMapping TypeName="InternetStoreModel.Cart">
+              <MappingFragment StoreEntitySet="Cart">
+                <ScalarProperty Name="id_Cart" ColumnName="id_Cart" />
+                <ScalarProperty Name="id_Customer" ColumnName="id_Customer" />
+                <ScalarProperty Name="id_OrdersWithCart" ColumnName="id_OrdersWithCart" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Categories">
+            <EntityTypeMapping TypeName="InternetStoreModel.Categories">
+              <MappingFragment StoreEntitySet="Categories">
+                <ScalarProperty Name="id_Categories" ColumnName="id_Categories" />
+                <ScalarProperty Name="NameCategories" ColumnName="NameCategories" />
+                <ScalarProperty Name="Desciptions" ColumnName="Desciptions" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Customers">
+            <EntityTypeMapping TypeName="InternetStoreModel.Customers">
+              <MappingFragment StoreEntitySet="Customers">
+                <ScalarProperty Name="id_Customers" ColumnName="id_Customers" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="RegisterDate" ColumnName="RegisterDate" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Goods">
+            <EntityTypeMapping TypeName="InternetStoreModel.Goods">
+              <MappingFragment StoreEntitySet="Goods">
+                <ScalarProperty Name="id_Product" ColumnName="id_Product" />
+                <ScalarProperty Name="id_Categories" ColumnName="id_Categories" />
+                <ScalarProperty Name="NameProduct" ColumnName="NameProduct" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Weight" ColumnName="Weight" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="DateProduct" ColumnName="DateProduct" />
+                <ScalarProperty Name="ImageProduct" ColumnName="ImageProduct" />
+                <ScalarProperty Name="id_Shipment" ColumnName="id_Shipment" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Orders">
+            <EntityTypeMapping TypeName="InternetStoreModel.Orders">
+              <MappingFragment StoreEntitySet="Orders">
+                <ScalarProperty Name="id_Order" ColumnName="id_Order" />
+                <ScalarProperty Name="id_Customer" ColumnName="id_Customer" />
+                <ScalarProperty Name="OrderDate" ColumnName="OrderDate" />
+                <ScalarProperty Name="id_StatusOrders" ColumnName="id_StatusOrders" />
+                <ScalarProperty Name="TotalAmount" ColumnName="TotalAmount" />
+                <ScalarProperty Name="id_Payments" ColumnName="id_Payments" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OrdersWithCart">
+            <EntityTypeMapping TypeName="InternetStoreModel.OrdersWithCart">
+              <MappingFragment StoreEntitySet="OrdersWithCart">
+                <ScalarProperty Name="id_OrderWithCart" ColumnName="id_OrderWithCart" />
+                <ScalarProperty Name="id_Product" ColumnName="id_Product" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Payments">
+            <EntityTypeMapping TypeName="InternetStoreModel.Payments">
+              <MappingFragment StoreEntitySet="Payments">
+                <ScalarProperty Name="id_Payments" ColumnName="id_Payments" />
+                <ScalarProperty Name="MethodName" ColumnName="MethodName" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Shipment">
+            <EntityTypeMapping TypeName="InternetStoreModel.Shipment">
+              <MappingFragment StoreEntitySet="Shipment">
+                <ScalarProperty Name="id_Shipment" ColumnName="id_Shipment" />
+                <ScalarProperty Name="id_Supplier" ColumnName="id_Supplier" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="id_StatuShipment" ColumnName="id_StatuShipment" />
+                <ScalarProperty Name="Weight" ColumnName="Weight" />
+                <ScalarProperty Name="Cost" ColumnName="Cost" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="StatuOrders">
+            <EntityTypeMapping TypeName="InternetStoreModel.StatuOrders">
+              <MappingFragment StoreEntitySet="StatuOrders">
+                <ScalarProperty Name="id_StatusOrders" ColumnName="id_StatusOrders" />
+                <ScalarProperty Name="NameStatus" ColumnName="NameStatus" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="StatusShipment">
+            <EntityTypeMapping TypeName="InternetStoreModel.StatusShipment">
+              <MappingFragment StoreEntitySet="StatusShipment">
+                <ScalarProperty Name="id_Status" ColumnName="id_Status" />
+                <ScalarProperty Name="NameStatus" ColumnName="NameStatus" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Suppliers">
+            <EntityTypeMapping TypeName="InternetStoreModel.Suppliers">
+              <MappingFragment StoreEntitySet="Suppliers">
+                <ScalarProperty Name="id_Supplier" ColumnName="id_Supplier" />
+                <ScalarProperty Name="NameSupplier" ColumnName="NameSupplier" />
+                <ScalarProperty Name="PhoneSupplier" ColumnName="PhoneSupplier" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="ContactName" ColumnName="ContactName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="InternetStoreModel.sysdiagrams">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="GetProductById" FunctionName="InternetStoreModel.Store.GetProductById">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="InternetStoreModel.GetProductById_Result">
+                <ScalarProperty Name="id_Product" ColumnName="id_Product" />
+                <ScalarProperty Name="id_Categories" ColumnName="id_Categories" />
+                <ScalarProperty Name="NameProduct" ColumnName="NameProduct" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Weight" ColumnName="Weight" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="DateProduct" ColumnName="DateProduct" />
+                <ScalarProperty Name="ImageProduct" ColumnName="ImageProduct" />
+                <ScalarProperty Name="id_Shipment" ColumnName="id_Shipment" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_alterdiagram" FunctionName="InternetStoreModel.Store.sp_alterdiagram" />
+          <FunctionImportMapping FunctionImportName="sp_creatediagram" FunctionName="InternetStoreModel.Store.sp_creatediagram" />
+          <FunctionImportMapping FunctionImportName="sp_dropdiagram" FunctionName="InternetStoreModel.Store.sp_dropdiagram" />
+          <FunctionImportMapping FunctionImportName="sp_helpdiagramdefinition" FunctionName="InternetStoreModel.Store.sp_helpdiagramdefinition">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="InternetStoreModel.sp_helpdiagramdefinition_Result">
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_helpdiagrams" FunctionName="InternetStoreModel.Store.sp_helpdiagrams">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="InternetStoreModel.sp_helpdiagrams_Result">
+                <ScalarProperty Name="Database" ColumnName="Database" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Owner" ColumnName="Owner" />
+                <ScalarProperty Name="OwnerID" ColumnName="OwnerID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_renamediagram" FunctionName="InternetStoreModel.Store.sp_renamediagram" />
+          <FunctionImportMapping FunctionImportName="sp_upgraddiagrams" FunctionName="InternetStoreModel.Store.sp_upgraddiagrams" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

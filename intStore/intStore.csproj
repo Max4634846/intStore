@@ -46,6 +46,12 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="MahApps.Metro.IconPacks.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0c0d510f9915137a, processorArchitecture=MSIL">
+      <HintPath>..\packages\MahApps.Metro.IconPacks.Material.4.11.0\lib\net47\MahApps.Metro.IconPacks.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="MahApps.Metro.IconPacks.Material, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0c0d510f9915137a, processorArchitecture=MSIL">
+      <HintPath>..\packages\MahApps.Metro.IconPacks.Material.4.11.0\lib\net47\MahApps.Metro.IconPacks.Material.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Xaml.Behaviors, Version=1.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Xaml.Behaviors.Wpf.1.1.39\lib\net45\Microsoft.Xaml.Behaviors.dll</HintPath>
     </Reference>
@@ -75,35 +81,76 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Cart.cs">
+      <DependentUpon>ModelBDInternetStore.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Categories.cs">
+      <DependentUpon>ModelBDInternetStore.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Customers.cs">
+      <DependentUpon>ModelBDInternetStore.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GetProductById_Result.cs">
+      <DependentUpon>ModelBDInternetStore.tt</DependentUpon>
+    </Compile>
     <Compile Include="Goods.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
+      <DependentUpon>ModelBDInternetStore.tt</DependentUpon>
     </Compile>
-    <Compile Include="Model1.Context.cs">
+    <Compile Include="ModelBDInternetStore.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>Model1.Context.tt</DependentUpon>
+      <DependentUpon>ModelBDInternetStore.Context.tt</DependentUpon>
     </Compile>
-    <Compile Include="Model1.cs">
+    <Compile Include="ModelBDInternetStore.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>Model1.tt</DependentUpon>
+      <DependentUpon>ModelBDInternetStore.tt</DependentUpon>
     </Compile>
-    <Compile Include="Model1.Designer.cs">
+    <Compile Include="ModelBDInternetStore.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>Model1.edmx</DependentUpon>
+      <DependentUpon>ModelBDInternetStore.edmx</DependentUpon>
     </Compile>
-    <Compile Include="Models\testProduct.cs" />
+    <Compile Include="Models\AuthService.cs" />
+    <Compile Include="Models\Cart.cs" />
+    <Compile Include="Models\Customer.cs" />
+    <Compile Include="Models\OrdersWithCart.cs" />
+    <Compile Include="Models\Product.cs" />
+    <Compile Include="Models\ProductEventArgs.cs" />
+    <Compile Include="Orders.cs">
+      <DependentUpon>ModelBDInternetStore.tt</DependentUpon>
+    </Compile>
+    <Compile Include="OrdersWithCart.cs">
+      <DependentUpon>ModelBDInternetStore.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Payments.cs">
+      <DependentUpon>ModelBDInternetStore.tt</DependentUpon>
+    </Compile>
     <Compile Include="Shipment.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
+      <DependentUpon>ModelBDInternetStore.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sp_helpdiagramdefinition_Result.cs">
+      <DependentUpon>ModelBDInternetStore.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sp_helpdiagrams_Result.cs">
+      <DependentUpon>ModelBDInternetStore.tt</DependentUpon>
+    </Compile>
+    <Compile Include="StatuOrders.cs">
+      <DependentUpon>ModelBDInternetStore.tt</DependentUpon>
+    </Compile>
+    <Compile Include="StatusShipment.cs">
+      <DependentUpon>ModelBDInternetStore.tt</DependentUpon>
     </Compile>
     <Compile Include="Suppliers.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
+      <DependentUpon>ModelBDInternetStore.tt</DependentUpon>
     </Compile>
     <Compile Include="sysdiagrams.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
+      <DependentUpon>ModelBDInternetStore.tt</DependentUpon>
     </Compile>
     <Compile Include="Utils\ImageManipulation.cs" />
+    <Compile Include="View\AddProductCart.xaml.cs">
+      <DependentUpon>AddProductCart.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\InternetStoreWindow.xaml.cs">
       <DependentUpon>InternetStoreWindow.xaml</DependentUpon>
     </Compile>
@@ -124,6 +171,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Style\StyleTextBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\AddProductCart.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -150,12 +201,12 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EntityDeploy Include="Model1.edmx">
+    <EntityDeploy Include="ModelBDInternetStore.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>Model1.Designer.cs</LastGenOutput>
+      <LastGenOutput>ModelBDInternetStore.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <None Include="Model1.edmx.diagram">
-      <DependentUpon>Model1.edmx</DependentUpon>
+    <None Include="ModelBDInternetStore.edmx.diagram">
+      <DependentUpon>ModelBDInternetStore.edmx</DependentUpon>
     </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -186,15 +237,15 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Model1.Context.tt">
+    <Content Include="ModelBDInternetStore.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>Model1.edmx</DependentUpon>
-      <LastGenOutput>Model1.Context.cs</LastGenOutput>
+      <DependentUpon>ModelBDInternetStore.edmx</DependentUpon>
+      <LastGenOutput>ModelBDInternetStore.Context.cs</LastGenOutput>
     </Content>
-    <Content Include="Model1.tt">
+    <Content Include="ModelBDInternetStore.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>Model1.edmx</DependentUpon>
-      <LastGenOutput>Model1.cs</LastGenOutput>
+      <DependentUpon>ModelBDInternetStore.edmx</DependentUpon>
+      <LastGenOutput>ModelBDInternetStore.cs</LastGenOutput>
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

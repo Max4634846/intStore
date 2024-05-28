@@ -3,11 +3,13 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:Icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
         xmlns:local="clr-namespace:intStore.View"
         mc:Ignorable="d"
         Title="Интернет-Магазин продуктов" Height="850" Width="1250"
         WindowStartupLocation="CenterScreen"
         Icon="\Images\av2.png">
+    
     <Border>
         <Grid>
             <Grid.ColumnDefinitions>
@@ -15,10 +17,10 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <Border Background="#33bb5e" CornerRadius="0 15 15 0">
+            <Border Background="White" CornerRadius="0 15 15 0">
                 <StackPanel HorizontalAlignment="Center">
                     <StackPanel Margin="0 25 0 0" VerticalAlignment="Center" HorizontalAlignment="Center">
-                        <TextBlock Text="Интернет-Магазин" Foreground="White" 
+                        <TextBlock Text="Интернет-Магазин" Foreground="Black" 
                                         FontSize="24" FontWeight="Bold">
                                 <TextBlock.Effect>
                                     <DropShadowEffect Color="Black" Direction="320" ShadowDepth="5" BlurRadius="10" Opacity="0.5" />
@@ -26,38 +28,101 @@
                             </TextBlock>
                     </StackPanel>
                     <WrapPanel Margin="20 10" VerticalAlignment="Center" HorizontalAlignment="Left" Width="250">
-                        <TextBlock Text="Имя пользователя" Foreground="White" 
+                        <TextBlock Text="Имя пользователя" Foreground="Black" 
                                     FontSize="18" FontWeight="Bold">
                             <TextBlock.Effect>
                                 <DropShadowEffect Color="Black" Direction="320" ShadowDepth="5" BlurRadius="10" Opacity="0.5" />
                             </TextBlock.Effect>
                         </TextBlock>
-                        <Button Background="Transparent" BorderBrush="Transparent" Margin="10 0">
+                        <Button Background="Transparent" BorderBrush="Transparent" Margin="10 0" Click="BtnCart_Click">
                             <Image Source="\Images\BaskedShop.png" Height="25" Width="25"/>
                         </Button>
                     </WrapPanel>
-                    
-                    <StackPanel Margin="0 5">
-                        <Button Content="Продукты" Foreground="White" 
-                                         FontSize="18" Height="34"  Background="#33bb5e" Width="250" BorderBrush="Transparent" Click="BtnProduct_Click">
-                                <Button.Effect>
-                                    <DropShadowEffect Color="Gray" Direction="180" ShadowDepth="1" BlurRadius="5" Opacity="0.9" />
-                                </Button.Effect>
-                            
-                        </Button>
-                    </StackPanel>
+
+
                     <StackPanel>
-                        <Button Content="Отчеты" Foreground="White" 
-                     FontSize="18" Height="34"  Background="#33bb5e" Width="250" BorderBrush="Transparent" Click="ReportBtn_Click">
+                        
+                        <Button Foreground="White" FontSize="18" Height="34"  Background="#33bb5e" BorderBrush="Transparent" Click="BtnMain_Click" Style="{StaticResource BtnAddProducts}" Margin="0 5">
+
                             <Button.Effect>
                                 <DropShadowEffect Color="Gray" Direction="180" ShadowDepth="1" BlurRadius="5" Opacity="0.9" />
                             </Button.Effect>
+
+                            <TextBlock Text="Главная">
+                                <TextBlock.Effect>
+                                    <DropShadowEffect Color="Gray" Direction="180" ShadowDepth="1" BlurRadius="5" Opacity="0.9" />
+                                </TextBlock.Effect>
+                            </TextBlock>
+
+
+
+                        </Button>
+
+                        <Button Foreground="White"  FontSize="18" Height="34"  Background="#33bb5e" BorderBrush="Transparent" Click="BtnProduct_Click" Style="{StaticResource BtnAddProducts}" Margin="0 5">
+                            <Button.Effect>
+                                <DropShadowEffect Color="Gray" Direction="180" ShadowDepth="1" BlurRadius="5" Opacity="0.9" />
+                            </Button.Effect>
+
+                            <TextBlock Text="Продукты">
+                                <TextBlock.Effect>
+                                    <DropShadowEffect Color="Gray" Direction="180" ShadowDepth="1" BlurRadius="5" Opacity="0.9" />
+                                </TextBlock.Effect>
+                            </TextBlock>
+
+                        </Button>
+
+                        <Button Foreground="White" FontSize="18" Height="34"  Background="#33bb5e" Width="250" BorderBrush="Transparent" Click="ReportBtn_Click" Style="{StaticResource BtnAddProducts}" Margin="0 5">
+                            <Button.Effect>
+                                <DropShadowEffect Color="Gray" Direction="180" ShadowDepth="1" BlurRadius="5" Opacity="0.9" />
+                            </Button.Effect>
+
+                            <TextBlock Text="Отчеты">
+                                <TextBlock.Effect>
+                                    <DropShadowEffect Color="Gray" Direction="180" ShadowDepth="1" BlurRadius="10" Opacity="0.9" />
+                                </TextBlock.Effect>
+                            </TextBlock>
                         </Button>
                     </StackPanel>
                 </StackPanel>
             </Border>
 
             <TabControl Grid.Column="1" Background="Transparent" BorderBrush="Transparent" Margin="5" x:Name="mainTabControl">
+
+                <TabItem Header="Главная" BorderBrush="Transparent" Visibility="Collapsed"  x:Name="MainPage">
+                    <Grid>
+                        <TextBlock Text="Главная страница" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="36"/>
+                    </Grid>
+                </TabItem>
+                
+                <TabItem Header="Корзина" BorderBrush="Transparent" Visibility="Collapsed"  x:Name="Cart">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="45" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Text="Корзина" HorizontalAlignment="Right" Margin="10 0" FontSize="36">
+                            <TextBlock.Effect>
+                                <DropShadowEffect Color="Black" Direction="360" ShadowDepth="1" BlurRadius="5" Opacity="0.9" />
+                            </TextBlock.Effect>
+                        </TextBlock>
+
+                        <ListBox Grid.Row="1" x:Name="CartListBox" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding NameProduct}" Margin="5"/>
+                                        <TextBlock Text="{Binding Price}" Margin="5"/>
+                                        <!-- Добавьте другие свойства товара, которые хотите отобразить -->
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+
+
+                    </Grid>
+                </TabItem>
+                
                 <TabItem Header="Продукты" BorderBrush="Transparent" Visibility="Collapsed"  x:Name="Product" >
                     <Grid Margin="20 0 0 0">
                         <Grid.RowDefinitions>
@@ -71,7 +136,7 @@
                             </TextBlock.Effect>
                         </TextBlock>
 
-                        <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="1" HorizontalScrollBarVisibility="Disabled">
+                        <ScrollViewer VerticalScrollBarVisibility="Hidden" Grid.Row="1" HorizontalScrollBarVisibility="Disabled">
                             <ItemsControl Name="ItemsList">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
@@ -80,7 +145,7 @@
                                 </ItemsControl.ItemsPanel>
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
-                                        <Border BorderThickness="1" BorderBrush="#33bb5e" Margin="5" Padding="5" CornerRadius="35" Width="300">
+                                        <Border BorderThickness="1" BorderBrush="Black"  Margin="5" Padding="5" CornerRadius="35" Width="300" Background="White">
                                             <Grid Margin="10">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="Auto"/>
@@ -98,29 +163,33 @@
                                                         <RowDefinition Height="Auto"/>
                                                         <RowDefinition Height="Auto"/>
                                                     </Grid.RowDefinitions>
-                                                    <TextBlock FontSize="18" Grid.Row="0" Margin="5">
+                                                    <TextBlock FontSize="18" Grid.Row="0" Margin="5" FontWeight="Bold">
                                                         <Run Text="{Binding NameProduct}"/>
                                                     </TextBlock>
-                                                    <TextBlock FontSize="16" Grid.Row="1" Margin="5">
+                                                    <TextBlock FontSize="14" Grid.Row="1" Margin="5">
                                                         <Run Text="Дата: "/>
-                                                        <Run Text="{Binding DateProduct}"/>
+                                                        <Run Text="{Binding DateProduct, StringFormat='dd/MM/yyyy'}"/>
                                                     </TextBlock>
                                                     <TextBlock FontSize="14" Grid.Row="2" Margin="5">
                                                         <Run Text="Количество: "/>
                                                         <Run Text="{Binding Quantity}"/>
+                                                        <Run Text="шт."/>
                                                     </TextBlock>
                                                     <TextBlock Grid.Row="3" Margin="5">
                                                         <Run Text="Цена: "/>
                                                         <Run Text="{Binding Price}"/>
+                                                        <Run Text="руб."/>
                                                     </TextBlock>
                                                     <TextBlock Grid.Row="4" Margin="5">
                                                         <Run Text="Вес: "/>
                                                         <Run Text="{Binding Weight}"/>
+                                                        <Run Text="грамм."/>
                                                     </TextBlock>
-                                                    <Button Content="Добавить" Grid.Row="5" Style="{StaticResource BtnAddProducts}"/>
-                                                </Grid>
+                                                    <Button Grid.Row="5" Style="{StaticResource BtnAddProducts}" Width="40" HorizontalAlignment="Right" Click="AddProduct_Click" CommandParameter="{Binding}">
+                                                        <Icon:PackIconMaterial Kind="Plus" VerticalAlignment="Center" HorizontalAlignment="Center" Width="10"/>
+                                                    </Button>
 
-                                                <!--<TextBlock Text="{Binding Description}" Width="250" TextWrapping="Wrap" Grid.Column="2" Margin="10"/>-->
+                                                </Grid>
                                             </Grid>
                                         </Border>
                                     </DataTemplate>
@@ -129,6 +198,8 @@
 
 
                         </ScrollViewer>
+                        
+
                     </Grid>
                    
 

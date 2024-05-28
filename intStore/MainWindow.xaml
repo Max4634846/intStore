@@ -116,7 +116,7 @@
                                     </Grid>
 
 
-                                    <Button Grid.Row="3" Height="35" Width="200" Style="{StaticResource SecondaryButton}" Content="Войти" Click="NextBtn_Click" Grid.ColumnSpan="2"/>
+                                    <Button Grid.Row="3" Height="35" Width="200" Style="{StaticResource SecondaryButton}" Content="Войти" Click="LoginBtn_Click" Grid.ColumnSpan="2"/>
                                     <Button Grid.Row="3" Content="Регистрация" Background="Transparent" FontSize="10"  Foreground="#33bb5e" BorderThickness="0" Margin="0,68,0,1" Width="60" Click="NextReg_Click"/>
                                 </Grid>
                             </Border>
@@ -199,7 +199,7 @@
                                     </Grid>
 
 
-                                    <Button Grid.Row="4" Height="35" Width="200" Style="{StaticResource SecondaryButton}" Content="Зарегистрироваться" VerticalAlignment="Top" Margin="0 5"/>
+                                    <Button Grid.Row="4" Height="35" Width="200" Style="{StaticResource SecondaryButton}" Content="Зарегистрироваться" VerticalAlignment="Top" Margin="0 5" Click="RegBtn_Click"/>
                                     <Button Grid.Row="4" Background="Transparent" Foreground="#33bb5e" Content="Войти" Width="60" Height="20" BorderThickness="0" FontSize="10" 
                                             Click="BackAuthor_Click"/>
                                 </Grid>

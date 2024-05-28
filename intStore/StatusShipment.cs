@@ -12,24 +12,18 @@ namespace intStore
     using System;
     using System.Collections.Generic;
     
-    public partial class Shipment
+    public partial class StatusShipment
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Shipment()
+        public StatusShipment()
         {
-            this.Goods = new HashSet<Goods>();
+            this.Shipment = new HashSet<Shipment>();
         }
     
-        public int id_Shipment { get; set; }
-        public Nullable<int> id_Supplier { get; set; }
-        public Nullable<System.DateTime> Date { get; set; }
-        public Nullable<int> id_StatuShipment { get; set; }
-        public Nullable<double> Weight { get; set; }
-        public Nullable<decimal> Cost { get; set; }
+        public int id_Status { get; set; }
+        public string NameStatus { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Goods> Goods { get; set; }
-        public virtual StatusShipment StatusShipment { get; set; }
-        public virtual Suppliers Suppliers { get; set; }
+        public virtual ICollection<Shipment> Shipment { get; set; }
     }
 }

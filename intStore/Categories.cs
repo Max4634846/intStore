@@ -12,24 +12,19 @@ namespace intStore
     using System;
     using System.Collections.Generic;
     
-    public partial class Shipment
+    public partial class Categories
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Shipment()
+        public Categories()
         {
             this.Goods = new HashSet<Goods>();
         }
     
-        public int id_Shipment { get; set; }
-        public Nullable<int> id_Supplier { get; set; }
-        public Nullable<System.DateTime> Date { get; set; }
-        public Nullable<int> id_StatuShipment { get; set; }
-        public Nullable<double> Weight { get; set; }
-        public Nullable<decimal> Cost { get; set; }
+        public int id_Categories { get; set; }
+        public string NameCategories { get; set; }
+        public string Desciptions { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Goods> Goods { get; set; }
-        public virtual StatusShipment StatusShipment { get; set; }
-        public virtual Suppliers Suppliers { get; set; }
     }
 }
