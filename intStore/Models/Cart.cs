@@ -12,5 +12,8 @@ namespace intStore.Models
         public int CustomerId { get; set; }
         public int OrdersWithCartId { get; set; }
         public int Quantity { get; set; }
+
+        public virtual Customer Customer { get; set; }
+        public virtual OrdersWithCart OrdersWithCart { get; set; }
     }
 }

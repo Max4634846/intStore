@@ -74,7 +74,7 @@ namespace intStore
         private void LoginBtn_Click(object sender, RoutedEventArgs e)
         {
             string email = txtFilterEmail.Text;
-            string password = txtFilterPassword.Password;
+            string password = txtFilterPassword.Text;
 
             var customer = authService.Login(email, password);
             if (customer != null)

@@ -7,14 +7,16 @@ using System.Windows;
 
 namespace intStore.Models
 {
-    internal class Customer
+    public class Customer
     {
-        public int id_Customers { get; set; }
+        public int Id_Customers { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
         public string Address { get; set; }
         public Nullable<System.DateTime> RegisterDate { get; set; }
         public string Password { get; set; }
+
+        public virtual ICollection<Cart> Cart { get; set; }
     }
 }

@@ -24,6 +24,7 @@ namespace intStore
         public Nullable<int> id_Categories { get; set; }
         public string NameProduct { get; set; }
         public string Description { get; set; }
+        public string NutritionalValue { get; set; }
         public Nullable<double> Weight { get; set; }
         public Nullable<decimal> Price { get; set; }
         public Nullable<int> Quantity { get; set; }

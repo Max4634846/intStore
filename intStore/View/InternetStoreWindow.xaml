@@ -12,7 +12,7 @@
         AllowsTransparency="True"
         Background="Transparent"
         Icon="\Images\av2.png">
-    
+
     <Border CornerRadius="35" Background="White" MouseDown="Border_MouseDown">
         <Grid>
             <Grid.ColumnDefinitions>
@@ -20,7 +20,7 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <Border Background="White" Margin="10" CornerRadius="0 15 15 0">
+            <Border Background="White" Margin="10 11" CornerRadius="15 15 15 15">
                 <StackPanel HorizontalAlignment="Center">
                     <WrapPanel Margin="0 25 0 0" VerticalAlignment="Center" HorizontalAlignment="Center">
                         <TextBlock Text="Интернет-Магазин" Foreground="Black" 
@@ -29,8 +29,19 @@
                                     <DropShadowEffect Color="Black" Direction="320" ShadowDepth="5" BlurRadius="10" Opacity="0.5" />
                                 </TextBlock.Effect>-->
                         </TextBlock>
-                        <Button Background="Transparent" BorderBrush="Transparent" Margin="10 0" Click="BtnCart_Click">
-                            <Image Source="\Images\BaskedShop.png" Height="25" Width="25"/>
+                        <Button  Background="Transparent" BorderBrush="Transparent" Style="{StaticResource BtnCartStyle}" Click="BtnCart_Click">
+                            <StackPanel>
+                                <Image Source="\Images\BaskedShop.png" Height="35" Width="35"/>
+                                <TextBlock x:Name="btnCart" Foreground="#33bb5e" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-45,-1,0">
+                                    <!--<Ellipse Height="20" Width="20" Margin="0 12 -4 0" Fill="Red">
+                                        
+                                    </Ellipse>-->
+                                </TextBlock>
+                            </StackPanel>
+
+                            <Button.Effect>
+                                <DropShadowEffect Color="Black" Direction="90" ShadowDepth="1" BlurRadius="2" Opacity="0.5" />
+                            </Button.Effect>
                         </Button>
                     </WrapPanel>
                     <WrapPanel Margin="3 10" VerticalAlignment="Center" HorizontalAlignment="Left" Width="250">
@@ -46,7 +57,7 @@
 
 
                     <StackPanel>
-                        
+
                         <Button Foreground="White" FontSize="18" Height="34"  Background="#33bb5e" BorderBrush="Transparent" Click="BtnMain_Click" Style="{StaticResource BtnAddProducts}" Margin="0 5">
 
                             <Button.Effect>
@@ -54,6 +65,22 @@
                             </Button.Effect>
 
                             <TextBlock Text="Главная">
+                                <TextBlock.Effect>
+                                    <DropShadowEffect Color="Gray" Direction="180" ShadowDepth="1" BlurRadius="5" Opacity="0.9" />
+                                </TextBlock.Effect>
+                            </TextBlock>
+
+
+
+                        </Button>
+
+                        <Button Foreground="White" FontSize="18" Height="34"  Background="#33bb5e" BorderBrush="Transparent" Click="BtnMain_Click" Style="{StaticResource BtnAddProducts}" Margin="0 5">
+
+                            <Button.Effect>
+                                <DropShadowEffect Color="Gray" Direction="180" ShadowDepth="1" BlurRadius="5" Opacity="0.9" />
+                            </Button.Effect>
+
+                            <TextBlock Text="Профиль">
                                 <TextBlock.Effect>
                                     <DropShadowEffect Color="Gray" Direction="180" ShadowDepth="1" BlurRadius="5" Opacity="0.9" />
                                 </TextBlock.Effect>
@@ -90,14 +117,34 @@
                 </StackPanel>
             </Border>
 
-            <TabControl Grid.Column="1" Background="Transparent" BorderBrush="Transparent" Margin="5" x:Name="mainTabControl">
+            <TabControl Background="Transparent" BorderBrush="Transparent" Margin="285,5,15,5" x:Name="mainTabControl" Grid.ColumnSpan="2">
 
                 <TabItem Header="Главная" BorderBrush="Transparent" Visibility="Collapsed"  x:Name="MainPage">
                     <Grid>
-                        <TextBlock Text="Главная страница" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="36"/>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="150"/>
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Border Grid.Row="0" Background="Linen" CornerRadius="15" Margin="0 25 0 0">
+                            <WrapPanel HorizontalAlignment="Right" Margin="-2 -5">
+                                <Button Content="Курьер" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="24" Foreground="White" Style="{StaticResource BtnAddProducts}" Margin="0 0 5 0" />
+                                <Button Content="Самовывоз" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="24" Foreground="White" Style="{StaticResource BtnAddProducts}"/>
+                            </WrapPanel>
+
+                        </Border>
+                        <TextBlock Grid.Row="1" Text="Каталог" FontSize="36" />
+                        <Border Grid.Row="1" Background="Linen" Margin="0 50" CornerRadius="15">
+                            <!--<ListView>
+                                <ListView.ItemsSource>
+                                    
+                                </ListView.ItemsSource>
+                            </ListView>-->
+                        </Border>
+
+
                     </Grid>
                 </TabItem>
-                
+
                 <TabItem Header="Корзина" BorderBrush="Transparent" Visibility="Collapsed"  x:Name="Cart">
                     <Grid>
                         <Grid.RowDefinitions>
@@ -111,7 +158,7 @@
                             </TextBlock.Effect>-->
                         </TextBlock>
 
-                        <ListView Grid.Row="1" BorderBrush="Transparent" x:Name="CartList" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+                        <ListView Grid.Row="1" BorderBrush="Transparent" x:Name="CartList" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" ScrollViewer.VerticalScrollBarVisibility="Disabled">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
                                     <Border Background="Linen" CornerRadius="5" Margin="5">
@@ -137,7 +184,7 @@
                                                 </TextBlock>
                                             </StackPanel>
                                             <Button Content="Купить" Height="30" HorizontalAlignment="Right" 
-                                                    VerticalAlignment="Center" Margin="5" Style="{StaticResource BtnAddProducts}" Grid.Column="1" Click="BtnBuy_Click" CommandParameter="{Binding}"/>
+                                                    VerticalAlignment="Center" Margin="5" Style="{StaticResource BtnAddProducts}" Grid.Column="1" Click="BtnBuy_Click"/>
                                             <Button Content="Удалить" Height="30" HorizontalAlignment="Right" 
                                                     VerticalAlignment="Center" Margin="5" Style="{StaticResource BtnDeleteProducts}" Grid.Column="2" Click="BtnDeleteProductCart_Click" CommandParameter="{Binding}"/>
                                         </Grid>
@@ -150,7 +197,7 @@
 
                     </Grid>
                 </TabItem>
-                
+
                 <TabItem Header="Продукты" BorderBrush="Transparent" Visibility="Collapsed"  x:Name="Product" >
                     <Grid Margin="20 0 0 0">
                         <Grid.RowDefinitions>
@@ -207,7 +254,7 @@
                                                         <Run Text="шт."/>
                                                     </TextBlock>
                                                     <TextBlock Grid.Row="3" Margin="5">
-                                                        <Run Text="Цена: "/>
+                                                        <Run Text="Цена за 1 кг: "/>
                                                         <Run Text="{Binding Price}"/>
                                                         <Run Text="руб."/>
                                                     </TextBlock>
@@ -229,16 +276,16 @@
 
 
                         </ScrollViewer>
-                        
+
 
                     </Grid>
-                   
+
 
                 </TabItem>
                 <TabItem Header="Отчеты" BorderBrush="Transparent" Visibility="Collapsed" x:Name="Report">
-                    
-                    <Image x:Name="testImage" Stretch="UniformToFill"  /> 
-                    
+
+                    <Image x:Name="testImage" Stretch="UniformToFill"  />
+
                 </TabItem>
             </TabControl>
         </Grid>

@@ -32,16 +32,25 @@ namespace intStore.View
         private Product SelectedItem;
         private List<Product> productList = new List<Product>();
         private Customers loggedInCustomer;
-        private List<Product> cartItems = new List<Product>();
+
+
         public InternetStoreWindow(Customers customers)
         {
             InitializeComponent();
             LoadProductList();
             loggedInCustomer = customers;
             LoadCartItemsForUser(loggedInCustomer.id_Customers);
-            
+            UpdateCartButton();
+        }
+        private void UpdateCartButton()
+        {
+            int itemsInCartCount;
+            using (var context = new InternetStoreEntities1())
+            {
+                itemsInCartCount = context.Cart.Count(item => item.id_Customer == loggedInCustomer.id_Customers);
+            }
 
-
+            btnCart.Text = itemsInCartCount.ToString();
         }
         private void LoadCartItemsForUser(int customerId)
         {
@@ -85,6 +94,7 @@ namespace intStore.View
                     id_Product = v.id_Product,
                     NameProduct = v.NameProduct,
                     Description = v.Description,
+                    NutritionalValue = v.NutritionalValue,
                     Weight = v.Weight,
                     Price = v.Price,
                     Quantity = v.Quantity,
@@ -222,6 +232,7 @@ namespace intStore.View
             MessageBox.Show("Товар был добавлен в корзину!");
 
             LoadCartItemsForUser(loggedInCustomer.id_Customers);
+            UpdateCartButton();
         }
 
         private void BtnBuy_Click(object sender, RoutedEventArgs e)
@@ -229,17 +240,40 @@ namespace intStore.View
             //...
         }
 
+        private void DeleteProductToCart(int customerId, int productId)
+        {
+            using (var context = new InternetStoreEntities1())
+            {
+                var cartItem = context.Cart
+                    .Include(c => c.OrdersWithCart)
+                    .FirstOrDefault(c => c.id_Customer == customerId && c.OrdersWithCart.id_Product == productId);
+
+                if (cartItem != null)
+                {
+                    context.Cart.Remove(cartItem);
+                    context.SaveChanges();
+                }
+            }
+        }
+
         private void BtnDeleteProductCart_Click(object sender, RoutedEventArgs e)
         {
-            //...
+            Button button = sender as Button;
+            if (button != null)
+            {
+                OrdersWithCart productToDelete = button.CommandParameter as OrdersWithCart;
+                if (productToDelete != null)
+                {
+                    DeleteProductToCart(loggedInCustomer.id_Customers, productToDelete.id_OrderWithCart);
+                    MessageBox.Show("Товар был удален из корзины!");
+
+                    LoadCartItemsForUser(loggedInCustomer.id_Customers);
+                    UpdateCartButton();
+                }
+            }
         }
 
-        private void RemoveCartItem(Cart cartItem)
-        {
-            //...
-        }
-
-        private void BtnCloseApp_Click(object sender, RoutedEventArgs e)
+            private void BtnCloseApp_Click(object sender, RoutedEventArgs e)
         {
             Close();
         }
@@ -248,5 +282,6 @@ namespace intStore.View
         {
             DragMove();
         }
+
     }
 }

@@ -34,10 +34,12 @@
                             <DropShadowEffect Color="Black" Direction="360" ShadowDepth="1" BlurRadius="5" Opacity="0.9"/>
                         </TextBlock.Effect>
                     </TextBlock>
-                    <TextBlock x:Name="Description" Text="Описание" HorizontalAlignment="Left" Margin="10" FontSize="18">
+                    <TextBlock x:Name="Description" Text="Описание" HorizontalAlignment="Left" Margin="10" FontSize="18" TextWrapping="Wrap">
                         <TextBlock.Effect>
                             <DropShadowEffect Color="Black" Direction="360" ShadowDepth="1" BlurRadius="5" Opacity="0.9"/>
                         </TextBlock.Effect>
+                    </TextBlock>
+                    <TextBlock x:Name="NutritionalValueProduct" Text="Пищевая ценность" HorizontalAlignment="Left" Margin="10" FontSize="14" TextWrapping="Wrap">
                     </TextBlock>
                 </StackPanel>
             </Border>

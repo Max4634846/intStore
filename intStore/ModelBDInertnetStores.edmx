@@ -42,6 +42,7 @@
           <Property Name="id_Categories" Type="int" />
           <Property Name="NameProduct" Type="nvarchar(max)" />
           <Property Name="Description" Type="nvarchar(max)" />
+          <Property Name="NutritionalValue" Type="nvarchar(max)" />
           <Property Name="Weight" Type="float" />
           <Property Name="Price" Type="money" />
           <Property Name="Quantity" Type="int" />
@@ -376,6 +377,7 @@
           <Property Name="id_Categories" Type="Int32" />
           <Property Name="NameProduct" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="NutritionalValue" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Weight" Type="Double" />
           <Property Name="Price" Type="Decimal" Precision="19" Scale="4" />
           <Property Name="Quantity" Type="Int32" />
@@ -745,6 +747,7 @@
                 <ScalarProperty Name="id_Categories" ColumnName="id_Categories" />
                 <ScalarProperty Name="NameProduct" ColumnName="NameProduct" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="NutritionalValue" ColumnName="NutritionalValue" />
                 <ScalarProperty Name="Weight" ColumnName="Weight" />
                 <ScalarProperty Name="Price" ColumnName="Price" />
                 <ScalarProperty Name="Quantity" ColumnName="Quantity" />

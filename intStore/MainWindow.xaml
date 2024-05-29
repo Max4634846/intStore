@@ -101,26 +101,22 @@
 
                                     <Grid Width="350" HorizontalAlignment="Left" Grid.Row="2" Grid.ColumnSpan="2" Margin="27,0,0,0">
                                         <Grid>
-                                            <!-- Placeholder Text -->
-                                            <TextBlock x:Name="searchPlaceholder1" Margin="26,0" VerticalAlignment="Center" Foreground="Gray"
-                   IsHitTestVisible="False" Panel.ZIndex="1" Text="Пароль...">
+                                            <TextBlock x:Name="searchPlaceholder1" Margin="26 0" VerticalAlignment="Center" Foreground="Gray" 
+                                                        IsHitTestVisible="False" Panel.ZIndex="1" Text="Пароль...">
                                                 <TextBlock.Style>
                                                     <Style TargetType="TextBlock">
-                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                        <Setter Property="Visibility" Value="Collapsed"/>
                                                         <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding Password.Length, ElementName=txtFilterPassword}" Value="0">
+                                                            <DataTrigger Binding="{Binding Text.Length, ElementName=txtFilterPassword}" Value="0">
                                                                 <Setter Property="Visibility" Value="Visible"/>
-                                                            </DataTrigger>
-                                                            <DataTrigger Binding="{Binding Password.Length, ElementName=txtFilterPassword}" Value="1">
-                                                                <Setter Property="Visibility" Value="Collapsed"/>
                                                             </DataTrigger>
                                                         </Style.Triggers>
                                                     </Style>
                                                 </TextBlock.Style>
                                             </TextBlock>
 
-                                            
-                                            <PasswordBox x:Name="txtFilterPassword" Margin="15,0" VerticalAlignment="Center" Style="{StaticResource PasswordBoxStyle}" Height="40"/>
+
+                                            <TextBox x:Name="txtFilterPassword" Margin="15,0" VerticalAlignment="Center" Style="{StaticResource TextBoxStyle}" Height="40"/>
                                         </Grid>
                                     </Grid>
 

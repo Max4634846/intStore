@@ -33,6 +33,7 @@ namespace intStore.View
             ImageProductAdd.Source = _currentProduct.ImageProduct;
             NameProduct.Text = _currentProduct.NameProduct;
             Description.Text = _currentProduct.Description;
+            NutritionalValueProduct.Text = _currentProduct.NutritionalValue;
         }
 
         private void BtnClose_Click(object sender, RoutedEventArgs e)
