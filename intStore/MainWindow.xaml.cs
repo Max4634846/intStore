@@ -73,14 +73,15 @@ namespace intStore
 
         private void LoginBtn_Click(object sender, RoutedEventArgs e)
         {
-            string email = txtFilterUsername.Text;
-            string password = txtFilterPassword.Text;
+            string email = txtFilterEmail.Text;
+            string password = txtFilterPassword.Password;
 
             var customer = authService.Login(email, password);
             if (customer != null)
             {
                 MessageBox.Show("Вход в систему прошел успешно!");
                 var internetStore = new InternetStoreWindow(customer);
+                internetStore.NameUserTextBlock.Text = customer.Name;
                 internetStore.Show();
                 this.Close();
             }
@@ -89,22 +90,43 @@ namespace intStore
                 MessageBox.Show("Неверный адрес электронной почты или пароль.");
             }
         }
-
+         
         private void RegBtn_Click(object sender, RoutedEventArgs e)
         {
             string username = txtFilterUsernameReg.Text;
             string email = txtFilterEmailReg.Text;
             string password = txtFilterPasswordReg.Text;
 
-            //if(string.IsNullOrWhiteSpace(username) && string.IsNullOrWhiteSpace(email) && string.IsNullOrWhiteSpace(password))
-            //{
-            //    MessageBox.Show("Данные были введены не корректно!");
-            //    return;
-            //}
+            if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
+            {
+                MessageBox.Show("Все поля обязательны для заполнения!");
+                return;
+            }
 
-            authService.Register(username, email, password);
-            MessageBox.Show("Регистрация прошла успешно!");
+            bool registrationSuccessful = authService.Register(username, email, password);
+            if (registrationSuccessful)
+            {
+                MessageBox.Show("Регистрация прошла успешно!");
+                ClearTextBox();
+            }
 
+        }
+
+        private void ClearTextBox()
+        {
+            txtFilterUsernameReg.Text = "";
+            txtFilterEmailReg.Text = "";
+            txtFilterPasswordReg.Text = "";
+        }
+
+        private void OnPasswordChanged(object sender, RoutedEventArgs e)
+        {
+            var passwordBox = sender as PasswordBox;
+            var textBox = this.FindName("txtPassword") as TextBox;
+            if (passwordBox != null && textBox != null)
+            {
+                textBox.Text = passwordBox.Password;
+            }
         }
     }
 }

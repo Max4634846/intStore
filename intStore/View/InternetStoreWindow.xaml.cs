@@ -39,24 +39,36 @@ namespace intStore.View
             LoadProductList();
             loggedInCustomer = customers;
             LoadCartItemsForUser(loggedInCustomer.id_Customers);
+            
+
 
         }
         private void LoadCartItemsForUser(int customerId)
         {
+
+            ImageManipulation imageManipulation = new ImageManipulation();
             using (var context = new InternetStoreEntities1())
             {
-                // Загрузите товары корзины для указанного пользователя из базы данных
                 var cartItemsForUser = context.Cart
                     .Where(item => item.id_Customer == customerId)
-                    .Select(item => new Product
+                    .Select(item => new
                     {
-                        Price = item.id_OrdersWithCart,
-                        // Добавьте другие свойства товара, которые хотите отобразить
+                        ImageProductData = item.OrdersWithCart.Goods.ImageProduct,
+                        NameProduct = item.OrdersWithCart.Goods.NameProduct,
+                        Quantity = item.Quantity,
                     })
                     .ToList();
 
-                // Установите загруженные товары в качестве источника данных для ListBox
-                CartListBox.ItemsSource = cartItemsForUser;
+                var cartItemsWithImages = cartItemsForUser
+                    .Select(item => new Product
+                    {
+                        ImageProduct = imageManipulation.GetPhotoFromDataBase(item.ImageProductData),
+                        NameProduct = item.NameProduct,
+                        Quantity = item.Quantity,
+                    })
+                    .ToList();
+
+                CartList.ItemsSource = cartItemsWithImages;
             }
         }
 
@@ -153,7 +165,6 @@ namespace intStore.View
                 {
                     SelectedItem = select;
                     AddProductCart addProductCart = new AddProductCart(SelectedItem);
-                    // Подписываемся на событие добавления товара в корзину
                     addProductCart.ProductAddedToCart += AddProductToCartHandler;
                     addProductCart.Show();
                 }
@@ -199,16 +210,43 @@ namespace intStore.View
                 }
 
                 context.SaveChanges();
+                
 
             }
         }
 
+        // Вызываем метод добавления товара в корзину, передавая информацию о товаре и его количестве
         private void AddProductToCartHandler(object sender, ProductEventArgs e)
         {
-            // Вызываем метод добавления товара в корзину, передавая информацию о товаре и его количестве
             AddProductToCart(loggedInCustomer.id_Customers, e.Product.id_Product, e.Quantity);
-            MessageBox.Show("Product added to cart successfully!");
+            MessageBox.Show("Товар был добавлен в корзину!");
+
+            LoadCartItemsForUser(loggedInCustomer.id_Customers);
         }
 
+        private void BtnBuy_Click(object sender, RoutedEventArgs e)
+        {
+            //...
+        }
+
+        private void BtnDeleteProductCart_Click(object sender, RoutedEventArgs e)
+        {
+            //...
+        }
+
+        private void RemoveCartItem(Cart cartItem)
+        {
+            //...
+        }
+
+        private void BtnCloseApp_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
+        private void Border_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            DragMove();
+        }
     }
 }

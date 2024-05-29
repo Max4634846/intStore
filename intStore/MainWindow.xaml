@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:metro="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:local="clr-namespace:intStore"
         mc:Ignorable="d"
         Title="Login" Height="650" Width="850"
@@ -21,6 +22,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
+            
             <Border Background="#33bb5e" CornerRadius="35 0 0 35">
                 <Grid>
                     <Grid.ColumnDefinitions >
@@ -39,6 +41,7 @@
 
                 </Grid>
             </Border>
+            
             <Border Grid.Column="1">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -78,13 +81,13 @@
                                     </StackPanel>
 
                                     <Grid Width="350" HorizontalAlignment="Left" Grid.Row="1" Grid.ColumnSpan="2" Margin="27,0,0,90" Grid.RowSpan="2">
-                                        <TextBlock x:Name="searchPlaceholder" Margin="15 0" VerticalAlignment="Center" Foreground="Gray" 
-                                                            IsHitTestVisible="False" Panel.ZIndex="1" Text="Логин...">
+                                        <TextBlock x:Name="searchPlaceholder" Margin="26 0" VerticalAlignment="Center" Foreground="Gray" 
+                                                    IsHitTestVisible="False" Panel.ZIndex="1" Text="Почта...">
                                             <TextBlock.Style>
                                                 <Style TargetType="TextBlock">
                                                     <Setter Property="Visibility" Value="Collapsed"/>
                                                     <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding Text.Length, ElementName=txtFilterUsername}" Value="0">
+                                                        <DataTrigger Binding="{Binding Text.Length, ElementName=txtFilterEmail}" Value="0">
                                                             <Setter Property="Visibility" Value="Visible"/>
                                                         </DataTrigger>
                                                     </Style.Triggers>
@@ -92,28 +95,35 @@
                                             </TextBlock.Style>
                                         </TextBlock>
 
-                                        <TextBox x:Name="txtFilterUsername" Style="{StaticResource textboxUsername}" Height="40"/>
+                                        <TextBox x:Name="txtFilterEmail" Margin="15 0" VerticalAlignment="Center" Style="{StaticResource TextBoxStyle}" Height="40"/>
 
                                     </Grid>
 
                                     <Grid Width="350" HorizontalAlignment="Left" Grid.Row="2" Grid.ColumnSpan="2" Margin="27,0,0,0">
-                                        <TextBlock x:Name="searchPlaceholder1" Margin="15 0" VerticalAlignment="Center" Foreground="Gray" 
-                                                            IsHitTestVisible="False" Panel.ZIndex="1" Text="Пароль...">
-                                            <TextBlock.Style>
-                                                <Style TargetType="TextBlock">
-                                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                                    <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding Text.Length, ElementName=txtFilterPassword}" Value="0">
-                                                            <Setter Property="Visibility" Value="Visible"/>
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </TextBlock.Style>
-                                        </TextBlock>
+                                        <Grid>
+                                            <!-- Placeholder Text -->
+                                            <TextBlock x:Name="searchPlaceholder1" Margin="26,0" VerticalAlignment="Center" Foreground="Gray"
+                   IsHitTestVisible="False" Panel.ZIndex="1" Text="Пароль...">
+                                                <TextBlock.Style>
+                                                    <Style TargetType="TextBlock">
+                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding Password.Length, ElementName=txtFilterPassword}" Value="0">
+                                                                <Setter Property="Visibility" Value="Visible"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Password.Length, ElementName=txtFilterPassword}" Value="1">
+                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                            </TextBlock>
 
-                                        <TextBox x:Name="txtFilterPassword" Style="{StaticResource textboxPassword}" Height="40"/>
-
+                                            
+                                            <PasswordBox x:Name="txtFilterPassword" Margin="15,0" VerticalAlignment="Center" Style="{StaticResource PasswordBoxStyle}" Height="40"/>
+                                        </Grid>
                                     </Grid>
+
 
 
                                     <Button Grid.Row="3" Height="35" Width="200" Style="{StaticResource SecondaryButton}" Content="Войти" Click="LoginBtn_Click" Grid.ColumnSpan="2"/>
@@ -142,8 +152,8 @@
                                     </StackPanel>
 
                                     <Grid Width="350" HorizontalAlignment="Center" Grid.Row="1">
-                                        <TextBlock x:Name="searchPlaceholderReg" Margin="15 0" VerticalAlignment="Center" Foreground="Gray" 
-                                IsHitTestVisible="False" Panel.ZIndex="1" Text="Логин...">
+                                        <TextBlock x:Name="searchPlaceholderReg" Margin="12 0" VerticalAlignment="Center" Foreground="Gray" 
+                                                    IsHitTestVisible="False" Panel.ZIndex="1" Text="Логин...">
                                             <TextBlock.Style>
                                                 <Style TargetType="TextBlock">
                                                     <Setter Property="Visibility" Value="Collapsed"/>
@@ -156,12 +166,12 @@
                                             </TextBlock.Style>
                                         </TextBlock>
 
-                                        <TextBox x:Name="txtFilterUsernameReg" Style="{StaticResource textboxUsername}" Height="40"/>
+                                        <TextBox x:Name="txtFilterUsernameReg" Style="{StaticResource TextBoxStyle}" Height="40"/>
 
                                     </Grid>
                                     <Grid Width="350" HorizontalAlignment="Center" Grid.Row="2">
-                                        <TextBlock x:Name="searchPlaceholder1Reg" Margin="15 0" VerticalAlignment="Center" Foreground="Gray" 
-                                                     IsHitTestVisible="False" Panel.ZIndex="1" Text="Пароль...">
+                                        <TextBlock x:Name="searchPlaceholder1Reg" Margin="12 0" VerticalAlignment="Center" Foreground="Gray" 
+                                                     IsHitTestVisible="False" Panel.ZIndex="1" Text="Почта...">
                                             <TextBlock.Style>
                                                 <Style TargetType="TextBlock">
                                                     <Setter Property="Visibility" Value="Collapsed"/>
@@ -174,14 +184,14 @@
                                             </TextBlock.Style>
                                         </TextBlock>
 
-                                        <TextBox x:Name="txtFilterEmailReg" Style="{StaticResource textboxPassword}" Height="40"/>
+                                        <TextBox x:Name="txtFilterEmailReg" Style="{StaticResource TextBoxStyle}" Height="40"/>
 
                                     </Grid>
 
 
                                     <Grid Width="350" HorizontalAlignment="Center" Grid.Row="3">
-                                        <TextBlock x:Name="searchPlaceholder1EmailReg" Margin="15 0" VerticalAlignment="Center" Foreground="Gray" 
-                                            IsHitTestVisible="False" Panel.ZIndex="1" Text="Почта...">
+                                        <TextBlock x:Name="searchPlaceholder1EmailReg" Margin="12 0" VerticalAlignment="Center" Foreground="Gray" 
+                                            IsHitTestVisible="False" Panel.ZIndex="1" Text="Пароль...">
                                             <TextBlock.Style>
                                                 <Style TargetType="TextBlock">
                                                     <Setter Property="Visibility" Value="Collapsed"/>
@@ -194,7 +204,7 @@
                                             </TextBlock.Style>
                                         </TextBlock>
 
-                                        <TextBox x:Name="txtFilterPasswordReg" Style="{StaticResource textboxPassword}" Height="40"/>
+                                        <TextBox x:Name="txtFilterPasswordReg" Style="{StaticResource TextBoxStyle}" Height="40"/>
 
                                     </Grid>
 
@@ -208,12 +218,14 @@
                     </TabControl>
                 </Grid>
             </Border>
+            
             <Button Style="{StaticResource ExitButtonStyle}"  Height="30" Width="30" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="15" Click="BtnClose_Click" >
                 <Image Source="/Images/CloseBtn.png" />
                 <Button.Effect>
                     <DropShadowEffect Color="Red" Direction="300" ShadowDepth="2" BlurRadius="5" Opacity="0.4" />
                 </Button.Effect>
             </Button>
+            
         </Grid>
     </Border>
 </Window>
