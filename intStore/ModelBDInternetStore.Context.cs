@@ -20,8 +20,7 @@ namespace intStore
         private static InternetStoreEntities1 _context;
         public static InternetStoreEntities1 GetContext()
         {
-            if (_context == null)
-                _context = new InternetStoreEntities1();
+            if (_context == null) _context = new InternetStoreEntities1();
             return _context;
         }
         public InternetStoreEntities1()

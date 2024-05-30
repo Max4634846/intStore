@@ -193,7 +193,6 @@
         </Setter>
     </Style>
 
-
     <Style x:Key="BtnBack" TargetType="{x:Type Button}" BasedOn="{StaticResource BaseButton}">
         <Setter Property="Background" Value="#33bb5e"/>
         <Setter Property="Foreground" Value="#eceff1"/>

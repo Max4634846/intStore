@@ -21,6 +21,7 @@ using System.Diagnostics;
 using System.Data.Entity;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
+using System.ComponentModel;
 
 
 namespace intStore.View
@@ -33,15 +34,16 @@ namespace intStore.View
         private Product SelectedItem;
         private List<Product> productList = new List<Product>();
         private Customers loggedInCustomer;
-
-
         public InternetStoreWindow(Customers customers)
         {
             InitializeComponent();
             LoadProductList();
             loggedInCustomer = customers;
             LoadCartItemsForUser(loggedInCustomer.id_Customers);
+            LoadOrderList(loggedInCustomer.id_Customers);
             UpdateCartButton();
+
+
         }
 
         private void UpdateCartButton()
@@ -51,12 +53,10 @@ namespace intStore.View
             {
                 itemsInCartCount = context.Cart.Count(item => item.id_Customer == loggedInCustomer.id_Customers);
             }
-
             btnCart.Text = itemsInCartCount.ToString();
         }
-        private void LoadCartItemsForUser(int customerId)
+        private void LoadOrderList(int customerId)
         {
-
             ImageManipulation imageManipulation = new ImageManipulation();
             using (var context = new InternetStoreEntities1())
             {
@@ -81,10 +81,43 @@ namespace intStore.View
                     })
                     .ToList();
 
-                CartList.ItemsSource = cartItemsWithImages;
+                OrdersList.ItemsSource = cartItemsWithImages;
             }
         }
+        private void LoadCartItemsForUser(int customerId)
+        {
+            ImageManipulation imageManipulation = new ImageManipulation();
+            using (var context = new InternetStoreEntities1())
+            {
+                var cartItemsForUser = context.Cart
+                    .Where(item => item.id_Customer == customerId)
+                    .Select(item => new
+                    {
+                        IdProduct = item.OrdersWithCart.id_OrderWithCart,
+                        ImageProductData = item.OrdersWithCart.Goods.ImageProduct,
+                        NameProduct = item.OrdersWithCart.Goods.NameProduct,
+                        Quantity = item.Quantity,
+                        Price = item.OrdersWithCart.Goods.Price,
+                    })
+                    .ToList();
 
+                var cartItemsWithImages = cartItemsForUser
+                    .Select(item => new Product
+                    {
+                        id_Product = item.IdProduct,
+                        ImageProduct = imageManipulation.GetPhotoFromDataBase(item.ImageProductData),
+                        NameProduct = item.NameProduct,
+                        Quantity = item.Quantity,
+                        Price = item.Price,
+                    })
+                    .ToList();
+
+
+                CartList.ItemsSource = cartItemsWithImages;
+                decimal totalPrice = Convert.ToDecimal(cartItemsWithImages.Sum(item => item.Price * item.Quantity));
+                Cost.Text = $"₽{totalPrice:F2}";
+            }
+        }
         private void LoadProductList()
         {
             var context = new InternetStoreEntities1();
@@ -105,80 +138,23 @@ namespace intStore.View
                     DateProduct = v.DateProduct,
                     ImageProduct = imageManipulation.GetPhotoFromDataBase(v.ImageProduct),
                 };
-
                 productList.Add(product);
             }
-
             ItemsList.ItemsSource = productList;
         }
 
-
-
-        private void BtnMain_Click(object sender, RoutedEventArgs e)
-        {
-            string tabName = "MainPage";
-
-            foreach( TabItem tabItem in mainTabControl.Items)
-            {
-                if(tabItem.Name == tabName)
-                {
-                    mainTabControl.SelectedItem = tabItem;
-                    break;
-                }
-            }
-        }
-
-        private void BtnProduct_Click(object sender, RoutedEventArgs e)
-        {
-           
-            string tabName = "Product";
-
-            foreach (TabItem tabItem in mainTabControl.Items)
-            {
-                if (tabItem.Name == tabName)
-                {
-                    mainTabControl.SelectedItem = tabItem;
-                    break;
-                }
-            }
-        }
-
-        private void ReportBtn_Click(object sender, RoutedEventArgs e)
-        {
-            string tabName = "Report";
-
-            foreach (TabItem tabItem in mainTabControl.Items)
-            {
-                if (tabItem.Name == tabName)
-                {
-                    mainTabControl.SelectedItem = tabItem;
-                    break;
-                }
-            }
-        }
-        private void BtnCart_Click(object sender, RoutedEventArgs e)
-        {
-            string tabName = "Cart";
-
-            foreach (TabItem tabItem in mainTabControl.Items)
-            {
-                if (tabItem.Name == tabName)
-                {
-                    mainTabControl.SelectedItem = tabItem;
-                    break;
-                }
-            }
-        }
-
+       
 
         private void AddProductToCartHandler(object sender, ProductEventArgs e)
         {
             AddProductToCart(loggedInCustomer.id_Customers, e.Product.id_Product, e.Quantity);
             MessageBox.Show("Товар был добавлен в корзину!");
-
+            
             LoadCartItemsForUser(loggedInCustomer.id_Customers);
+            
             UpdateCartButton();
         }
+
         private void AddProductToCart(int customerId, int productId, int quantity)
         {
             using (var context = new InternetStoreEntities1())
@@ -189,6 +165,17 @@ namespace intStore.View
                                                     new SqlParameter("@Quantity", quantity));
             }
         }
+
+        private void DeleteProductFromCart(int customerId, int productId)
+        {
+            using (var context = new InternetStoreEntities1())
+            {
+                context.Database.ExecuteSqlCommand("EXEC DeleteProductFromCart @CustomerId, @ProductId",
+                                                    new SqlParameter("@CustomerId", customerId),
+                                                    new SqlParameter("@ProductId", productId));
+            }
+        }
+
         private void AddProduct_Click(object sender, RoutedEventArgs e)
         {
             Button button = sender as Button;
@@ -207,18 +194,6 @@ namespace intStore.View
                     MessageBox.Show("Продукт не выбран.");
                 }
             }
-
-        }
-
-
-        private void DeleteProductFromCart(int customerId, int productId)
-        {
-            using (var context = new InternetStoreEntities1())
-            {
-                context.Database.ExecuteSqlCommand("EXEC DeleteProductFromCart @CustomerId, @ProductId",
-                                                    new SqlParameter("@CustomerId", customerId),
-                                                    new SqlParameter("@ProductId", productId));
-            }
         }
 
         private void BtnDeleteProductCart_Click(object sender, RoutedEventArgs e)
@@ -229,14 +204,92 @@ namespace intStore.View
                 Product productToDelete = button.CommandParameter as Product;
                 if (productToDelete != null)
                 {
+                    MessageBoxResult result = MessageBox.Show("Вы точно хотите удалить товар?", "Удаление товара", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    if (result == MessageBoxResult.Yes)
+                    {
+                        DeleteProductFromCart(loggedInCustomer.id_Customers, productToDelete.id_Product);
+                        MessageBox.Show("Товар был удален из корзины!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+
+                        LoadCartItemsForUser(loggedInCustomer.id_Customers);
+                        UpdateCartButton();
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+            }
+        }
+        private void BtnBuy_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = sender as Button;
+            if (button != null)
+            {
+                Product productToDelete = button.CommandParameter as Product;
+                if (productToDelete != null)
+                {
                     DeleteProductFromCart(loggedInCustomer.id_Customers, productToDelete.id_Product);
-                    MessageBox.Show("Товар был удален из корзины!");
+                    MessageBox.Show("Вы купили товар ожидайте доставки!");
 
                     LoadCartItemsForUser(loggedInCustomer.id_Customers);
+
                     UpdateCartButton();
                 }
             }
-        } 
+        }
+
+
+        private void BtnMain_Click(object sender, RoutedEventArgs e)
+        {
+            string tabName = "MainPage";
+            foreach (TabItem tabItem in mainTabControl.Items)
+            {
+                if (tabItem.Name == tabName)
+                {
+                    mainTabControl.SelectedItem = tabItem;
+                    break;
+                }
+            }
+        }
+
+        private void BtnProduct_Click(object sender, RoutedEventArgs e)
+        {
+            string tabName = "Product";
+            foreach (TabItem tabItem in mainTabControl.Items)
+            {
+                if (tabItem.Name == tabName)
+                {
+                    mainTabControl.SelectedItem = tabItem;
+                    break;
+                }
+            }
+        }
+
+        private void ReportBtn_Click(object sender, RoutedEventArgs e)
+        {
+            string tabName = "Report";
+            foreach (TabItem tabItem in mainTabControl.Items)
+            {
+                if (tabItem.Name == tabName)
+                {
+                    mainTabControl.SelectedItem = tabItem;
+                    break;
+                }
+            }
+        }
+
+        private void BtnCart_Click(object sender, RoutedEventArgs e)
+        {
+            string tabName = "Cart";
+            foreach (TabItem tabItem in mainTabControl.Items)
+            {
+                if (tabItem.Name == tabName)
+                {
+                    mainTabControl.SelectedItem = tabItem;
+                    break;
+                }
+            }
+        }
 
         private void BtnCloseApp_Click(object sender, RoutedEventArgs e)
         {
@@ -247,10 +300,56 @@ namespace intStore.View
         {
             DragMove();
         }
-        private void BtnBuy_Click(object sender, RoutedEventArgs e)
+
+        private void txtSearchCart_TextChanged(object sender, TextChangedEventArgs e)
         {
-            //...
+            string filterText = txtSearchCart.Text.ToLower();
+
+            ICollectionView view = CollectionViewSource.GetDefaultView(CartList.ItemsSource);
+            if (view != null)
+            {
+                view.Filter = (obj) =>
+                {
+                    Product product = obj as Product;
+                    if (product != null)
+                    {
+                        return product.NameProduct.ToString().ToLower().Contains(filterText);
+                    }
+                    return false;
+                };
+            }
         }
 
+        private void txtSearchProduct_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            string filterText = txtSearchProduct.Text.ToLower();
+
+            ICollectionView view = CollectionViewSource.GetDefaultView(productList);
+            if (view != null)
+            {
+                view.Filter = (obj) =>
+                {
+                    Product product = obj as Product;
+                    if (product != null)
+                    {
+                        return product.NameProduct.ToString().ToLower().Contains(filterText);
+                    }
+                    return false;
+                };
+            }
+        }
+
+        private void BtnOrders_Click(object sender, RoutedEventArgs e)
+        {
+            string tabName = "Orders";
+            foreach (TabItem tabItem in mainTabControl.Items)
+            {
+                if (tabItem.Name == tabName)
+                {
+                    mainTabControl.SelectedItem = tabItem;
+                    break;
+                }
+            }
+        }
     }
 }

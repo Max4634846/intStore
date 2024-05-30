@@ -35,22 +35,6 @@ namespace intStore.View
             Description.Text = _currentProduct.Description;
             NutritionalValueProduct.Text = _currentProduct.NutritionalValue;
         }
-
-        private void BtnClose_Click(object sender, RoutedEventArgs e)
-        {
-            Close();
-        }
-
-        private void BtnBack_Click(object sender, RoutedEventArgs e)
-        {
-            Close();
-        }
-
-        private void Border_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            DragMove();
-        }
-
         private void PlusBtn_Click(object sender, RoutedEventArgs e)
         {
             if (int.TryParse(CheckNumber.Text, out int currentQuantity))
@@ -87,6 +71,21 @@ namespace intStore.View
             {
                 MessageBox.Show("Некорректное количество товара.");
             }
+        }
+
+        private void BtnClose_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
+        private void BtnBack_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
+        private void Border_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            DragMove();
         }
 
     }

@@ -11,7 +11,7 @@
         Background="Transparent"
         AllowsTransparency="True"
         WindowStartupLocation="CenterScreen"
-        Icon="\Images\av2.png">
+        Icon="\Images\Avocado.png">
 
     <Border Background="AliceBlue" CornerRadius="35" MouseDown="Border_MouseDown">
         <Grid>
@@ -64,7 +64,7 @@
                                         <RowDefinition Height="*" />
                                     </Grid.RowDefinitions>
                                     <StackPanel Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.ColumnSpan="2" Margin="37,0,0,0">
-                                        <Image Source="\Images\av2.png" Height="64" Width="64" Margin="0 0 0 5"/>
+                                        <Image Source="\Images\Avocado.png" Height="64" Width="64" Margin="0 0 0 5"/>
                                         <TextBlock Text="Интернет-Магазин" Foreground="White" 
                                                     FontSize="36" FontWeight="Bold">
                                             <TextBlock.Effect>

@@ -10,6 +10,7 @@ namespace intStore.Models
     public class Product
     {
         public int id_Product { get; set; }
+        public int id_Categories { get; set; }
         public string NameProduct { get; set; }
         public string Description { get; set; }
         public string NutritionalValue { get; set; }

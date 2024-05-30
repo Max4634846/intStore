@@ -11,7 +11,7 @@
         WindowStyle="None"
         AllowsTransparency="True"
         Background="Transparent"
-        Icon="\Images\av2.png">
+        Icon="\Images\Avocado.png">
 
     <Border CornerRadius="35" Background="White" MouseDown="Border_MouseDown">
         <Grid>
@@ -22,80 +22,62 @@
 
             <Border Background="White" Margin="10 11" CornerRadius="15 15 15 15">
                 <StackPanel HorizontalAlignment="Center">
+                    
                     <WrapPanel Margin="0 25 0 0" VerticalAlignment="Center" HorizontalAlignment="Center">
-                        <TextBlock Text="Интернет-Магазин" Foreground="Black" 
-                                        FontSize="24" FontWeight="Bold">
-                                <!--<TextBlock.Effect>
-                                    <DropShadowEffect Color="Black" Direction="320" ShadowDepth="5" BlurRadius="10" Opacity="0.5" />
-                                </TextBlock.Effect>-->
-                        </TextBlock>
+                        <TextBlock Text="Интернет-Магазин" Foreground="Black" FontSize="24" FontWeight="Bold"/>
                         <Button  Background="Transparent" BorderBrush="Transparent" Style="{StaticResource BtnCartStyle}" Click="BtnCart_Click">
                             <StackPanel>
                                 <Image Source="\Images\BaskedShop.png" Height="35" Width="35"/>
-                                <TextBlock x:Name="btnCart" Foreground="#33bb5e" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-45,-1,0">
-                                    <!--<Ellipse Height="20" Width="20" Margin="0 12 -4 0" Fill="Red">
-                                        
-                                    </Ellipse>-->
-                                </TextBlock>
+                                <TextBlock x:Name="btnCart" Foreground="#33bb5e" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-45,-1,0"/>
                             </StackPanel>
-
-                            
                             <Button.Effect>
                                 <DropShadowEffect Color="Black" Direction="90" ShadowDepth="1" BlurRadius="2" Opacity="0.5" />
                             </Button.Effect>
                         </Button>
                     </WrapPanel>
-                    <WrapPanel Margin="3 10" VerticalAlignment="Center" HorizontalAlignment="Left" Width="250">
+                    
+                    <WrapPanel Margin="0 0 0 5" VerticalAlignment="Center" HorizontalAlignment="Left" Width="250">
                         <TextBlock Foreground="Black" FontSize="18" FontWeight="Bold">
-                            
-                            <!--<TextBlock.Effect>
-                                <DropShadowEffect Color="Black" Direction="320" ShadowDepth="5" BlurRadius="10" Opacity="0.5" />
-                            </TextBlock.Effect>-->
                             <Run Text="Пользователь :" />
                             <Run x:Name="NameUserTextBlock" Text="Имя" />
                         </TextBlock>
                     </WrapPanel>
 
+                    <WrapPanel Margin="0 0 0 10" VerticalAlignment="Center" HorizontalAlignment="Left" Width="250">
+                        <TextBlock Foreground="Black" FontSize="18" FontWeight="Bold">
+                            <Run Text="Сумма :" />
+                            <Run x:Name="Cost" Text="100 руб." Foreground="#33bb5e" FontSize="16" />
+                        </TextBlock>
+                    </WrapPanel>
 
                     <StackPanel>
-
+                        
                         <Button Foreground="White" FontSize="18" Height="34"  Background="#33bb5e" BorderBrush="Transparent" Click="BtnMain_Click" Style="{StaticResource BtnAddProducts}" Margin="0 5">
-
                             <Button.Effect>
                                 <DropShadowEffect Color="Gray" Direction="180" ShadowDepth="1" BlurRadius="5" Opacity="0.9" />
                             </Button.Effect>
-
                             <TextBlock Text="Главная">
                                 <TextBlock.Effect>
                                     <DropShadowEffect Color="Gray" Direction="180" ShadowDepth="1" BlurRadius="5" Opacity="0.9" />
                                 </TextBlock.Effect>
                             </TextBlock>
-
-
-
                         </Button>
 
-                        <Button Foreground="White" FontSize="18" Height="34"  Background="#33bb5e" BorderBrush="Transparent" Click="BtnMain_Click" Style="{StaticResource BtnAddProducts}" Margin="0 5">
-
+                        <Button Foreground="White" FontSize="18" Height="34"  Background="#33bb5e" BorderBrush="Transparent" Click="BtnOrders_Click" Style="{StaticResource BtnAddProducts}" Margin="0 5">
                             <Button.Effect>
                                 <DropShadowEffect Color="Gray" Direction="180" ShadowDepth="1" BlurRadius="5" Opacity="0.9" />
                             </Button.Effect>
-
-                            <TextBlock Text="Профиль">
+                            <TextBlock Text="Доставки">
                                 <TextBlock.Effect>
                                     <DropShadowEffect Color="Gray" Direction="180" ShadowDepth="1" BlurRadius="5" Opacity="0.9" />
                                 </TextBlock.Effect>
                             </TextBlock>
-
-
-
                         </Button>
 
                         <Button Foreground="White"  FontSize="18" Height="34"  Background="#33bb5e" BorderBrush="Transparent" Click="BtnProduct_Click" Style="{StaticResource BtnAddProducts}" Margin="0 5">
                             <Button.Effect>
                                 <DropShadowEffect Color="Gray" Direction="180" ShadowDepth="1" BlurRadius="5" Opacity="0.9" />
                             </Button.Effect>
-
                             <TextBlock Text="Продукты">
                                 <TextBlock.Effect>
                                     <DropShadowEffect Color="Gray" Direction="180" ShadowDepth="1" BlurRadius="5" Opacity="0.9" />
@@ -107,19 +89,18 @@
                             <Button.Effect>
                                 <DropShadowEffect Color="Gray" Direction="180" ShadowDepth="1" BlurRadius="5" Opacity="0.9" />
                             </Button.Effect>
-
                             <TextBlock Text="Выйти">
                                 <TextBlock.Effect>
                                     <DropShadowEffect Color="Gray" Direction="180" ShadowDepth="1" BlurRadius="10" Opacity="0.9" />
                                 </TextBlock.Effect>
                             </TextBlock>
                         </Button>
+                        
                     </StackPanel>
                 </StackPanel>
             </Border>
 
-            <TabControl Background="Transparent" BorderBrush="Transparent" Margin="285,5,15,5" x:Name="mainTabControl" Grid.ColumnSpan="2">
-
+            <TabControl Background="Transparent" BorderBrush="Transparent" Margin="285,5,15,5" x:Name="mainTabControl" Grid.ColumnSpan="2" >
                 <TabItem Header="Главная" BorderBrush="Transparent" Visibility="Collapsed"  x:Name="MainPage">
                     <Grid>
                         <Grid.RowDefinitions>
@@ -127,22 +108,52 @@
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <Border Grid.Row="0" Background="Linen" CornerRadius="15" Margin="0 25 0 0">
+                            
                             <WrapPanel HorizontalAlignment="Right" Margin="-2 -5">
                                 <Button Content="Курьер" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="24" Foreground="White" Style="{StaticResource BtnAddProducts}" Margin="0 0 5 0" />
                                 <Button Content="Самовывоз" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="24" Foreground="White" Style="{StaticResource BtnAddProducts}"/>
                             </WrapPanel>
 
                         </Border>
+                        
                         <TextBlock Grid.Row="1" Text="Каталог" FontSize="36" />
+
                         <Border Grid.Row="1" Background="Linen" Margin="0 50" CornerRadius="15">
-                            <!--<ListView>
-                                <ListView.ItemsSource>
-                                    
-                                </ListView.ItemsSource>
-                            </ListView>-->
+                            <ListView Grid.Row="1" BorderBrush="Transparent" x:Name="CatalogList" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Background="Linen" CornerRadius="5" Margin="5">
+                                            <Border.Effect>
+                                                <DropShadowEffect Color="Gray" Direction="180" ShadowDepth="1" BlurRadius="5" Opacity="0.9" />
+                                            </Border.Effect>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto" />
+                                                </Grid.RowDefinitions>
+
+                                                <Image Source="{Binding ImageProduct}" Width="100" Height="100" Margin="5" Grid.Column="0"/>
+                                                <StackPanel Orientation="Vertical" VerticalAlignment="Center" Grid.Column="1" Margin="10,0">
+                                                    <TextBlock Text="{Binding NameProduct}" FontWeight="Bold" FontSize="14" Margin="0,0,0,5"/>
+                                                    <TextBlock >
+                                                        <Run Text="Количество: " />
+                                                        <Run Text="{Binding Quantity}" />
+                                                    </TextBlock>
+                                                </StackPanel>
+                                                <Button Content="Купить" Height="30" HorizontalAlignment="Right" 
+                                                    VerticalAlignment="Center" Margin="5" Style="{StaticResource BtnAddProducts}" Grid.Column="1" Click="BtnBuy_Click"/>
+                                                <Button Content="Удалить" Height="30" HorizontalAlignment="Right" 
+                                                    VerticalAlignment="Center" Margin="5" Style="{StaticResource BtnDeleteProducts}" Grid.Column="2" Click="BtnDeleteProductCart_Click" CommandParameter="{Binding}"/>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
                         </Border>
-
-
                     </Grid>
                 </TabItem>
 
@@ -153,11 +164,22 @@
                             <RowDefinition Height="750" />
                         </Grid.RowDefinitions>
 
-                        <TextBlock Text="Корзина" HorizontalAlignment="Right" Margin="10 0" FontSize="36">
-                            <!--<TextBlock.Effect>
-                                <DropShadowEffect Color="Black" Direction="360" ShadowDepth="1" BlurRadius="5" Opacity="0.9" />
-                            </TextBlock.Effect>-->
+                        <TextBlock Text="Корзина" HorizontalAlignment="Right" Margin="10 0" FontSize="36"/>
+                        
+                        <TextBlock x:Name="searchCart" Margin="26 0" VerticalAlignment="Center" Foreground="Gray" IsHitTestVisible="False" Panel.ZIndex="1" Text="Найти...">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Text.Length, ElementName=txtSearchCart}" Value="0">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
                         </TextBlock>
+                        
+                        <TextBox x:Name="txtSearchCart" Margin="15,0" HorizontalAlignment="Left" Style="{StaticResource TextBoxStyle}" Height="40" Width="250" TextChanged="txtSearchCart_TextChanged"/>
 
                         <ListView Grid.Row="1" BorderBrush="Transparent" x:Name="CartList" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" ScrollViewer.VerticalScrollBarVisibility="Disabled">
                             <ListView.ItemTemplate>
@@ -193,9 +215,6 @@
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                         </ListView>
-
-
-
                     </Grid>
                 </TabItem>
 
@@ -206,11 +225,21 @@
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
 
-                        <TextBlock Text="Список продуктов" FontSize="36" Margin="10" HorizontalAlignment="Center">
-                            <!--<TextBlock.Effect>
-                                <DropShadowEffect Color="Black" Direction="180" ShadowDepth="1" BlurRadius="5" Opacity="0.9" />
-                            </TextBlock.Effect>-->
+                        <TextBlock Text="Список продуктов" FontSize="36" Margin="10" HorizontalAlignment="Right"/>
+
+                        <TextBlock x:Name="searchProduct" Margin="26 0" VerticalAlignment="Center" Foreground="Gray" IsHitTestVisible="False" Panel.ZIndex="1" Text="Найти...">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Text.Length, ElementName=txtSearchProduct}" Value="0">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
                         </TextBlock>
+                        <TextBox x:Name="txtSearchProduct" Margin="15,0" HorizontalAlignment="Left" Style="{StaticResource TextBoxStyle}" Height="40" Width="250" TextChanged="txtSearchProduct_TextChanged"/>
 
                         <ScrollViewer VerticalScrollBarVisibility="Hidden" Grid.Row="1" HorizontalScrollBarVisibility="Disabled">
                             <ItemsControl Name="ItemsList">
@@ -274,20 +303,71 @@
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
-
-
                         </ScrollViewer>
-
-
                     </Grid>
-
-
                 </TabItem>
-                <TabItem Header="Отчеты" BorderBrush="Transparent" Visibility="Collapsed" x:Name="Report">
 
-                    <Image x:Name="testImage" Stretch="UniformToFill"  />
+                <TabItem Header="Доставки" BorderBrush="Transparent" Visibility="Collapsed" x:Name="Orders">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="45" />
+                            <RowDefinition Height="750" />
+                        </Grid.RowDefinitions>
 
+                        <TextBlock Text="Доставки" HorizontalAlignment="Right" Margin="10 0" FontSize="36"/>
+
+                        <TextBlock x:Name="searchOrder" Margin="26 0" VerticalAlignment="Center" Foreground="Gray" IsHitTestVisible="False" Panel.ZIndex="1" Text="Найти...">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Text.Length, ElementName=txtSearchOrders}" Value="0">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+
+                        <TextBox x:Name="txtSearchOrders" Margin="15,0" HorizontalAlignment="Left" Style="{StaticResource TextBoxStyle}" Height="40" Width="250" TextChanged="txtSearchCart_TextChanged"/>
+
+                        <ListView Grid.Row="1" BorderBrush="Transparent" x:Name="OrdersList" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="Linen" CornerRadius="5" Margin="5">
+                                        <Border.Effect>
+                                            <DropShadowEffect Color="Gray" Direction="180" ShadowDepth="1" BlurRadius="5" Opacity="0.9" />
+                                        </Border.Effect>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+
+                                            <Image Source="{Binding ImageProduct}" Width="100" Height="100" Margin="5" Grid.Column="0"/>
+                                            <StackPanel Orientation="Vertical" VerticalAlignment="Center" Grid.Column="1" Margin="10,0">
+                                                <TextBlock Text="{Binding NameProduct}" FontWeight="Bold" FontSize="14" Margin="0,0,0,5"/>
+                                                <TextBlock >
+                                                    <Run Text="Количество: " />
+                                                    <Run Text="{Binding Quantity}" />
+                                                </TextBlock>
+                                            </StackPanel>
+                                            <Button Content="Купить" Height="30" HorizontalAlignment="Right" 
+                                                    VerticalAlignment="Center" Margin="5" Style="{StaticResource BtnAddProducts}" Grid.Column="1" Click="BtnBuy_Click"/>
+                                            <Button Content="Удалить" Height="30" HorizontalAlignment="Right" 
+                                                    VerticalAlignment="Center" Margin="5" Style="{StaticResource BtnDeleteProducts}" Grid.Column="2" Click="BtnDeleteProductCart_Click" CommandParameter="{Binding}"/>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </Grid>
                 </TabItem>
+                
             </TabControl>
         </Grid>
     </Border>

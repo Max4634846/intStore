@@ -31,88 +31,10 @@ namespace intStore
             InitializeComponent();
             authService = new AuthService();
         }
-
-        private void BtnClose_Click(object sender, RoutedEventArgs e)
-        {
-            Close();
-        }
-
-        private void Border_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (e.ChangedButton == MouseButton.Left)
-            {
-                this.DragMove(); 
-            }
-
-        }
-
-        private void NextReg_Click(object sender, RoutedEventArgs e)
-        {
-            string tabName = "Reg";
-
-            foreach (TabItem tabItem in mainTabControl.Items)
-            {
-                if (tabItem.Name == tabName)
-                {
-                    mainTabControl.SelectedItem = tabItem;
-                    break;
-                }
-            }
-        }
-
-        private void BackAuthor_Click(object sender, RoutedEventArgs e)
-        {
-            string tabName = "Author";
-
-            foreach (TabItem tabItem in mainTabControl.Items)
-            {
-                if (tabItem.Name == tabName)
-                {
-                    mainTabControl.SelectedItem = tabItem;
-                    break;
-                }
-            }
-        }
-
-
-
         private void LoginBtn_Click(object sender, RoutedEventArgs e)
         {
             string email = txtFilterEmail.Text;
             string password = txtFilterPassword.Text;
-
-            //MailMessage message = new MailMessage(email, password);
-
-            //// Устанавливаем тему письма
-            //message.Subject = "Ваш логин и пароль";
-
-            //// Устанавливаем текст письма
-            //message.Body = $"Ваш логин: {email}\nВаш пароль: {password}";
-
-            //// Создаем новый объект SmtpClient
-            //SmtpClient client = new SmtpClient("smtp.example.com")
-            //{
-            //    Port = 443,
-            //    Credentials = new NetworkCredential(email, password),
-            //    EnableSsl = true
-            //};
-
-            //try
-            //{
-            //    // Отправляем письмо
-            //    client.Send(message);
-            //    Console.WriteLine("Письмо успешно отправлено.");
-            //}
-            //catch (Exception ex)
-            //{
-            //    Console.WriteLine($"Ошибка при отправке письма: {ex.Message}");
-            //}
-            //finally
-            //{
-            //    // Освобождаем ресурсы
-            //    message.Dispose();
-            //    client.Dispose();
-            //}
 
             var customer = authService.Login(email, password);
             if (customer != null)
@@ -147,7 +69,6 @@ namespace intStore
                 MessageBox.Show("Регистрация прошла успешно!");
                 ClearTextBox();
             }
-
         }
 
         private void ClearTextBox()
@@ -157,6 +78,49 @@ namespace intStore
             txtFilterPasswordReg.Text = "";
         }
 
-       
+
+        private void BtnClose_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
+        private void Border_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left)
+            {
+                this.DragMove();
+            }
+
+        }
+
+        private void NextReg_Click(object sender, RoutedEventArgs e)
+        {
+            string tabName = "Reg";
+
+            foreach (TabItem tabItem in mainTabControl.Items)
+            {
+                if (tabItem.Name == tabName)
+                {
+                    mainTabControl.SelectedItem = tabItem;
+                    break;
+                }
+            }
+        }
+
+        private void BackAuthor_Click(object sender, RoutedEventArgs e)
+        {
+            string tabName = "Author";
+
+            foreach (TabItem tabItem in mainTabControl.Items)
+            {
+                if (tabItem.Name == tabName)
+                {
+                    mainTabControl.SelectedItem = tabItem;
+                    break;
+                }
+            }
+        }
+
+
     }
 }

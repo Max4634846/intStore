@@ -28,7 +28,7 @@
             </Button>
             <Border Grid.Row="1">
                 <StackPanel>
-                    <Image x:Name="ImageProductAdd" Source="\Images\imagePattern.png" Width="150"></Image>
+                    <Image x:Name="ImageProductAdd" Source="\Images\ImagePattern.png" Width="150"></Image>
                     <TextBlock x:Name="NameProduct" Text="Название проудкта" HorizontalAlignment="Left" Margin="10" FontSize="36">
                         <TextBlock.Effect>
                             <DropShadowEffect Color="Black" Direction="360" ShadowDepth="1" BlurRadius="5" Opacity="0.9"/>
