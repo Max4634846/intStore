@@ -20,6 +20,6 @@ namespace intStore.Models
         public ImageSource ImageProduct { get; set; }
         public Nullable<int> id_Shipment { get; set; }
 
-        public virtual ICollection<OrdersWithCart> OrdersWithCart { get; set; }
+        public virtual ICollection<OrdersWithCartModel> OrdersWithCartModel { get; set; }
     }
 }

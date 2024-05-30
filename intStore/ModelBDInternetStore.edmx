@@ -135,7 +135,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Cart_OrdersWithCart">
-          <End Role="OrdersWithCart" Type="Self.OrdersWithCart" Multiplicity="0..1" />
+          <End Role="OrdersWithCart" Type="Self.OrdersWithCart" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="Cart" Type="Self.Cart" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="OrdersWithCart">
@@ -242,6 +244,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="AddProductToCart" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="CustomerId" Type="int" Mode="In" />
+          <Parameter Name="ProductId" Type="int" Mode="In" />
+          <Parameter Name="Quantity" Type="int" Mode="In" />
+        </Function>
+        <Function Name="DeleteCartItem" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="CartId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="DeleteProductFromCart" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="CustomerId" Type="int" Mode="In" />
+          <Parameter Name="ProductId" Type="int" Mode="In" />
+        </Function>
         <Function Name="fn_diagramobjects" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int" />
         <Function Name="GetProductById" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ProductId" Type="int" Mode="In" />
@@ -485,7 +499,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Cart_OrdersWithCart">
-          <End Role="OrdersWithCart" Type="Self.OrdersWithCart" Multiplicity="0..1" />
+          <End Role="OrdersWithCart" Type="Self.OrdersWithCart" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="Cart" Type="Self.Cart" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="OrdersWithCart">
@@ -645,6 +661,18 @@
             <End Role="Suppliers" EntitySet="Suppliers" />
             <End Role="Shipment" EntitySet="Shipment" />
           </AssociationSet>
+          <FunctionImport Name="AddProductToCart">
+            <Parameter Name="CustomerId" Mode="In" Type="Int32" />
+            <Parameter Name="ProductId" Mode="In" Type="Int32" />
+            <Parameter Name="Quantity" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="DeleteCartItem">
+            <Parameter Name="CartId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="DeleteProductFromCart">
+            <Parameter Name="CustomerId" Mode="In" Type="Int32" />
+            <Parameter Name="ProductId" Mode="In" Type="Int32" />
+          </FunctionImport>
           <FunctionImport Name="GetProductById" ReturnType="Collection(InternetStoreModel.GetProductById_Result)">
             <Parameter Name="ProductId" Mode="In" Type="Int32" />
           </FunctionImport>
@@ -837,6 +865,9 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="AddProductToCart" FunctionName="InternetStoreModel.Store.AddProductToCart" />
+          <FunctionImportMapping FunctionImportName="DeleteCartItem" FunctionName="InternetStoreModel.Store.DeleteCartItem" />
+          <FunctionImportMapping FunctionImportName="DeleteProductFromCart" FunctionName="InternetStoreModel.Store.DeleteProductFromCart" />
           <FunctionImportMapping FunctionImportName="GetProductById" FunctionName="InternetStoreModel.Store.GetProductById">
             <ResultMapping>
               <ComplexTypeMapping TypeName="InternetStoreModel.GetProductById_Result">

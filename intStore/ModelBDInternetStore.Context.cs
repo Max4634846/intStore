@@ -47,6 +47,45 @@ namespace intStore
         public virtual DbSet<Suppliers> Suppliers { get; set; }
         public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }
     
+        public virtual int AddProductToCart(Nullable<int> customerId, Nullable<int> productId, Nullable<int> quantity)
+        {
+            var customerIdParameter = customerId.HasValue ?
+                new ObjectParameter("CustomerId", customerId) :
+                new ObjectParameter("CustomerId", typeof(int));
+    
+            var productIdParameter = productId.HasValue ?
+                new ObjectParameter("ProductId", productId) :
+                new ObjectParameter("ProductId", typeof(int));
+    
+            var quantityParameter = quantity.HasValue ?
+                new ObjectParameter("Quantity", quantity) :
+                new ObjectParameter("Quantity", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("AddProductToCart", customerIdParameter, productIdParameter, quantityParameter);
+        }
+    
+        public virtual int DeleteCartItem(Nullable<int> cartId)
+        {
+            var cartIdParameter = cartId.HasValue ?
+                new ObjectParameter("CartId", cartId) :
+                new ObjectParameter("CartId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("DeleteCartItem", cartIdParameter);
+        }
+    
+        public virtual int DeleteProductFromCart(Nullable<int> customerId, Nullable<int> productId)
+        {
+            var customerIdParameter = customerId.HasValue ?
+                new ObjectParameter("CustomerId", customerId) :
+                new ObjectParameter("CustomerId", typeof(int));
+    
+            var productIdParameter = productId.HasValue ?
+                new ObjectParameter("ProductId", productId) :
+                new ObjectParameter("ProductId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("DeleteProductFromCart", customerIdParameter, productIdParameter);
+        }
+    
         public virtual ObjectResult<GetProductById_Result> GetProductById(Nullable<int> productId)
         {
             var productIdParameter = productId.HasValue ?

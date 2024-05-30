@@ -17,6 +17,6 @@ namespace intStore.Models
         public Nullable<System.DateTime> RegisterDate { get; set; }
         public string Password { get; set; }
 
-        public virtual ICollection<Cart> Cart { get; set; }
+        public virtual ICollection<CartModel> Cart { get; set; }
     }
 }

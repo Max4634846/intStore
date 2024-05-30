@@ -3,6 +3,8 @@ using intStore.View;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -14,6 +16,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Web.UI.WebControls;
 
 namespace intStore
 {
@@ -71,10 +74,45 @@ namespace intStore
             }
         }
 
+
+
         private void LoginBtn_Click(object sender, RoutedEventArgs e)
         {
             string email = txtFilterEmail.Text;
             string password = txtFilterPassword.Text;
+
+            //MailMessage message = new MailMessage(email, password);
+
+            //// Устанавливаем тему письма
+            //message.Subject = "Ваш логин и пароль";
+
+            //// Устанавливаем текст письма
+            //message.Body = $"Ваш логин: {email}\nВаш пароль: {password}";
+
+            //// Создаем новый объект SmtpClient
+            //SmtpClient client = new SmtpClient("smtp.example.com")
+            //{
+            //    Port = 443,
+            //    Credentials = new NetworkCredential(email, password),
+            //    EnableSsl = true
+            //};
+
+            //try
+            //{
+            //    // Отправляем письмо
+            //    client.Send(message);
+            //    Console.WriteLine("Письмо успешно отправлено.");
+            //}
+            //catch (Exception ex)
+            //{
+            //    Console.WriteLine($"Ошибка при отправке письма: {ex.Message}");
+            //}
+            //finally
+            //{
+            //    // Освобождаем ресурсы
+            //    message.Dispose();
+            //    client.Dispose();
+            //}
 
             var customer = authService.Login(email, password);
             if (customer != null)
@@ -119,14 +157,6 @@ namespace intStore
             txtFilterPasswordReg.Text = "";
         }
 
-        private void OnPasswordChanged(object sender, RoutedEventArgs e)
-        {
-            var passwordBox = sender as PasswordBox;
-            var textBox = this.FindName("txtPassword") as TextBox;
-            if (passwordBox != null && textBox != null)
-            {
-                textBox.Text = passwordBox.Password;
-            }
-        }
+       
     }
 }

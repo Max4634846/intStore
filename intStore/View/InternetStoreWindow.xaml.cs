@@ -20,6 +20,7 @@ using System.Windows.Media.Media3D;
 using System.Diagnostics;
 using System.Data.Entity;
 using System.Collections.ObjectModel;
+using System.Data.SqlClient;
 
 
 namespace intStore.View
@@ -42,6 +43,7 @@ namespace intStore.View
             LoadCartItemsForUser(loggedInCustomer.id_Customers);
             UpdateCartButton();
         }
+
         private void UpdateCartButton()
         {
             int itemsInCartCount;
@@ -62,6 +64,7 @@ namespace intStore.View
                     .Where(item => item.id_Customer == customerId)
                     .Select(item => new
                     {
+                        IdProduct = item.OrdersWithCart.id_OrderWithCart,
                         ImageProductData = item.OrdersWithCart.Goods.ImageProduct,
                         NameProduct = item.OrdersWithCart.Goods.NameProduct,
                         Quantity = item.Quantity,
@@ -71,6 +74,7 @@ namespace intStore.View
                 var cartItemsWithImages = cartItemsForUser
                     .Select(item => new Product
                     {
+                        id_Product = item.IdProduct,
                         ImageProduct = imageManipulation.GetPhotoFromDataBase(item.ImageProductData),
                         NameProduct = item.NameProduct,
                         Quantity = item.Quantity,
@@ -165,6 +169,26 @@ namespace intStore.View
                 }
             }
         }
+
+
+        private void AddProductToCartHandler(object sender, ProductEventArgs e)
+        {
+            AddProductToCart(loggedInCustomer.id_Customers, e.Product.id_Product, e.Quantity);
+            MessageBox.Show("Товар был добавлен в корзину!");
+
+            LoadCartItemsForUser(loggedInCustomer.id_Customers);
+            UpdateCartButton();
+        }
+        private void AddProductToCart(int customerId, int productId, int quantity)
+        {
+            using (var context = new InternetStoreEntities1())
+            {
+                context.Database.ExecuteSqlCommand("EXEC AddProductToCart @CustomerId, @ProductId, @Quantity",
+                                                    new SqlParameter("@CustomerId", customerId),
+                                                    new SqlParameter("@ProductId", productId),
+                                                    new SqlParameter("@Quantity", quantity));
+            }
+        }
         private void AddProduct_Click(object sender, RoutedEventArgs e)
         {
             Button button = sender as Button;
@@ -185,74 +209,15 @@ namespace intStore.View
             }
 
         }
-        private void AddProductToCart(int customerId, int productId, int quantity)
+
+
+        private void DeleteProductFromCart(int customerId, int productId)
         {
             using (var context = new InternetStoreEntities1())
             {
-                var cart = context.Cart
-                    .Include(c => c.OrdersWithCart)
-                    .FirstOrDefault(c => c.id_Customer == customerId && c.OrdersWithCart.id_Product == productId);
-
-                if (cart != null)
-                {
-                    cart.Quantity += quantity;
-                }
-                else
-                {
-                    var newOrderWithCart = new OrdersWithCart
-                    {
-                        id_Product = productId,
-                        Quantity = quantity
-                    };
-
-                    context.OrdersWithCart.Add(newOrderWithCart);
-                    context.SaveChanges();
-
-                    var newCart = new Cart
-                    {
-                        id_Customer = customerId,
-                        id_OrdersWithCart = newOrderWithCart.id_OrderWithCart,
-                        Quantity = quantity
-                    };
-
-                    context.Cart.Add(newCart);
-                    
-                }
-
-                context.SaveChanges();
-                
-
-            }
-        }
-
-        // Вызываем метод добавления товара в корзину, передавая информацию о товаре и его количестве
-        private void AddProductToCartHandler(object sender, ProductEventArgs e)
-        {
-            AddProductToCart(loggedInCustomer.id_Customers, e.Product.id_Product, e.Quantity);
-            MessageBox.Show("Товар был добавлен в корзину!");
-
-            LoadCartItemsForUser(loggedInCustomer.id_Customers);
-            UpdateCartButton();
-        }
-
-        private void BtnBuy_Click(object sender, RoutedEventArgs e)
-        {
-            //...
-        }
-
-        private void DeleteProductToCart(int customerId, int productId)
-        {
-            using (var context = new InternetStoreEntities1())
-            {
-                var cartItem = context.Cart
-                    .Include(c => c.OrdersWithCart)
-                    .FirstOrDefault(c => c.id_Customer == customerId && c.OrdersWithCart.id_Product == productId);
-
-                if (cartItem != null)
-                {
-                    context.Cart.Remove(cartItem);
-                    context.SaveChanges();
-                }
+                context.Database.ExecuteSqlCommand("EXEC DeleteProductFromCart @CustomerId, @ProductId",
+                                                    new SqlParameter("@CustomerId", customerId),
+                                                    new SqlParameter("@ProductId", productId));
             }
         }
 
@@ -261,19 +226,19 @@ namespace intStore.View
             Button button = sender as Button;
             if (button != null)
             {
-                OrdersWithCart productToDelete = button.CommandParameter as OrdersWithCart;
+                Product productToDelete = button.CommandParameter as Product;
                 if (productToDelete != null)
                 {
-                    DeleteProductToCart(loggedInCustomer.id_Customers, productToDelete.id_OrderWithCart);
+                    DeleteProductFromCart(loggedInCustomer.id_Customers, productToDelete.id_Product);
                     MessageBox.Show("Товар был удален из корзины!");
 
                     LoadCartItemsForUser(loggedInCustomer.id_Customers);
                     UpdateCartButton();
                 }
             }
-        }
+        } 
 
-            private void BtnCloseApp_Click(object sender, RoutedEventArgs e)
+        private void BtnCloseApp_Click(object sender, RoutedEventArgs e)
         {
             Close();
         }
@@ -281,6 +246,10 @@ namespace intStore.View
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
         {
             DragMove();
+        }
+        private void BtnBuy_Click(object sender, RoutedEventArgs e)
+        {
+            //...
         }
 
     }

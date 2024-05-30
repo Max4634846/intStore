@@ -39,6 +39,7 @@
                                 </TextBlock>
                             </StackPanel>
 
+                            
                             <Button.Effect>
                                 <DropShadowEffect Color="Black" Direction="90" ShadowDepth="1" BlurRadius="2" Opacity="0.5" />
                             </Button.Effect>

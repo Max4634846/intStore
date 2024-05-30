@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace intStore.Models
 {
-    public class Cart
+    public class CartModel
     {
         public int Id { get; set; }
         public int CustomerId { get; set; }
@@ -14,6 +14,6 @@ namespace intStore.Models
         public int Quantity { get; set; }
 
         public virtual Customer Customer { get; set; }
-        public virtual OrdersWithCart OrdersWithCart { get; set; }
+        public virtual OrdersWithCartModel OrdersWithCart { get; set; }
     }
 }
