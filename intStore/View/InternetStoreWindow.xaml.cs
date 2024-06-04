@@ -22,6 +22,7 @@ using System.Data.Entity;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
 using System.ComponentModel;
+using MimeKit.Tnef;
 
 
 namespace intStore.View
@@ -33,19 +34,22 @@ namespace intStore.View
     {
         private Product SelectedItem;
         private List<Product> productList = new List<Product>();
+        private List<CategoriesModel> categoriesList = new List<CategoriesModel>();
         private Customers loggedInCustomer;
+        private bool IsMaximized = false;
         public InternetStoreWindow(Customers customers)
         {
             InitializeComponent();
             LoadProductList();
+            LoadCategoriesList();
             loggedInCustomer = customers;
             LoadCartItemsForUser(loggedInCustomer.id_Customers);
-            LoadOrderList(loggedInCustomer.id_Customers);
             UpdateCartButton();
 
 
         }
 
+        //Обновление счётчика корзины...
         private void UpdateCartButton()
         {
             int itemsInCartCount;
@@ -55,35 +59,8 @@ namespace intStore.View
             }
             btnCart.Text = itemsInCartCount.ToString();
         }
-        private void LoadOrderList(int customerId)
-        {
-            ImageManipulation imageManipulation = new ImageManipulation();
-            using (var context = new InternetStoreEntities1())
-            {
-                var cartItemsForUser = context.Cart
-                    .Where(item => item.id_Customer == customerId)
-                    .Select(item => new
-                    {
-                        IdProduct = item.OrdersWithCart.id_OrderWithCart,
-                        ImageProductData = item.OrdersWithCart.Goods.ImageProduct,
-                        NameProduct = item.OrdersWithCart.Goods.NameProduct,
-                        Quantity = item.Quantity,
-                    })
-                    .ToList();
 
-                var cartItemsWithImages = cartItemsForUser
-                    .Select(item => new Product
-                    {
-                        id_Product = item.IdProduct,
-                        ImageProduct = imageManipulation.GetPhotoFromDataBase(item.ImageProductData),
-                        NameProduct = item.NameProduct,
-                        Quantity = item.Quantity,
-                    })
-                    .ToList();
-
-                OrdersList.ItemsSource = cartItemsWithImages;
-            }
-        }
+        //Отображение данных в корзине... 
         private void LoadCartItemsForUser(int customerId)
         {
             ImageManipulation imageManipulation = new ImageManipulation();
@@ -98,10 +75,11 @@ namespace intStore.View
                         NameProduct = item.OrdersWithCart.Goods.NameProduct,
                         Quantity = item.Quantity,
                         Price = item.OrdersWithCart.Goods.Price,
-                    })
-                    .ToList();
+                        Status = item.Status.NameStatus,
 
-                var cartItemsWithImages = cartItemsForUser
+                    }).ToList();
+
+                    var cartItemsWithImages = cartItemsForUser
                     .Select(item => new Product
                     {
                         id_Product = item.IdProduct,
@@ -109,15 +87,18 @@ namespace intStore.View
                         NameProduct = item.NameProduct,
                         Quantity = item.Quantity,
                         Price = item.Price,
-                    })
-                    .ToList();
+                        Status = item.Status,
 
+                    }).ToList();
 
                 CartList.ItemsSource = cartItemsWithImages;
+
                 decimal totalPrice = Convert.ToDecimal(cartItemsWithImages.Sum(item => item.Price * item.Quantity));
                 Cost.Text = $"₽{totalPrice:F2}";
             }
         }
+
+        //Списки с товарами
         private void LoadProductList()
         {
             var context = new InternetStoreEntities1();
@@ -130,6 +111,7 @@ namespace intStore.View
                 {
                     id_Product = v.id_Product,
                     NameProduct = v.NameProduct,
+                    id_Categories = v.Categories.id_Categories,
                     Description = v.Description,
                     NutritionalValue = v.NutritionalValue,
                     Weight = v.Weight,
@@ -143,15 +125,34 @@ namespace intStore.View
             ItemsList.ItemsSource = productList;
         }
 
-       
+        private void LoadCategoriesList()
+        {
+            var context = new InternetStoreEntities1();
+            ImageManipulation imageManipulation = new ImageManipulation();
+            var realEstatesFromDb = context.Categories.ToList();
 
+            foreach (var v in realEstatesFromDb)
+            {
+                CategoriesModel categoriesProduct = new CategoriesModel
+                {
+                    id_Categories = v.id_Categories,
+                    NameCategories = v.NameCategories,
+                    Desciptions = v.Desciptions,
+                    ImageCategories = imageManipulation.GetPhotoFromDataBase(v.ImageCategories),
+                };
+                categoriesList.Add(categoriesProduct);
+            }
+            CatalogList.ItemsSource = categoriesList;
+        }
+
+
+        //Методы для кнопок с хранимыми процедурами внутри
         private void AddProductToCartHandler(object sender, ProductEventArgs e)
         {
             AddProductToCart(loggedInCustomer.id_Customers, e.Product.id_Product, e.Quantity);
             MessageBox.Show("Товар был добавлен в корзину!");
             
             LoadCartItemsForUser(loggedInCustomer.id_Customers);
-            
             UpdateCartButton();
         }
 
@@ -159,10 +160,11 @@ namespace intStore.View
         {
             using (var context = new InternetStoreEntities1())
             {
-                context.Database.ExecuteSqlCommand("EXEC AddProductToCart @CustomerId, @ProductId, @Quantity",
-                                                    new SqlParameter("@CustomerId", customerId),
-                                                    new SqlParameter("@ProductId", productId),
-                                                    new SqlParameter("@Quantity", quantity));
+                context.Database.ExecuteSqlCommand(
+                    "EXEC AddProductToCart @CustomerId, @ProductId, @Quantity",
+                    new SqlParameter("@CustomerId", customerId),
+                    new SqlParameter("@ProductId", productId),
+                    new SqlParameter("@Quantity", quantity));
             }
         }
 
@@ -170,12 +172,24 @@ namespace intStore.View
         {
             using (var context = new InternetStoreEntities1())
             {
-                context.Database.ExecuteSqlCommand("EXEC DeleteProductFromCart @CustomerId, @ProductId",
-                                                    new SqlParameter("@CustomerId", customerId),
-                                                    new SqlParameter("@ProductId", productId));
+                context.Database.ExecuteSqlCommand(
+                    "EXEC DeleteProductFromCart @CustomerId, @ProductId",
+                    new SqlParameter("@CustomerId", customerId),
+                    new SqlParameter("@ProductId", productId));
             }
         }
 
+        private void BuyProduct(int customerId, int cartProductId)
+        {
+            using (var context = new InternetStoreEntities1())
+            {
+                context.Database.ExecuteSqlCommand("EXEC MoveCartItemToOrder @CustomerId, @CartItemId",
+                    new SqlParameter("@CustomerId", customerId),
+                    new SqlParameter("@CartItemId", cartProductId));
+            }
+        }
+
+        //Добавление товара в корзину, удаление
         private void AddProduct_Click(object sender, RoutedEventArgs e)
         {
             Button button = sender as Button;
@@ -189,10 +203,7 @@ namespace intStore.View
                     addProductCart.ProductAddedToCart += AddProductToCartHandler;
                     addProductCart.Show();
                 }
-                else
-                {
-                    MessageBox.Show("Продукт не выбран.");
-                }
+                else MessageBox.Show("Продукт не выбран.");
             }
         }
 
@@ -208,37 +219,63 @@ namespace intStore.View
                     if (result == MessageBoxResult.Yes)
                     {
                         DeleteProductFromCart(loggedInCustomer.id_Customers, productToDelete.id_Product);
-                        MessageBox.Show("Товар был удален из корзины!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        MessageBox.Show("Товар был удален из корзины!", "Предупреждение об удалении товара", MessageBoxButton.OK, MessageBoxImage.Warning);
 
                         LoadCartItemsForUser(loggedInCustomer.id_Customers);
                         UpdateCartButton();
                     }
-                    else
-                    {
-                        return;
-                    }
+                    else return;
                 }
             }
         }
+
+        //Покупка товара, данные отправляется в заказы
         private void BtnBuy_Click(object sender, RoutedEventArgs e)
+        {
+            Button buttonBuy = sender as Button;
+            if (buttonBuy != null)
+            {
+                Product productToBuy = buttonBuy.CommandParameter as Product;
+                if (productToBuy != null)
+                {
+                        MessageBoxResult result = MessageBox.Show("Вы точно хотите приобрести данный товар?", "Покупка товара", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                        if (result == MessageBoxResult.Yes)
+                        {
+                            BuyProduct(loggedInCustomer.id_Customers, productToBuy.id_Product);
+                            MessageBox.Show("Данный товар был приобретен, ваш статус заказа: оформлен", "Покупка товара завершена", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                            LoadCartItemsForUser(loggedInCustomer.id_Customers);
+                        }
+                }
+            }
+        }
+
+        //Выбор определенной категории с товарами
+        private void BtnCategoriesProduct_Click(object sender, RoutedEventArgs e)
         {
             Button button = sender as Button;
             if (button != null)
             {
-                Product productToDelete = button.CommandParameter as Product;
-                if (productToDelete != null)
+                CategoriesModel selectedCategory = button.CommandParameter as CategoriesModel;
+                if (selectedCategory != null)
                 {
-                    DeleteProductFromCart(loggedInCustomer.id_Customers, productToDelete.id_Product);
-                    MessageBox.Show("Вы купили товар ожидайте доставки!");
+                    // Фильтруем список товаров по выбранной категории
+                    var filteredProducts = productList.Where(product => product.id_Categories== selectedCategory.id_Categories);
 
-                    LoadCartItemsForUser(loggedInCustomer.id_Customers);
+                    // Получаем вкладку "Продукты"
+                    TabItem tabProducts = mainTabControl.FindName("Product") as TabItem;
 
-                    UpdateCartButton();
+                    if (tabProducts != null)
+                    {
+                        tabProducts.IsSelected = true;
+                        ItemsList.ItemsSource = filteredProducts.ToList();
+                    }
                 }
             }
         }
 
 
+        //Кнопки для перехода между вкладками TabControl...
         private void BtnMain_Click(object sender, RoutedEventArgs e)
         {
             string tabName = "MainPage";
@@ -260,10 +297,15 @@ namespace intStore.View
                 if (tabItem.Name == tabName)
                 {
                     mainTabControl.SelectedItem = tabItem;
+                    if (ItemsList.ItemsSource != productList)
+                    {
+                        ItemsList.ItemsSource = productList;
+                    }
                     break;
                 }
             }
         }
+
 
         private void ReportBtn_Click(object sender, RoutedEventArgs e)
         {
@@ -290,9 +332,36 @@ namespace intStore.View
                 }
             }
         }
+        private void BtnOrders_Click(object sender, RoutedEventArgs e)
+        {
+            string tabName = "Orders";
+            foreach (TabItem tabItem in mainTabControl.Items)
+            {
+                if (tabItem.Name == tabName)
+                {
+                    mainTabControl.SelectedItem = tabItem;
+                    break;
+                }
+            }
+        }
+
+        private void BtnPersonalAccount_Click(object sender, RoutedEventArgs e)
+        {
+            string tabName = "PersonalAccount";
+            foreach (TabItem tabItem in mainTabControl.Items)
+            {
+                if (tabItem.Name == tabName)
+                {
+                    mainTabControl.SelectedItem = tabItem;
+                    break;
+                }
+            }
+        }
 
         private void BtnCloseApp_Click(object sender, RoutedEventArgs e)
         {
+            MainWindow mainWindow = new MainWindow();
+            mainWindow.Show();
             Close();
         }
 
@@ -300,6 +369,7 @@ namespace intStore.View
         {
             DragMove();
         }
+
 
         private void txtSearchCart_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -339,17 +409,27 @@ namespace intStore.View
             }
         }
 
-        private void BtnOrders_Click(object sender, RoutedEventArgs e)
+        //Масштабирование окна
+        private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            string tabName = "Orders";
-            foreach (TabItem tabItem in mainTabControl.Items)
+            if (e.ClickCount == 2)
             {
-                if (tabItem.Name == tabName)
+                if (this.IsMaximized)
                 {
-                    mainTabControl.SelectedItem = tabItem;
-                    break;
+                    this.WindowState = WindowState.Normal;
+                    this.Width = 1280;
+                    this.Height = 850;
+
+                    IsMaximized = false;
+                }
+                else
+                {
+                    this.WindowState = WindowState.Maximized;
+
+                    IsMaximized = true;
                 }
             }
         }
+
     }
 }

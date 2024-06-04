@@ -14,15 +14,17 @@ namespace intStore
     
     public partial class Orders
     {
-        public int id_Order { get; set; }
-        public Nullable<int> id_Customer { get; set; }
-        public Nullable<System.DateTime> OrderDate { get; set; }
-        public Nullable<int> id_StatusOrders { get; set; }
-        public Nullable<decimal> TotalAmount { get; set; }
-        public Nullable<int> id_Payments { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Orders()
+        {
+            this.Cart = new HashSet<Cart>();
+        }
     
-        public virtual Customers Customers { get; set; }
-        public virtual Payments Payments { get; set; }
-        public virtual StatuOrders StatuOrders { get; set; }
+        public int id_Order { get; set; }
+        public Nullable<System.DateTime> OrderDate { get; set; }
+        public Nullable<decimal> TotalAmount { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Cart> Cart { get; set; }
     }
 }

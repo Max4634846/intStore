@@ -20,9 +20,11 @@ namespace intStore
         private static InternetStoreEntities1 _context;
         public static InternetStoreEntities1 GetContext()
         {
-            if (_context == null) _context = new InternetStoreEntities1();
+            if (_context != null)
+                _context = new InternetStoreEntities1();
             return _context;
         }
+
         public InternetStoreEntities1()
             : base("name=InternetStoreEntities1")
         {
@@ -41,7 +43,7 @@ namespace intStore
         public virtual DbSet<OrdersWithCart> OrdersWithCart { get; set; }
         public virtual DbSet<Payments> Payments { get; set; }
         public virtual DbSet<Shipment> Shipment { get; set; }
-        public virtual DbSet<StatuOrders> StatuOrders { get; set; }
+        public virtual DbSet<Status> Status { get; set; }
         public virtual DbSet<StatusShipment> StatusShipment { get; set; }
         public virtual DbSet<Suppliers> Suppliers { get; set; }
         public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }
@@ -85,6 +87,19 @@ namespace intStore
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("DeleteProductFromCart", customerIdParameter, productIdParameter);
         }
     
+        public virtual int DeleteProductFromOrder(Nullable<int> orderId, Nullable<int> customerId)
+        {
+            var orderIdParameter = orderId.HasValue ?
+                new ObjectParameter("orderId", orderId) :
+                new ObjectParameter("orderId", typeof(int));
+    
+            var customerIdParameter = customerId.HasValue ?
+                new ObjectParameter("customerId", customerId) :
+                new ObjectParameter("customerId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("DeleteProductFromOrder", orderIdParameter, customerIdParameter);
+        }
+    
         public virtual ObjectResult<GetProductById_Result> GetProductById(Nullable<int> productId)
         {
             var productIdParameter = productId.HasValue ?
@@ -92,6 +107,19 @@ namespace intStore
                 new ObjectParameter("ProductId", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetProductById_Result>("GetProductById", productIdParameter);
+        }
+    
+        public virtual int MoveCartItemToOrder(Nullable<int> customerId, Nullable<int> cartItemId)
+        {
+            var customerIdParameter = customerId.HasValue ?
+                new ObjectParameter("CustomerId", customerId) :
+                new ObjectParameter("CustomerId", typeof(int));
+    
+            var cartItemIdParameter = cartItemId.HasValue ?
+                new ObjectParameter("CartItemId", cartItemId) :
+                new ObjectParameter("CartItemId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("MoveCartItemToOrder", customerIdParameter, cartItemIdParameter);
         }
     
         public virtual int sp_alterdiagram(string diagramname, Nullable<int> owner_id, Nullable<int> version, byte[] definition)

@@ -8,7 +8,7 @@ using System.Windows.Media.Imaging;
 
 namespace intStore.Utils
 {
-    internal class ImageManipulation
+    public class ImageManipulation
     {
         public ImageSource GetPhotoFromDataBase(string photoPath)
         {

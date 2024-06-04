@@ -23,6 +23,7 @@ namespace intStore
         public int id_Categories { get; set; }
         public string NameCategories { get; set; }
         public string Desciptions { get; set; }
+        public string ImageCategories { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Goods> Goods { get; set; }

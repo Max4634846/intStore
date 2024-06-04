@@ -12,18 +12,18 @@ namespace intStore
     using System;
     using System.Collections.Generic;
     
-    public partial class StatuOrders
+    public partial class Status
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public StatuOrders()
+        public Status()
         {
-            this.Orders = new HashSet<Orders>();
+            this.Cart = new HashSet<Cart>();
         }
     
         public int id_StatusOrders { get; set; }
         public string NameStatus { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Orders> Orders { get; set; }
+        public virtual ICollection<Cart> Cart { get; set; }
     }
 }

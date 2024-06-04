@@ -11,7 +11,10 @@
           </Key>
           <Property Name="id_Cart" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="id_Customer" Type="int" />
+          <Property Name="id_Order" Type="int" />
           <Property Name="id_OrdersWithCart" Type="int" />
+          <Property Name="id_Status" Type="int" />
+          <Property Name="id_Payments" Type="int" />
           <Property Name="Quantity" Type="int" />
         </EntityType>
         <EntityType Name="Categories">
@@ -21,6 +24,7 @@
           <Property Name="id_Categories" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="NameCategories" Type="nvarchar(max)" />
           <Property Name="Desciptions" Type="nvarchar(max)" />
+          <Property Name="ImageCategories" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="Customers">
           <Key>
@@ -55,11 +59,8 @@
             <PropertyRef Name="id_Order" />
           </Key>
           <Property Name="id_Order" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="id_Customer" Type="int" />
           <Property Name="OrderDate" Type="date" />
-          <Property Name="id_StatusOrders" Type="int" />
           <Property Name="TotalAmount" Type="money" />
-          <Property Name="id_Payments" Type="int" />
         </EntityType>
         <EntityType Name="OrdersWithCart">
           <Key>
@@ -88,7 +89,7 @@
           <Property Name="Weight" Type="float" />
           <Property Name="Cost" Type="money" />
         </EntityType>
-        <EntityType Name="StatuOrders">
+        <EntityType Name="Status">
           <Key>
             <PropertyRef Name="id_StatusOrders" />
           </Key>
@@ -134,10 +135,20 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Cart_Orders">
+          <End Role="Orders" Type="Self.Orders" Multiplicity="0..1" />
+          <End Role="Cart" Type="Self.Cart" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Orders">
+              <PropertyRef Name="id_Order" />
+            </Principal>
+            <Dependent Role="Cart">
+              <PropertyRef Name="id_Order" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Cart_OrdersWithCart">
-          <End Role="OrdersWithCart" Type="Self.OrdersWithCart" Multiplicity="0..1">
-            <OnDelete Action="Cascade" />
-          </End>
+          <End Role="OrdersWithCart" Type="Self.OrdersWithCart" Multiplicity="0..1" />
           <End Role="Cart" Type="Self.Cart" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="OrdersWithCart">
@@ -145,6 +156,30 @@
             </Principal>
             <Dependent Role="Cart">
               <PropertyRef Name="id_OrdersWithCart" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Cart_Payments">
+          <End Role="Payments" Type="Self.Payments" Multiplicity="0..1" />
+          <End Role="Cart" Type="Self.Cart" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Payments">
+              <PropertyRef Name="id_Payments" />
+            </Principal>
+            <Dependent Role="Cart">
+              <PropertyRef Name="id_Payments" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Cart_Status">
+          <End Role="Status" Type="Self.Status" Multiplicity="0..1" />
+          <End Role="Cart" Type="Self.Cart" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Status">
+              <PropertyRef Name="id_StatusOrders" />
+            </Principal>
+            <Dependent Role="Cart">
+              <PropertyRef Name="id_Status" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -169,42 +204,6 @@
             </Principal>
             <Dependent Role="Goods">
               <PropertyRef Name="id_Shipment" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Orders_Customers">
-          <End Role="Customers" Type="Self.Customers" Multiplicity="0..1" />
-          <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Customers">
-              <PropertyRef Name="id_Customers" />
-            </Principal>
-            <Dependent Role="Orders">
-              <PropertyRef Name="id_Customer" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Orders_Payments">
-          <End Role="Payments" Type="Self.Payments" Multiplicity="0..1" />
-          <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Payments">
-              <PropertyRef Name="id_Payments" />
-            </Principal>
-            <Dependent Role="Orders">
-              <PropertyRef Name="id_Payments" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Orders_StatuOrders">
-          <End Role="StatuOrders" Type="Self.StatuOrders" Multiplicity="0..1" />
-          <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="StatuOrders">
-              <PropertyRef Name="id_StatusOrders" />
-            </Principal>
-            <Dependent Role="Orders">
-              <PropertyRef Name="id_StatusOrders" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -256,9 +255,17 @@
           <Parameter Name="CustomerId" Type="int" Mode="In" />
           <Parameter Name="ProductId" Type="int" Mode="In" />
         </Function>
+        <Function Name="DeleteProductFromOrder" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="orderId" Type="int" Mode="In" />
+          <Parameter Name="customerId" Type="int" Mode="In" />
+        </Function>
         <Function Name="fn_diagramobjects" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int" />
         <Function Name="GetProductById" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ProductId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="MoveCartItemToOrder" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="CustomerId" Type="int" Mode="In" />
+          <Parameter Name="CartItemId" Type="int" Mode="In" />
         </Function>
         <Function Name="sp_alterdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
@@ -299,7 +306,7 @@
           <EntitySet Name="OrdersWithCart" EntityType="Self.OrdersWithCart" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Payments" EntityType="Self.Payments" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Shipment" EntityType="Self.Shipment" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="StatuOrders" EntityType="Self.StatuOrders" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Status" EntityType="Self.Status" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="StatusShipment" EntityType="Self.StatusShipment" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Suppliers" EntityType="Self.Suppliers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
@@ -307,8 +314,20 @@
             <End Role="Customers" EntitySet="Customers" />
             <End Role="Cart" EntitySet="Cart" />
           </AssociationSet>
+          <AssociationSet Name="FK_Cart_Orders" Association="Self.FK_Cart_Orders">
+            <End Role="Orders" EntitySet="Orders" />
+            <End Role="Cart" EntitySet="Cart" />
+          </AssociationSet>
           <AssociationSet Name="FK_Cart_OrdersWithCart" Association="Self.FK_Cart_OrdersWithCart">
             <End Role="OrdersWithCart" EntitySet="OrdersWithCart" />
+            <End Role="Cart" EntitySet="Cart" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Cart_Payments" Association="Self.FK_Cart_Payments">
+            <End Role="Payments" EntitySet="Payments" />
+            <End Role="Cart" EntitySet="Cart" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Cart_Status" Association="Self.FK_Cart_Status">
+            <End Role="Status" EntitySet="Status" />
             <End Role="Cart" EntitySet="Cart" />
           </AssociationSet>
           <AssociationSet Name="FK_Goods_Categories" Association="Self.FK_Goods_Categories">
@@ -318,18 +337,6 @@
           <AssociationSet Name="FK_Goods_Shipment" Association="Self.FK_Goods_Shipment">
             <End Role="Shipment" EntitySet="Shipment" />
             <End Role="Goods" EntitySet="Goods" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Orders_Customers" Association="Self.FK_Orders_Customers">
-            <End Role="Customers" EntitySet="Customers" />
-            <End Role="Orders" EntitySet="Orders" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Orders_Payments" Association="Self.FK_Orders_Payments">
-            <End Role="Payments" EntitySet="Payments" />
-            <End Role="Orders" EntitySet="Orders" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Orders_StatuOrders" Association="Self.FK_Orders_StatuOrders">
-            <End Role="StatuOrders" EntitySet="StatuOrders" />
-            <End Role="Orders" EntitySet="Orders" />
           </AssociationSet>
           <AssociationSet Name="FK_OrdersWithCart_Goods" Association="Self.FK_OrdersWithCart_Goods">
             <End Role="Goods" EntitySet="Goods" />
@@ -355,10 +362,16 @@
           </Key>
           <Property Name="id_Cart" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="id_Customer" Type="Int32" />
+          <Property Name="id_Order" Type="Int32" />
           <Property Name="id_OrdersWithCart" Type="Int32" />
+          <Property Name="id_Status" Type="Int32" />
+          <Property Name="id_Payments" Type="Int32" />
           <Property Name="Quantity" Type="Int32" />
           <NavigationProperty Name="Customers" Relationship="Self.FK_Cart_Customers" FromRole="Cart" ToRole="Customers" />
+          <NavigationProperty Name="Orders" Relationship="Self.FK_Cart_Orders" FromRole="Cart" ToRole="Orders" />
           <NavigationProperty Name="OrdersWithCart" Relationship="Self.FK_Cart_OrdersWithCart" FromRole="Cart" ToRole="OrdersWithCart" />
+          <NavigationProperty Name="Payments" Relationship="Self.FK_Cart_Payments" FromRole="Cart" ToRole="Payments" />
+          <NavigationProperty Name="Status" Relationship="Self.FK_Cart_Status" FromRole="Cart" ToRole="Status" />
         </EntityType>
         <EntityType Name="Categories">
           <Key>
@@ -367,6 +380,7 @@
           <Property Name="id_Categories" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="NameCategories" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Desciptions" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ImageCategories" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Goods" Relationship="Self.FK_Goods_Categories" FromRole="Categories" ToRole="Goods" />
         </EntityType>
         <EntityType Name="Customers">
@@ -381,7 +395,6 @@
           <Property Name="RegisterDate" Type="DateTime" Precision="0" />
           <Property Name="Password" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Cart" Relationship="Self.FK_Cart_Customers" FromRole="Customers" ToRole="Cart" />
-          <NavigationProperty Name="Orders" Relationship="Self.FK_Orders_Customers" FromRole="Customers" ToRole="Orders" />
         </EntityType>
         <EntityType Name="Goods">
           <Key>
@@ -407,14 +420,9 @@
             <PropertyRef Name="id_Order" />
           </Key>
           <Property Name="id_Order" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="id_Customer" Type="Int32" />
           <Property Name="OrderDate" Type="DateTime" Precision="0" />
-          <Property Name="id_StatusOrders" Type="Int32" />
           <Property Name="TotalAmount" Type="Decimal" Precision="19" Scale="4" />
-          <Property Name="id_Payments" Type="Int32" />
-          <NavigationProperty Name="Customers" Relationship="Self.FK_Orders_Customers" FromRole="Orders" ToRole="Customers" />
-          <NavigationProperty Name="Payments" Relationship="Self.FK_Orders_Payments" FromRole="Orders" ToRole="Payments" />
-          <NavigationProperty Name="StatuOrders" Relationship="Self.FK_Orders_StatuOrders" FromRole="Orders" ToRole="StatuOrders" />
+          <NavigationProperty Name="Cart" Relationship="Self.FK_Cart_Orders" FromRole="Orders" ToRole="Cart" />
         </EntityType>
         <EntityType Name="OrdersWithCart">
           <Key>
@@ -433,7 +441,7 @@
           <Property Name="id_Payments" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="MethodName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Orders" Relationship="Self.FK_Orders_Payments" FromRole="Payments" ToRole="Orders" />
+          <NavigationProperty Name="Cart" Relationship="Self.FK_Cart_Payments" FromRole="Payments" ToRole="Cart" />
         </EntityType>
         <EntityType Name="Shipment">
           <Key>
@@ -449,13 +457,13 @@
           <NavigationProperty Name="StatusShipment" Relationship="Self.FK_Shipment_StatusShipment" FromRole="Shipment" ToRole="StatusShipment" />
           <NavigationProperty Name="Suppliers" Relationship="Self.FK_Shipment_Suppliers" FromRole="Shipment" ToRole="Suppliers" />
         </EntityType>
-        <EntityType Name="StatuOrders">
+        <EntityType Name="Status">
           <Key>
             <PropertyRef Name="id_StatusOrders" />
           </Key>
           <Property Name="id_StatusOrders" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="NameStatus" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Orders" Relationship="Self.FK_Orders_StatuOrders" FromRole="StatuOrders" ToRole="Orders" />
+          <NavigationProperty Name="Cart" Relationship="Self.FK_Cart_Status" FromRole="Status" ToRole="Cart" />
         </EntityType>
         <EntityType Name="StatusShipment">
           <Key>
@@ -498,10 +506,20 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Cart_Orders">
+          <End Role="Orders" Type="Self.Orders" Multiplicity="0..1" />
+          <End Role="Cart" Type="Self.Cart" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Orders">
+              <PropertyRef Name="id_Order" />
+            </Principal>
+            <Dependent Role="Cart">
+              <PropertyRef Name="id_Order" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Cart_OrdersWithCart">
-          <End Role="OrdersWithCart" Type="Self.OrdersWithCart" Multiplicity="0..1">
-            <OnDelete Action="Cascade" />
-          </End>
+          <End Role="OrdersWithCart" Type="Self.OrdersWithCart" Multiplicity="0..1" />
           <End Role="Cart" Type="Self.Cart" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="OrdersWithCart">
@@ -509,6 +527,30 @@
             </Principal>
             <Dependent Role="Cart">
               <PropertyRef Name="id_OrdersWithCart" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Cart_Payments">
+          <End Role="Payments" Type="Self.Payments" Multiplicity="0..1" />
+          <End Role="Cart" Type="Self.Cart" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Payments">
+              <PropertyRef Name="id_Payments" />
+            </Principal>
+            <Dependent Role="Cart">
+              <PropertyRef Name="id_Payments" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Cart_Status">
+          <End Role="Status" Type="Self.Status" Multiplicity="0..1" />
+          <End Role="Cart" Type="Self.Cart" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Status">
+              <PropertyRef Name="id_StatusOrders" />
+            </Principal>
+            <Dependent Role="Cart">
+              <PropertyRef Name="id_Status" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -521,18 +563,6 @@
             </Principal>
             <Dependent Role="Goods">
               <PropertyRef Name="id_Categories" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Orders_Customers">
-          <End Role="Customers" Type="Self.Customers" Multiplicity="0..1" />
-          <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Customers">
-              <PropertyRef Name="id_Customers" />
-            </Principal>
-            <Dependent Role="Orders">
-              <PropertyRef Name="id_Customer" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -557,30 +587,6 @@
             </Principal>
             <Dependent Role="OrdersWithCart">
               <PropertyRef Name="id_Product" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Orders_Payments">
-          <End Role="Payments" Type="Self.Payments" Multiplicity="0..1" />
-          <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Payments">
-              <PropertyRef Name="id_Payments" />
-            </Principal>
-            <Dependent Role="Orders">
-              <PropertyRef Name="id_Payments" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Orders_StatuOrders">
-          <End Role="StatuOrders" Type="Self.StatuOrders" Multiplicity="0..1" />
-          <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="StatuOrders">
-              <PropertyRef Name="id_StatusOrders" />
-            </Principal>
-            <Dependent Role="Orders">
-              <PropertyRef Name="id_StatusOrders" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -617,7 +623,7 @@
           <EntitySet Name="OrdersWithCart" EntityType="Self.OrdersWithCart" />
           <EntitySet Name="Payments" EntityType="Self.Payments" />
           <EntitySet Name="Shipment" EntityType="Self.Shipment" />
-          <EntitySet Name="StatuOrders" EntityType="Self.StatuOrders" />
+          <EntitySet Name="Status" EntityType="Self.Status" />
           <EntitySet Name="StatusShipment" EntityType="Self.StatusShipment" />
           <EntitySet Name="Suppliers" EntityType="Self.Suppliers" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
@@ -625,17 +631,25 @@
             <End Role="Customers" EntitySet="Customers" />
             <End Role="Cart" EntitySet="Cart" />
           </AssociationSet>
+          <AssociationSet Name="FK_Cart_Orders" Association="Self.FK_Cart_Orders">
+            <End Role="Orders" EntitySet="Orders" />
+            <End Role="Cart" EntitySet="Cart" />
+          </AssociationSet>
           <AssociationSet Name="FK_Cart_OrdersWithCart" Association="Self.FK_Cart_OrdersWithCart">
             <End Role="OrdersWithCart" EntitySet="OrdersWithCart" />
+            <End Role="Cart" EntitySet="Cart" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Cart_Payments" Association="Self.FK_Cart_Payments">
+            <End Role="Payments" EntitySet="Payments" />
+            <End Role="Cart" EntitySet="Cart" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Cart_Status" Association="Self.FK_Cart_Status">
+            <End Role="Status" EntitySet="Status" />
             <End Role="Cart" EntitySet="Cart" />
           </AssociationSet>
           <AssociationSet Name="FK_Goods_Categories" Association="Self.FK_Goods_Categories">
             <End Role="Categories" EntitySet="Categories" />
             <End Role="Goods" EntitySet="Goods" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Orders_Customers" Association="Self.FK_Orders_Customers">
-            <End Role="Customers" EntitySet="Customers" />
-            <End Role="Orders" EntitySet="Orders" />
           </AssociationSet>
           <AssociationSet Name="FK_Goods_Shipment" Association="Self.FK_Goods_Shipment">
             <End Role="Shipment" EntitySet="Shipment" />
@@ -644,14 +658,6 @@
           <AssociationSet Name="FK_OrdersWithCart_Goods" Association="Self.FK_OrdersWithCart_Goods">
             <End Role="Goods" EntitySet="Goods" />
             <End Role="OrdersWithCart" EntitySet="OrdersWithCart" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Orders_Payments" Association="Self.FK_Orders_Payments">
-            <End Role="Payments" EntitySet="Payments" />
-            <End Role="Orders" EntitySet="Orders" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Orders_StatuOrders" Association="Self.FK_Orders_StatuOrders">
-            <End Role="StatuOrders" EntitySet="StatuOrders" />
-            <End Role="Orders" EntitySet="Orders" />
           </AssociationSet>
           <AssociationSet Name="FK_Shipment_StatusShipment" Association="Self.FK_Shipment_StatusShipment">
             <End Role="StatusShipment" EntitySet="StatusShipment" />
@@ -673,8 +679,16 @@
             <Parameter Name="CustomerId" Mode="In" Type="Int32" />
             <Parameter Name="ProductId" Mode="In" Type="Int32" />
           </FunctionImport>
+          <FunctionImport Name="DeleteProductFromOrder">
+            <Parameter Name="orderId" Mode="In" Type="Int32" />
+            <Parameter Name="customerId" Mode="In" Type="Int32" />
+          </FunctionImport>
           <FunctionImport Name="GetProductById" ReturnType="Collection(InternetStoreModel.GetProductById_Result)">
             <Parameter Name="ProductId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="MoveCartItemToOrder">
+            <Parameter Name="CustomerId" Mode="In" Type="Int32" />
+            <Parameter Name="CartItemId" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="sp_alterdiagram">
             <Parameter Name="diagramname" Mode="In" Type="String" />
@@ -741,7 +755,10 @@
               <MappingFragment StoreEntitySet="Cart">
                 <ScalarProperty Name="id_Cart" ColumnName="id_Cart" />
                 <ScalarProperty Name="id_Customer" ColumnName="id_Customer" />
+                <ScalarProperty Name="id_Order" ColumnName="id_Order" />
                 <ScalarProperty Name="id_OrdersWithCart" ColumnName="id_OrdersWithCart" />
+                <ScalarProperty Name="id_Status" ColumnName="id_Status" />
+                <ScalarProperty Name="id_Payments" ColumnName="id_Payments" />
                 <ScalarProperty Name="Quantity" ColumnName="Quantity" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -752,6 +769,7 @@
                 <ScalarProperty Name="id_Categories" ColumnName="id_Categories" />
                 <ScalarProperty Name="NameCategories" ColumnName="NameCategories" />
                 <ScalarProperty Name="Desciptions" ColumnName="Desciptions" />
+                <ScalarProperty Name="ImageCategories" ColumnName="ImageCategories" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -789,11 +807,8 @@
             <EntityTypeMapping TypeName="InternetStoreModel.Orders">
               <MappingFragment StoreEntitySet="Orders">
                 <ScalarProperty Name="id_Order" ColumnName="id_Order" />
-                <ScalarProperty Name="id_Customer" ColumnName="id_Customer" />
                 <ScalarProperty Name="OrderDate" ColumnName="OrderDate" />
-                <ScalarProperty Name="id_StatusOrders" ColumnName="id_StatusOrders" />
                 <ScalarProperty Name="TotalAmount" ColumnName="TotalAmount" />
-                <ScalarProperty Name="id_Payments" ColumnName="id_Payments" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -827,9 +842,9 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="StatuOrders">
-            <EntityTypeMapping TypeName="InternetStoreModel.StatuOrders">
-              <MappingFragment StoreEntitySet="StatuOrders">
+          <EntitySetMapping Name="Status">
+            <EntityTypeMapping TypeName="InternetStoreModel.Status">
+              <MappingFragment StoreEntitySet="Status">
                 <ScalarProperty Name="id_StatusOrders" ColumnName="id_StatusOrders" />
                 <ScalarProperty Name="NameStatus" ColumnName="NameStatus" />
               </MappingFragment>
@@ -868,6 +883,7 @@
           <FunctionImportMapping FunctionImportName="AddProductToCart" FunctionName="InternetStoreModel.Store.AddProductToCart" />
           <FunctionImportMapping FunctionImportName="DeleteCartItem" FunctionName="InternetStoreModel.Store.DeleteCartItem" />
           <FunctionImportMapping FunctionImportName="DeleteProductFromCart" FunctionName="InternetStoreModel.Store.DeleteProductFromCart" />
+          <FunctionImportMapping FunctionImportName="DeleteProductFromOrder" FunctionName="InternetStoreModel.Store.DeleteProductFromOrder" />
           <FunctionImportMapping FunctionImportName="GetProductById" FunctionName="InternetStoreModel.Store.GetProductById">
             <ResultMapping>
               <ComplexTypeMapping TypeName="InternetStoreModel.GetProductById_Result">
@@ -884,6 +900,7 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="MoveCartItemToOrder" FunctionName="InternetStoreModel.Store.MoveCartItemToOrder" />
           <FunctionImportMapping FunctionImportName="sp_alterdiagram" FunctionName="InternetStoreModel.Store.sp_alterdiagram" />
           <FunctionImportMapping FunctionImportName="sp_creatediagram" FunctionName="InternetStoreModel.Store.sp_creatediagram" />
           <FunctionImportMapping FunctionImportName="sp_dropdiagram" FunctionName="InternetStoreModel.Store.sp_dropdiagram" />

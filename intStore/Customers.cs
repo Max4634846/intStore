@@ -18,7 +18,6 @@ namespace intStore
         public Customers()
         {
             this.Cart = new HashSet<Cart>();
-            this.Orders = new HashSet<Orders>();
         }
     
         public int id_Customers { get; set; }
@@ -31,7 +30,5 @@ namespace intStore
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Cart> Cart { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Orders> Orders { get; set; }
     }
 }

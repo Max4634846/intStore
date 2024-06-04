@@ -18,5 +18,7 @@ namespace intStore.Models
         public string Password { get; set; }
 
         public virtual ICollection<CartModel> Cart { get; set; }
+
+        public virtual ICollection<OrdersModel> Orders { get; set; }
     }
 }

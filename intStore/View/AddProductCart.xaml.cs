@@ -60,11 +60,8 @@ namespace intStore.View
         {
             if (int.TryParse(CheckNumber.Text, out int quantity))
             {
-                // Создаем аргументы события
                 ProductEventArgs args = new ProductEventArgs(_currentProduct, quantity);
-                // Вызываем событие
                 ProductAddedToCart?.Invoke(this, args);
-                // Закрываем окно
                 Close();
             }
             else

@@ -7,7 +7,7 @@ using System.Windows.Media;
 
 namespace intStore.Models
 {
-    public class Product
+    public class ProductModelOrders
     {
         public int id_Product { get; set; }
         public int id_Categories { get; set; }
@@ -20,9 +20,8 @@ namespace intStore.Models
         public Nullable<System.DateTime> DateProduct { get; set; }
         public ImageSource ImageProduct { get; set; }
         public Nullable<int> id_Shipment { get; set; }
-        public string Status{  get; set; }
 
         public virtual ICollection<OrdersWithCartModel> OrdersWithCartModel { get; set; }
-        public virtual CategoriesModel Categories { get; set; }
+        public virtual Categories Categories { get; set; }
     }
 }

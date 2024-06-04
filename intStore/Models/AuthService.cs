@@ -11,7 +11,6 @@ namespace intStore.Models
 {
     public class AuthService
     {
-        private EmailService emailService = new EmailService();
         public bool Register(string name, string email, string password)
         {
             using (var connection = new InternetStoreEntities1())
@@ -33,7 +32,6 @@ namespace intStore.Models
                 connection.Customers.Add(customer);
                 connection.SaveChanges();
 
-                emailService.SendEmailAsync(email, "Добро пожаловать в Интернет-магазин", $"Здравствуйте {name},\n\nСпасибо за регистрацию в нашем Интернет-магазине!");
                 return true;
             }
         }

@@ -17,8 +17,11 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Web.UI.WebControls;
+using System.Windows.Forms;
+using MessageBox = System.Windows.Forms.MessageBox;
 
-namespace intStore
+
+namespace intStore.View
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -29,12 +32,14 @@ namespace intStore
         public MainWindow()
         {
             InitializeComponent();
+            UpdatePlaceholderVisibility();
+            UpdatePlaceholderVisibilityReg();
             authService = new AuthService();
         }
         private void LoginBtn_Click(object sender, RoutedEventArgs e)
         {
             string email = txtFilterEmail.Text;
-            string password = txtFilterPassword.Text;
+            string password = passwordBox.Password;
 
             var customer = authService.Login(email, password);
             if (customer != null)
@@ -47,7 +52,9 @@ namespace intStore
             }
             else
             {
-                MessageBox.Show("Неверный адрес электронной почты или пароль.");
+                
+                MessageBox.Show("Попробуйте войти заново, неправильный логин или пароль", "Ошибка входа", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
             }
         }
          
@@ -55,7 +62,7 @@ namespace intStore
         {
             string username = txtFilterUsernameReg.Text;
             string email = txtFilterEmailReg.Text;
-            string password = txtFilterPasswordReg.Text;
+            string password = txtFilterPasswordReg.Password;
 
             if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
             {
@@ -75,7 +82,7 @@ namespace intStore
         {
             txtFilterUsernameReg.Text = "";
             txtFilterEmailReg.Text = "";
-            txtFilterPasswordReg.Text = "";
+            txtFilterPasswordReg.Password = "";
         }
 
 
@@ -121,6 +128,27 @@ namespace intStore
             }
         }
 
+        private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            UpdatePlaceholderVisibility();
+            UpdatePlaceholderVisibilityReg();
+        }
 
+        private void UpdatePlaceholderVisibility()
+        {
+            var placeholderText = (TextBlock)passwordBox.Template.FindName("PlaceholderText", passwordBox);
+            if (placeholderText != null)
+            {
+                placeholderText.Visibility = string.IsNullOrEmpty(passwordBox.Password) ? Visibility.Visible : Visibility.Collapsed;
+            }
+        }
+        private void UpdatePlaceholderVisibilityReg()
+        {
+            var placeholderText = (TextBlock)txtFilterPasswordReg.Template.FindName("PlaceholderText", txtFilterPasswordReg);
+            if (placeholderText != null)
+            {
+                placeholderText.Visibility = string.IsNullOrEmpty(txtFilterPasswordReg.Password) ? Visibility.Visible : Visibility.Collapsed;
+            }
+        }
     }
 }

@@ -16,10 +16,16 @@ namespace intStore
     {
         public int id_Cart { get; set; }
         public Nullable<int> id_Customer { get; set; }
+        public Nullable<int> id_Order { get; set; }
         public Nullable<int> id_OrdersWithCart { get; set; }
+        public Nullable<int> id_Status { get; set; }
+        public Nullable<int> id_Payments { get; set; }
         public Nullable<int> Quantity { get; set; }
     
         public virtual Customers Customers { get; set; }
+        public virtual Orders Orders { get; set; }
         public virtual OrdersWithCart OrdersWithCart { get; set; }
+        public virtual Payments Payments { get; set; }
+        public virtual Status Status { get; set; }
     }
 }
