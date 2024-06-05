@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.RightsManagement;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
@@ -21,6 +22,7 @@ namespace intStore.Models
         public ImageSource ImageProduct { get; set; }
         public Nullable<int> id_Shipment { get; set; }
         public string Status{  get; set; }
+        public string Payment {  get; set; }
 
         public virtual ICollection<OrdersWithCartModel> OrdersWithCartModel { get; set; }
         public virtual CategoriesModel Categories { get; set; }

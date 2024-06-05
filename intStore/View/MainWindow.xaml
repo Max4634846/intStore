@@ -24,8 +24,7 @@
             </Grid.RowDefinitions>
 
 
-            <Image Source="\Images\3913745.jpg" Margin="25" VerticalAlignment="Center" />
-            <Image Source="\Images\3913745.jpg" Margin="25" VerticalAlignment="Center" />
+            <Image Source="\Images\LoginImage.jpg" Margin="25" VerticalAlignment="Center" />
 
             <Border Grid.Column="1">
                 <Grid>
@@ -51,10 +50,10 @@
                                     </Grid.RowDefinitions>
                                     <StackPanel Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.ColumnSpan="2" Margin="37,0,0,0">
                                         <Image Source="\Images\Avocado.png" Height="64" Width="64" Margin="0 0 0 5"/>
-                                        <TextBlock Text="Интернет-Магазин" Foreground="#a9eb56" 
+                                        <TextBlock Text="Интернет-Магазин" Foreground="LightGreen" 
                                                             FontSize="36" FontWeight="Bold">
                                             <TextBlock.Effect>
-                                                <DropShadowEffect Color="#312563" Direction="180" ShadowDepth="3" BlurRadius="5" Opacity="0.9" />
+                                                <DropShadowEffect Color="#312563" Direction="180" ShadowDepth="3" BlurRadius="10" Opacity="0.9" />
                                             </TextBlock.Effect>
                                         </TextBlock>
                                     </StackPanel>

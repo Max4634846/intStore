@@ -1,28 +1,18 @@
 ﻿using intStore.Models;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Runtime.Remoting.Contexts;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using intStore.Utils;
-using intStore.Models;
-using System.Windows.Media.Media3D;
-using System.Diagnostics;
-using System.Data.Entity;
-using System.Collections.ObjectModel;
 using System.Data.SqlClient;
 using System.ComponentModel;
-using MimeKit.Tnef;
+using Microsoft.Web.WebView2.Core;
+using System.Diagnostics;
+
+
 
 
 namespace intStore.View
@@ -45,8 +35,12 @@ namespace intStore.View
             loggedInCustomer = customers;
             LoadCartItemsForUser(loggedInCustomer.id_Customers);
             UpdateCartButton();
-
-
+            DateReg.Text = $"{customers.RegisterDate:yyyy.MM.dd}";
+            NumberPhone.Text = $"{customers.Phone}";
+            Address.Text = $"{customers.Address}";
+            UserName.Text = $"{customers.Name}";
+            SurName.Text = $"{customers.SurName}";
+            
         }
 
         //Обновление счётчика корзины...
@@ -76,6 +70,8 @@ namespace intStore.View
                         Quantity = item.Quantity,
                         Price = item.OrdersWithCart.Goods.Price,
                         Status = item.Status.NameStatus,
+                        Payment = item.Payments.MethodName.ToLower(),
+                        
 
                     }).ToList();
 
@@ -88,13 +84,20 @@ namespace intStore.View
                         Quantity = item.Quantity,
                         Price = item.Price,
                         Status = item.Status,
-
+                        Payment = item.Payment,
+                        
                     }).ToList();
 
+                
                 CartList.ItemsSource = cartItemsWithImages;
+                
 
                 decimal totalPrice = Convert.ToDecimal(cartItemsWithImages.Sum(item => item.Price * item.Quantity));
                 Cost.Text = $"₽{totalPrice:F2}";
+
+                
+                
+                
             }
         }
 
@@ -431,5 +434,63 @@ namespace intStore.View
             }
         }
 
+        private void SaveBtn_Click(object sender, RoutedEventArgs e)
+        {
+            int customerId = loggedInCustomer.id_Customers;
+
+            using (var context = new InternetStoreEntities1())
+            {
+                var cust = context.Customers.FirstOrDefault(c => c.id_Customers == customerId);
+
+                if (cust != null)
+                {
+                    cust.Name = UserName.Text;
+                    cust.SurName = SurName.Text;
+                    cust.Phone = NumberPhone.Text;
+                    cust.Address = Address.Text;
+                    context.SaveChanges();
+                    MessageBox.Show("Данные были изменены");
+
+                }
+                else
+                {
+                    MessageBox.Show("Пользователь не найден.");
+                }
+            }
+        }
+
+        private async void AddAddress_Click(object sender, RoutedEventArgs e)
+        {
+            string script = "document.querySelector('#searchbox input').value\r\n";
+
+            var result = await webView.CoreWebView2.ExecuteScriptAsync(script);
+
+            Address.Text = result;
+        }
+
+        private void UserName_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            e.Handled = !IsTextAllowed(e.Text);
+
+        }
+        private bool IsTextAllowed(string text)
+        {
+            foreach (char c in text)
+            {
+                if (!char.IsLetter(c))
+                {
+                    MessageBox.Show($"Вводить можно только буквы", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+                    return false;
+                }
+            }
+            return true;
+        }
+
+
+        //Создание отчета по заказам
+        private void BtnReportOrder_Click(object sender, RoutedEventArgs e)
+        {
+            
+        }
     }
 }
