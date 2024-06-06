@@ -11,6 +11,14 @@ using System.Data.SqlClient;
 using System.ComponentModel;
 using Microsoft.Web.WebView2.Core;
 using System.Diagnostics;
+using Xceed.Document.NET;
+using Xceed.Words.NET;
+using Image = Xceed.Document.NET.Image;
+using System.Windows.Media;
+using System.Drawing;
+using Color = System.Drawing.Color;
+using System.IO;
+using System.Xml.Linq;
 
 
 
@@ -40,7 +48,9 @@ namespace intStore.View
             Address.Text = $"{customers.Address}";
             UserName.Text = $"{customers.Name}";
             SurName.Text = $"{customers.SurName}";
-            
+            RefreshPage();
+
+
         }
 
         //Обновление счётчика корзины...
@@ -204,7 +214,7 @@ namespace intStore.View
                     SelectedItem = select;
                     AddProductCart addProductCart = new AddProductCart(SelectedItem);
                     addProductCart.ProductAddedToCart += AddProductToCartHandler;
-                    addProductCart.Show();
+                    addProductCart.ShowDialog();
                 }
                 else MessageBox.Show("Продукт не выбран.");
             }
@@ -486,11 +496,138 @@ namespace intStore.View
             return true;
         }
 
-
         //Создание отчета по заказам
         private void BtnReportOrder_Click(object sender, RoutedEventArgs e)
         {
-            
+            string txtName = txtNameReport.Text;
+            string filePath = $"C:\\Users\\ultra\\source\\repos\\intStore\\intStore\\Resources\\ReportOrders\\{txtName}.docx";
+
+            if(File.Exists(filePath))
+            {
+                MessageBox.Show("Такое название уже есть, придумайте новое");
+                return;
+            }
+
+            txtNameReport.Text = "";
+
+            using (var doc = DocX.Create(filePath))
+            {
+                doc.InsertParagraph("Интернет-Магазин").Color(Color.FromArgb(255, 51, 187, 94)).FontSize(36d).Bold().Alignment = Alignment.center;
+
+                doc.InsertParagraph("");
+                doc.InsertParagraph("");
+
+                doc.InsertParagraph($"Общая стоимость: ").FontSize(10d).Bold().Alignment = Alignment.left;
+
+
+                using (var context = new InternetStoreEntities1())
+                {
+                    var cars = context.Cart.Take(60).ToList();
+
+                    if (cars.Any())
+                    {
+                        var table = doc.AddTable(cars.Count + 1, 6);
+
+                        Color headerColor = ColorTranslator.FromHtml("#33bb5e");
+
+                        table.Rows[0].Cells[0].Paragraphs.First().Append("Номер заказа").Color(Color.White).Bold();
+                        table.Rows[0].Cells[1].Paragraphs.First().Append("Дата").Color(Color.White).Bold();
+                        table.Rows[0].Cells[2].Paragraphs.First().Append("Стоимость").Color(Color.White).Bold();
+                        table.Rows[0].Cells[3].Paragraphs.First().Append("Количество").Color(Color.White).Bold();
+                        table.Rows[0].Cells[4].Paragraphs.First().Append("Название продукта").Color(Color.White).Bold();
+                        table.Rows[0].Cells[5].Paragraphs.First().Append("Категория").Color(Color.White).Bold();
+
+                        foreach (var cell in table.Rows[0].Cells)
+                        {
+                            cell.FillColor = headerColor;
+                        }
+
+                        for (int i = 0; i < cars.Count; i++)
+                        {
+                            table.Rows[i + 1].Cells[0].Paragraphs.First().Append(cars[i].Orders.id_Order.ToString()).Alignment = Alignment.center;
+                            table.Rows[i + 1].Cells[1].Paragraphs.First().Append($"{cars[i].Orders.OrderDate:dd.MM.yyyy}").Alignment = Alignment.center;
+                            table.Rows[i + 1].Cells[2].Paragraphs.First().Append($"{cars[i].Orders.TotalAmount:F2} руб.").Alignment = Alignment.center;
+                            table.Rows[i + 1].Cells[3].Paragraphs.First().Append($"{cars[i].Quantity} шт.").Alignment = Alignment.center;
+                            table.Rows[i + 1].Cells[4].Paragraphs.First().Append(cars[i].OrdersWithCart.Goods.NameProduct.ToString()).Alignment = Alignment.center;
+                            table.Rows[i + 1].Cells[5].Paragraphs.First().Append(cars[i].OrdersWithCart.Goods.Categories.NameCategories.ToString()).Alignment = Alignment.center;
+
+                        }
+
+
+                        doc.InsertTable(table).Alignment = Alignment.center;
+
+                        doc.InsertParagraph("");
+
+
+                        doc.InsertParagraph("Информация о всех заказах, которые были оформлены и выполнены в нашем интернет-магазине.").FontSize(18d).Alignment = Alignment.center;
+
+
+                        doc.InsertParagraph("");
+                        doc.InsertParagraph("");
+
+                        string signaturePath = @"C:\Users\ultra\source\repos\intStore\intStore\Images\Obrazec.png";
+                        Image signatureImage = doc.AddImage(signaturePath);
+                        Picture signaturePicture = signatureImage.CreatePicture(150, 150);
+
+                        string signaturePath1 = @"C:\Users\ultra\source\repos\intStore\intStore\Images\Podpic.png";
+                        Image signatureImage1 = doc.AddImage(signaturePath1);
+                        Picture signaturePicture1 = signatureImage1.CreatePicture(60, 60);
+
+                        var directorParagraph = doc.InsertParagraph();
+                        directorParagraph.Append("Генеральный директор: ").Bold().FontSize(12);
+                        directorParagraph.Append("Макаров М.Ю.").FontSize(12).AppendPicture(signaturePicture1);
+                        directorParagraph.SpacingAfter(20);
+
+                        doc.InsertParagraph("");
+                        doc.InsertParagraph("");
+
+                        var accountantParagraph = doc.InsertParagraph();
+                        accountantParagraph.Append("Генеральный бухгалтер: ").Bold().FontSize(12);
+                        accountantParagraph.Append("Макарова А.Ю.").FontSize(12).AppendPicture(signaturePicture1);
+
+                        var paragraph1 = doc.InsertParagraph();
+                        paragraph1.AppendPicture(signaturePicture).Alignment = Alignment.right;
+
+                        var paragraph2 = doc.InsertParagraph();
+
+
+
+
+
+                    }
+                    else
+                    {
+                        doc.InsertParagraph("Нет данных об автомобилях для отображения.");
+                    }
+                }
+
+                doc.Save();
+                Process.Start(filePath);
+                RefreshPage();
+            }
+        }
+
+        private void BtnOrdersComboBox_Click(object sender, RoutedEventArgs e)
+        {
+            string selectedReport = (string)ReportOrderComboBox.SelectedItem;
+
+            if (!string.IsNullOrEmpty(selectedReport))
+            {
+                string filePath = $"C:\\Users\\ultra\\source\\repos\\intStore\\intStore\\Resources\\ReportOrders\\{selectedReport}.docx";
+
+                Process.Start(filePath);
+            }
+        }
+        private void RefreshPage()
+        {
+            ReportOrderComboBox.Items.Clear();
+
+            string[] reportFiles = Directory.GetFiles("C:\\Users\\ultra\\source\\repos\\intStore\\intStore\\Resources\\ReportOrders", "*.docx");
+
+            foreach (string file in reportFiles)
+            {
+                ReportOrderComboBox.Items.Add(System.IO.Path.GetFileNameWithoutExtension(file));
+            }
         }
     }
 }
