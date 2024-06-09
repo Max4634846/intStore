@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 
 namespace intStore.Models
 {
@@ -17,9 +13,11 @@ namespace intStore.Models
         public string Address { get; set; }
         public Nullable<System.DateTime> RegisterDate { get; set; }
         public string Password { get; set; }
+        public int id_Payments { get; set; }
 
         public virtual ICollection<CartModel> Cart { get; set; }
 
         public virtual ICollection<OrdersModel> Orders { get; set; }
+        public virtual ICollection<PaymentModel> Payments { get; set; }
     }
 }

@@ -28,8 +28,10 @@ namespace intStore
         public string Address { get; set; }
         public Nullable<System.DateTime> RegisterDate { get; set; }
         public string Password { get; set; }
+        public Nullable<int> id_Payments { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Cart> Cart { get; set; }
+        public virtual Payments Payments { get; set; }
     }
 }

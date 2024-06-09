@@ -9,16 +9,9 @@ using System.Windows.Input;
 using intStore.Utils;
 using System.Data.SqlClient;
 using System.ComponentModel;
-using Microsoft.Web.WebView2.Core;
 using System.Diagnostics;
-using Xceed.Document.NET;
-using Xceed.Words.NET;
-using Image = Xceed.Document.NET.Image;
-using System.Windows.Media;
-using System.Drawing;
-using Color = System.Drawing.Color;
 using System.IO;
-using System.Xml.Linq;
+
 
 
 
@@ -35,6 +28,7 @@ namespace intStore.View
         private List<CategoriesModel> categoriesList = new List<CategoriesModel>();
         private Customers loggedInCustomer;
         private bool IsMaximized = false;
+        private List<Product> filteredProducts = new List<Product>();
         public InternetStoreWindow(Customers customers)
         {
             InitializeComponent();
@@ -43,14 +37,19 @@ namespace intStore.View
             loggedInCustomer = customers;
             LoadCartItemsForUser(loggedInCustomer.id_Customers);
             UpdateCartButton();
+            RefreshPage();
+            LoadedText(customers);
+            ItemSource();
+        }
+
+        private void LoadedText(Customers customers)
+        {
             DateReg.Text = $"{customers.RegisterDate:yyyy.MM.dd}";
             NumberPhone.Text = $"{customers.Phone}";
             Address.Text = $"{customers.Address}";
             UserName.Text = $"{customers.Name}";
             SurName.Text = $"{customers.SurName}";
-            RefreshPage();
-
-
+            PaymentsComboBox.SelectedValuePath = Convert.ToString(customers.id_Payments);
         }
 
         //Обновление счётчика корзины...
@@ -80,7 +79,6 @@ namespace intStore.View
                         Quantity = item.Quantity,
                         Price = item.OrdersWithCart.Goods.Price,
                         Status = item.Status.NameStatus,
-                        Payment = item.Payments.MethodName.ToLower(),
                         
 
                     }).ToList();
@@ -94,20 +92,24 @@ namespace intStore.View
                         Quantity = item.Quantity,
                         Price = item.Price,
                         Status = item.Status,
-                        Payment = item.Payment,
                         
                     }).ToList();
-
-                
+  
                 CartList.ItemsSource = cartItemsWithImages;
                 
-
                 decimal totalPrice = Convert.ToDecimal(cartItemsWithImages.Sum(item => item.Price * item.Quantity));
                 Cost.Text = $"₽{totalPrice:F2}";
 
-                
-                
-                
+                if(totalPrice > 1000)
+                {
+                    BuyProductCart.Visibility = Visibility.Visible;
+                    minPrice.Visibility = Visibility.Hidden;
+                }
+                else
+                {
+                    BuyProductCart.Visibility = Visibility.Hidden;
+                    minPrice.Visibility = Visibility.Visible;
+                }
             }
         }
 
@@ -136,6 +138,7 @@ namespace intStore.View
                 productList.Add(product);
             }
             ItemsList.ItemsSource = productList;
+
         }
 
         private void LoadCategoriesList()
@@ -211,12 +214,15 @@ namespace intStore.View
                 var select = button.CommandParameter as Product;
                 if (select != null)
                 {
-                    SelectedItem = select;
-                    AddProductCart addProductCart = new AddProductCart(SelectedItem);
-                    addProductCart.ProductAddedToCart += AddProductToCartHandler;
-                    addProductCart.ShowDialog();
+                        SelectedItem = select;
+                        AddProductCart addProductCart = new AddProductCart(SelectedItem);
+                        addProductCart.ProductAddedToCart += AddProductToCartHandler;
+                        addProductCart.ShowDialog();
                 }
-                else MessageBox.Show("Продукт не выбран.");
+                else
+                {
+                    MessageBox.Show("Продукт не выбран.");
+                }
             }
         }
 
@@ -263,25 +269,28 @@ namespace intStore.View
             }
         }
 
-        //Выбор определенной категории с товарами
+        //Выбор определенной категории с товарами 
         private void BtnCategoriesProduct_Click(object sender, RoutedEventArgs e)
         {
+            txtSearchCatalog.Visibility = Visibility.Visible;
+            searchCatalog.Visibility = Visibility.Visible;
+
+            txtSearchProduct.Visibility = Visibility.Hidden;
+            searchProduct.Visibility = Visibility.Hidden;
+
             Button button = sender as Button;
             if (button != null)
             {
                 CategoriesModel selectedCategory = button.CommandParameter as CategoriesModel;
                 if (selectedCategory != null)
                 {
-                    // Фильтруем список товаров по выбранной категории
-                    var filteredProducts = productList.Where(product => product.id_Categories== selectedCategory.id_Categories);
-
-                    // Получаем вкладку "Продукты"
+                    filteredProducts = productList.Where(product => product.id_Categories == selectedCategory.id_Categories).ToList();
                     TabItem tabProducts = mainTabControl.FindName("Product") as TabItem;
 
                     if (tabProducts != null)
                     {
                         tabProducts.IsSelected = true;
-                        ItemsList.ItemsSource = filteredProducts.ToList();
+                        ItemsList.ItemsSource = filteredProducts;
                     }
                 }
             }
@@ -304,6 +313,13 @@ namespace intStore.View
 
         private void BtnProduct_Click(object sender, RoutedEventArgs e)
         {
+
+            txtSearchProduct.Visibility = Visibility.Visible;
+            searchProduct.Visibility = Visibility.Visible;
+
+            txtSearchCatalog.Visibility = Visibility.Hidden;
+            searchCatalog.Visibility = Visibility.Hidden;
+
             string tabName = "Product";
             foreach (TabItem tabItem in mainTabControl.Items)
             {
@@ -312,13 +328,13 @@ namespace intStore.View
                     mainTabControl.SelectedItem = tabItem;
                     if (ItemsList.ItemsSource != productList)
                     {
+
                         ItemsList.ItemsSource = productList;
                     }
                     break;
                 }
             }
         }
-
 
         private void ReportBtn_Click(object sender, RoutedEventArgs e)
         {
@@ -370,6 +386,18 @@ namespace intStore.View
                 }
             }
         }
+        private void BtnСompletedOrders_Click(object sender, RoutedEventArgs e)
+        {
+            string tabName = "CompletedOrders";
+            foreach (TabItem tabItem in mainTabControl.Items)
+            {
+                if (tabItem.Name == tabName)
+                {
+                    mainTabControl.SelectedItem = tabItem;
+                    break;
+                }
+            }
+        }
 
         private void BtnCloseApp_Click(object sender, RoutedEventArgs e)
         {
@@ -380,10 +408,13 @@ namespace intStore.View
 
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            DragMove();
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                this.DragMove();
+            }
         }
 
-
+        //Сортировка товара по имени
         private void txtSearchCart_TextChanged(object sender, TextChangedEventArgs e)
         {
             string filterText = txtSearchCart.Text.ToLower();
@@ -407,7 +438,46 @@ namespace intStore.View
         {
             string filterText = txtSearchProduct.Text.ToLower();
 
+
+            if (!string.IsNullOrWhiteSpace(filterText))
+            {
+                searchProduct.Visibility = Visibility.Hidden;
+            }
+            else
+            {
+                searchProduct.Visibility = Visibility.Visible;
+            }
+
             ICollectionView view = CollectionViewSource.GetDefaultView(productList);
+            if (view != null)
+            {
+                view.Filter = (obj) =>
+                {
+                    Product product = obj as Product;
+                    if (product != null)
+                    {
+                        return product.NameProduct.ToString().ToLower().Contains(filterText);
+                    }
+                    return false;
+                };
+            }
+        }
+
+
+        private void txtSearchCatalog_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            string filterText = txtSearchCatalog.Text.ToLower();
+            
+            if(!string.IsNullOrWhiteSpace(filterText))
+            {
+                searchCatalog.Visibility = Visibility.Hidden; 
+            }
+            else
+            {
+                searchCatalog.Visibility = Visibility.Visible;
+            }
+
+            ICollectionView view = CollectionViewSource.GetDefaultView(filteredProducts);
             if (view != null)
             {
                 view.Filter = (obj) =>
@@ -443,6 +513,18 @@ namespace intStore.View
                 }
             }
         }
+        private void ItemSource()
+        {
+            using (var context = new InternetStoreEntities1())
+            {
+
+                var paymentsComboBox = context.Payments.Select(el => new PaymentModel { id_Payments = el.id_Payments, MethodName = el.MethodName }).ToList();
+
+                PaymentsComboBox.ItemsSource = paymentsComboBox;
+                PaymentsComboBox.DisplayMemberPath = "MethodName";
+                PaymentsComboBox.SelectedValuePath = "id_Payments";
+            }
+        }
 
         private void SaveBtn_Click(object sender, RoutedEventArgs e)
         {
@@ -451,16 +533,16 @@ namespace intStore.View
             using (var context = new InternetStoreEntities1())
             {
                 var cust = context.Customers.FirstOrDefault(c => c.id_Customers == customerId);
-
                 if (cust != null)
                 {
                     cust.Name = UserName.Text;
                     cust.SurName = SurName.Text;
                     cust.Phone = NumberPhone.Text;
                     cust.Address = Address.Text;
+                    cust.id_Payments = Convert.ToInt32(PaymentsComboBox.SelectedValue);
+
                     context.SaveChanges();
                     MessageBox.Show("Данные были изменены");
-
                 }
                 else
                 {
@@ -473,9 +555,15 @@ namespace intStore.View
         {
             string script = "document.querySelector('#searchbox input').value\r\n";
 
-            var result = await webView.CoreWebView2.ExecuteScriptAsync(script);
-
-            Address.Text = result;
+            if(string.IsNullOrEmpty(script))
+            {
+                MessageBox.Show("Напиши в строку поиска");
+            }
+            else
+            {
+                var result = await webView.CoreWebView2.ExecuteScriptAsync(script);
+                Address.Text = result;
+            }
         }
 
         private void UserName_PreviewTextInput(object sender, TextCompositionEventArgs e)
@@ -499,112 +587,9 @@ namespace intStore.View
         //Создание отчета по заказам
         private void BtnReportOrder_Click(object sender, RoutedEventArgs e)
         {
-            string txtName = txtNameReport.Text;
-            string filePath = $"C:\\Users\\ultra\\source\\repos\\intStore\\intStore\\Resources\\ReportOrders\\{txtName}.docx";
-
-            if(File.Exists(filePath))
-            {
-                MessageBox.Show("Такое название уже есть, придумайте новое");
-                return;
-            }
-
-            txtNameReport.Text = "";
-
-            using (var doc = DocX.Create(filePath))
-            {
-                doc.InsertParagraph("Интернет-Магазин").Color(Color.FromArgb(255, 51, 187, 94)).FontSize(36d).Bold().Alignment = Alignment.center;
-
-                doc.InsertParagraph("");
-                doc.InsertParagraph("");
-
-                doc.InsertParagraph($"Общая стоимость: ").FontSize(10d).Bold().Alignment = Alignment.left;
-
-
-                using (var context = new InternetStoreEntities1())
-                {
-                    var cars = context.Cart.Take(60).ToList();
-
-                    if (cars.Any())
-                    {
-                        var table = doc.AddTable(cars.Count + 1, 6);
-
-                        Color headerColor = ColorTranslator.FromHtml("#33bb5e");
-
-                        table.Rows[0].Cells[0].Paragraphs.First().Append("Номер заказа").Color(Color.White).Bold();
-                        table.Rows[0].Cells[1].Paragraphs.First().Append("Дата").Color(Color.White).Bold();
-                        table.Rows[0].Cells[2].Paragraphs.First().Append("Стоимость").Color(Color.White).Bold();
-                        table.Rows[0].Cells[3].Paragraphs.First().Append("Количество").Color(Color.White).Bold();
-                        table.Rows[0].Cells[4].Paragraphs.First().Append("Название продукта").Color(Color.White).Bold();
-                        table.Rows[0].Cells[5].Paragraphs.First().Append("Категория").Color(Color.White).Bold();
-
-                        foreach (var cell in table.Rows[0].Cells)
-                        {
-                            cell.FillColor = headerColor;
-                        }
-
-                        for (int i = 0; i < cars.Count; i++)
-                        {
-                            table.Rows[i + 1].Cells[0].Paragraphs.First().Append(cars[i].Orders.id_Order.ToString()).Alignment = Alignment.center;
-                            table.Rows[i + 1].Cells[1].Paragraphs.First().Append($"{cars[i].Orders.OrderDate:dd.MM.yyyy}").Alignment = Alignment.center;
-                            table.Rows[i + 1].Cells[2].Paragraphs.First().Append($"{cars[i].Orders.TotalAmount:F2} руб.").Alignment = Alignment.center;
-                            table.Rows[i + 1].Cells[3].Paragraphs.First().Append($"{cars[i].Quantity} шт.").Alignment = Alignment.center;
-                            table.Rows[i + 1].Cells[4].Paragraphs.First().Append(cars[i].OrdersWithCart.Goods.NameProduct.ToString()).Alignment = Alignment.center;
-                            table.Rows[i + 1].Cells[5].Paragraphs.First().Append(cars[i].OrdersWithCart.Goods.Categories.NameCategories.ToString()).Alignment = Alignment.center;
-
-                        }
-
-
-                        doc.InsertTable(table).Alignment = Alignment.center;
-
-                        doc.InsertParagraph("");
-
-
-                        doc.InsertParagraph("Информация о всех заказах, которые были оформлены и выполнены в нашем интернет-магазине.").FontSize(18d).Alignment = Alignment.center;
-
-
-                        doc.InsertParagraph("");
-                        doc.InsertParagraph("");
-
-                        string signaturePath = @"C:\Users\ultra\source\repos\intStore\intStore\Images\Obrazec.png";
-                        Image signatureImage = doc.AddImage(signaturePath);
-                        Picture signaturePicture = signatureImage.CreatePicture(150, 150);
-
-                        string signaturePath1 = @"C:\Users\ultra\source\repos\intStore\intStore\Images\Podpic.png";
-                        Image signatureImage1 = doc.AddImage(signaturePath1);
-                        Picture signaturePicture1 = signatureImage1.CreatePicture(60, 60);
-
-                        var directorParagraph = doc.InsertParagraph();
-                        directorParagraph.Append("Генеральный директор: ").Bold().FontSize(12);
-                        directorParagraph.Append("Макаров М.Ю.").FontSize(12).AppendPicture(signaturePicture1);
-                        directorParagraph.SpacingAfter(20);
-
-                        doc.InsertParagraph("");
-                        doc.InsertParagraph("");
-
-                        var accountantParagraph = doc.InsertParagraph();
-                        accountantParagraph.Append("Генеральный бухгалтер: ").Bold().FontSize(12);
-                        accountantParagraph.Append("Макарова А.Ю.").FontSize(12).AppendPicture(signaturePicture1);
-
-                        var paragraph1 = doc.InsertParagraph();
-                        paragraph1.AppendPicture(signaturePicture).Alignment = Alignment.right;
-
-                        var paragraph2 = doc.InsertParagraph();
-
-
-
-
-
-                    }
-                    else
-                    {
-                        doc.InsertParagraph("Нет данных об автомобилях для отображения.");
-                    }
-                }
-
-                doc.Save();
-                Process.Start(filePath);
-                RefreshPage();
-            }
+            ReportGenerate reportGenerate = new ReportGenerate(loggedInCustomer);
+            reportGenerate.GenerateFile(txtNameReport.Text);
+            RefreshPage();
         }
 
         private void BtnOrdersComboBox_Click(object sender, RoutedEventArgs e)
@@ -613,21 +598,47 @@ namespace intStore.View
 
             if (!string.IsNullOrEmpty(selectedReport))
             {
-                string filePath = $"C:\\Users\\ultra\\source\\repos\\intStore\\intStore\\Resources\\ReportOrders\\{selectedReport}.docx";
+                string filePath = $"\\intStore\\intStore\\bin\\Debug\\Report\\{loggedInCustomer.id_Customers}\\{selectedReport}.docx";
 
-                Process.Start(filePath);
+                if (File.Exists(filePath))
+                {
+                    Process.Start(filePath);
+                }
+                else
+                {
+                    MessageBox.Show("Файл не найден.");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Пожалуйста, выберите отчет.");
             }
         }
+
         private void RefreshPage()
         {
+            string customerDirectory = $"\\intStore\\intStore\\bin\\Debug\\Report\\{loggedInCustomer.id_Customers}";
+
             ReportOrderComboBox.Items.Clear();
 
-            string[] reportFiles = Directory.GetFiles("C:\\Users\\ultra\\source\\repos\\intStore\\intStore\\Resources\\ReportOrders", "*.docx");
-
-            foreach (string file in reportFiles)
+            if (Directory.Exists(customerDirectory))
             {
-                ReportOrderComboBox.Items.Add(System.IO.Path.GetFileNameWithoutExtension(file));
+                var reportFiles = Directory.GetFiles(customerDirectory, "*.docx");
+                foreach (var reportFile in reportFiles)
+                {
+                    ReportOrderComboBox.Items.Add(Path.GetFileNameWithoutExtension(reportFile));
+                }
             }
+        }
+
+        private void MinusBtn_Click(object sender, RoutedEventArgs e)
+        {
+            
+        }
+
+        private void PlusBtn_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

@@ -17,7 +17,7 @@ namespace intStore
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Payments()
         {
-            this.Cart = new HashSet<Cart>();
+            this.Customers = new HashSet<Customers>();
         }
     
         public int id_Payments { get; set; }
@@ -25,6 +25,6 @@ namespace intStore
         public string Description { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Cart> Cart { get; set; }
+        public virtual ICollection<Customers> Customers { get; set; }
     }
 }

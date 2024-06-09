@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Net.Mail;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace intStore.Models
@@ -20,6 +15,7 @@ namespace intStore.Models
                     MessageBox.Show("Данная почта уже используется");
                     return false;
                 }
+
 
                 var customer = new Customers
                 {
@@ -40,7 +36,7 @@ namespace intStore.Models
         {
             using(var connection = new InternetStoreEntities1())
             {
-                return connection.Customers.FirstOrDefault(c => c.Email == email && c.Password == password);
+                return connection.Customers.Include("Payments").FirstOrDefault(c => c.Email == email && c.Password == password);
             }
         }
     }

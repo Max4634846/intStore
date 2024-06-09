@@ -1,21 +1,7 @@
 ﻿using intStore.Models;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data.Entity;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace intStore.View
 {
@@ -30,6 +16,11 @@ namespace intStore.View
         {
             InitializeComponent();
             _currentProduct = currentProduct;
+            LoadTextAddProduct(_currentProduct);
+        }
+
+        private void LoadTextAddProduct(Product _currentProduct)
+        {
             ImageProductAdd.Source = _currentProduct.ImageProduct;
             NameProduct.Text = _currentProduct.NameProduct;
             Description.Text = _currentProduct.Description;
@@ -82,7 +73,10 @@ namespace intStore.View
 
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            DragMove();
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                this.DragMove();
+            }
         }
 
     }

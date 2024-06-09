@@ -1,4 +1,5 @@
 ﻿using intStore.Models;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -39,9 +40,7 @@ namespace intStore.View
             }
             else
             {
-                
                 MessageBox.Show("Попробуйте войти заново, неправильный логин или пароль", "Ошибка входа", MessageBoxButton.OK, MessageBoxImage.Error);
-
             }
         }
          
@@ -57,12 +56,23 @@ namespace intStore.View
                 return;
             }
 
+            if (!IsValidEmail(email))
+            {
+                MessageBox.Show("Некорректный email.");
+                return;
+            }
+
             bool registrationSuccessful = authService.Register(username, email, password);
             if (registrationSuccessful)
             {
                 MessageBox.Show("Регистрация прошла успешно!");
                 ClearTextBox();
             }
+        }
+        private bool IsValidEmail(string email)
+        {
+            string pattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$"; // Почта@gmail.com
+            return Regex.IsMatch(email, pattern);
         }
 
         private void ClearTextBox()
