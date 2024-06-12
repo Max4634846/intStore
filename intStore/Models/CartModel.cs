@@ -1,5 +1,6 @@
 ﻿using System;
 
+
 namespace intStore.Models
 {
     public class CartModel

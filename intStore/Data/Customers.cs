@@ -7,29 +7,31 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace intStore
+namespace intStore.Data
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class Shipment
+    public partial class Customers
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Shipment()
+        public Customers()
         {
-            this.Goods = new HashSet<Goods>();
+            this.Cart = new HashSet<Cart>();
         }
     
-        public int id_Shipment { get; set; }
-        public Nullable<int> id_Supplier { get; set; }
-        public Nullable<System.DateTime> Date { get; set; }
-        public Nullable<int> id_StatuShipment { get; set; }
-        public Nullable<double> Weight { get; set; }
-        public Nullable<decimal> Cost { get; set; }
+        public int id_Customers { get; set; }
+        public string Name { get; set; }
+        public string SurName { get; set; }
+        public string Email { get; set; }
+        public string Phone { get; set; }
+        public string Address { get; set; }
+        public Nullable<System.DateTime> RegisterDate { get; set; }
+        public string Password { get; set; }
+        public Nullable<int> id_Payments { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Goods> Goods { get; set; }
-        public virtual StatusShipment StatusShipment { get; set; }
-        public virtual Suppliers Suppliers { get; set; }
+        public virtual ICollection<Cart> Cart { get; set; }
+        public virtual Payments Payments { get; set; }
     }
 }

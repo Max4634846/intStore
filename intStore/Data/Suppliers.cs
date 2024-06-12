@@ -7,21 +7,24 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace intStore
+namespace intStore.Data
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class StatusShipment
+    public partial class Suppliers
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public StatusShipment()
+        public Suppliers()
         {
             this.Shipment = new HashSet<Shipment>();
         }
     
-        public int id_Status { get; set; }
-        public string NameStatus { get; set; }
+        public int id_Supplier { get; set; }
+        public string NameSupplier { get; set; }
+        public string PhoneSupplier { get; set; }
+        public string Email { get; set; }
+        public string ContactName { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Shipment> Shipment { get; set; }

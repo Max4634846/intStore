@@ -7,24 +7,24 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace intStore
+namespace intStore.Data
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class Payments
+    public partial class Orders
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Payments()
+        public Orders()
         {
-            this.Customers = new HashSet<Customers>();
+            this.Cart = new HashSet<Cart>();
         }
     
-        public int id_Payments { get; set; }
-        public string MethodName { get; set; }
-        public string Description { get; set; }
+        public int id_Order { get; set; }
+        public Nullable<System.DateTime> OrderDate { get; set; }
+        public Nullable<decimal> TotalAmount { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Customers> Customers { get; set; }
+        public virtual ICollection<Cart> Cart { get; set; }
     }
 }

@@ -16,5 +16,6 @@ namespace intStore.Models
 
         public virtual ICollection<CartModel> Cart { get; set; }
         public virtual Product Products { get; set; }
+        public virtual CartModel CartModel { get; set; }
     }
 }

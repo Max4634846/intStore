@@ -3,44 +3,34 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Windows;
 using Xceed.Document.NET;
 using Xceed.Words.NET;
 using Image = Xceed.Document.NET.Image;
+using intStore.Data;
+
 
 namespace intStore.Utils
 {
     public class ReportGenerate
     {
         private Customers loggedInCustomer;
+
         public ReportGenerate(Customers customer)
         {
             loggedInCustomer = customer;
         }
-        public void GenerateFile(string txtNameReport)
+
+        // Докумен по оформленным заказм для клиента...
+        public void GenerateFile()
         {
+            string txtNameReport = "Отчет_по_заказам"; // Имя файла для отчета
             string customerDirectory = $"\\intStore\\intStore\\bin\\Debug\\Report\\{loggedInCustomer.id_Customers}";
             if (!Directory.Exists(customerDirectory))
             {
                 Directory.CreateDirectory(customerDirectory);
             }
 
-            if (string.IsNullOrWhiteSpace(txtNameReport))
-            {
-                MessageBox.Show("Данное поле не может быть пустым, дайте наименование файлу!", "Название файла...", MessageBoxButton.OKCancel, MessageBoxImage.Exclamation);
-                return;
-            }
-
-            string txtName = txtNameReport;
-            string filePath = $"{customerDirectory}\\{txtName}.docx";
-
-            if (File.Exists(filePath))
-            {
-                MessageBox.Show("Такое название уже есть, придумайте новое");
-                return;
-            }
-
-            txtNameReport = "";
+            string filePath = $"{customerDirectory}\\{txtNameReport}.docx";
 
             using (var doc = DocX.Create(filePath))
             {
@@ -50,9 +40,7 @@ namespace intStore.Utils
                 doc.InsertParagraph("");
 
                 doc.InsertParagraph($"Имя клиента: {loggedInCustomer.Name}");
-                doc.InsertParagraph($"Выбор оплаты: {loggedInCustomer.Payments.MethodName}");
                 doc.InsertParagraph($"Дата отчета: {DateTime.Now:yyyy.MM.dd}");
-
 
                 using (var context = new InternetStoreEntities1())
                 {
@@ -101,14 +89,11 @@ namespace intStore.Utils
                             }
                         }
 
-
                         doc.InsertTable(table).Alignment = Alignment.center;
 
                         doc.InsertParagraph("");
 
-
                         doc.InsertParagraph("Информация о всех заказах, которые были оформлены и выполнены в нашем интернет-магазине.").FontSize(18d).Alignment = Alignment.center;
-
 
                         doc.InsertParagraph("");
                         doc.InsertParagraph("");
@@ -137,11 +122,6 @@ namespace intStore.Utils
                         paragraph1.AppendPicture(signaturePicture).Alignment = Alignment.right;
 
                         var paragraph2 = doc.InsertParagraph();
-
-
-
-
-
                     }
                     else
                     {

@@ -7,25 +7,25 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace intStore
+namespace intStore.Data
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class OrdersWithCart
+    public partial class Categories
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public OrdersWithCart()
+        public Categories()
         {
-            this.Cart = new HashSet<Cart>();
+            this.Goods = new HashSet<Goods>();
         }
     
-        public int id_OrderWithCart { get; set; }
-        public Nullable<int> id_Product { get; set; }
-        public Nullable<int> Quantity { get; set; }
+        public int id_Categories { get; set; }
+        public string NameCategories { get; set; }
+        public string Desciptions { get; set; }
+        public string ImageCategories { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Cart> Cart { get; set; }
-        public virtual Goods Goods { get; set; }
+        public virtual ICollection<Goods> Goods { get; set; }
     }
 }

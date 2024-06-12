@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace intStore
+namespace intStore.Data
 {
     using System;
     using System.Data.Entity;
@@ -17,6 +17,14 @@ namespace intStore
     
     public partial class InternetStoreEntities1 : DbContext
     {
+        private static InternetStoreEntities1 _context;
+        public static InternetStoreEntities1 GetContext()
+        {
+            if (_context != null)
+                _context = new InternetStoreEntities1();
+            return _context;
+        }
+
         public InternetStoreEntities1()
             : base("name=InternetStoreEntities1")
         {
@@ -57,15 +65,6 @@ namespace intStore
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("AddProductToCart", customerIdParameter, productIdParameter, quantityParameter);
         }
     
-        public virtual int DeleteCartItem(Nullable<int> cartId)
-        {
-            var cartIdParameter = cartId.HasValue ?
-                new ObjectParameter("CartId", cartId) :
-                new ObjectParameter("CartId", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("DeleteCartItem", cartIdParameter);
-        }
-    
         public virtual int DeleteProductFromCart(Nullable<int> customerId, Nullable<int> productId)
         {
             var customerIdParameter = customerId.HasValue ?
@@ -77,19 +76,6 @@ namespace intStore
                 new ObjectParameter("ProductId", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("DeleteProductFromCart", customerIdParameter, productIdParameter);
-        }
-    
-        public virtual int DeleteProductFromOrder(Nullable<int> orderId, Nullable<int> customerId)
-        {
-            var orderIdParameter = orderId.HasValue ?
-                new ObjectParameter("orderId", orderId) :
-                new ObjectParameter("orderId", typeof(int));
-    
-            var customerIdParameter = customerId.HasValue ?
-                new ObjectParameter("customerId", customerId) :
-                new ObjectParameter("customerId", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("DeleteProductFromOrder", orderIdParameter, customerIdParameter);
         }
     
         public virtual int MoveCartItemToOrder(Nullable<int> customerId, Nullable<int> cartItemId)

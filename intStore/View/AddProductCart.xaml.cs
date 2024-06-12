@@ -24,8 +24,10 @@ namespace intStore.View
             ImageProductAdd.Source = _currentProduct.ImageProduct;
             NameProduct.Text = _currentProduct.NameProduct;
             Description.Text = _currentProduct.Description;
-            NutritionalValueProduct.Text = _currentProduct.NutritionalValue;
+            PriceProduct.Text = Convert.ToString($"{_currentProduct.Price:F2}₽");
         }
+
+        //Кнопки количества товара, уменьшение и увеличение товара
         private void PlusBtn_Click(object sender, RoutedEventArgs e)
         {
             if (int.TryParse(CheckNumber.Text, out int currentQuantity))
@@ -47,6 +49,7 @@ namespace intStore.View
             }
         }
 
+        //Кнопка добавления, закрытия и перетаскивания окна
         private void AddProductCart_Click(object sender, RoutedEventArgs e)
         {
             if (int.TryParse(CheckNumber.Text, out int quantity))
@@ -60,12 +63,6 @@ namespace intStore.View
                 MessageBox.Show("Некорректное количество товара.");
             }
         }
-
-        private void BtnClose_Click(object sender, RoutedEventArgs e)
-        {
-            Close();
-        }
-
         private void BtnBack_Click(object sender, RoutedEventArgs e)
         {
             Close();

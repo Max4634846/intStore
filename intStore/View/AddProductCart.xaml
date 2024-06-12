@@ -36,7 +36,9 @@
                     </TextBlock>
                     <TextBlock x:Name="Description" Text="Описание" HorizontalAlignment="Left" Margin="10" FontSize="14" TextWrapping="Wrap">
                     </TextBlock>
-                    <TextBlock x:Name="NutritionalValueProduct" Text="Пищевая ценность" HorizontalAlignment="Left" Margin="10" FontSize="14" TextWrapping="Wrap">
+                    <TextBlock HorizontalAlignment="Left" Margin="10" FontSize="14" TextWrapping="Wrap">
+                        <Run Text="Цена: " FontWeight="Bold" FontSize="18" />
+                        <Run x:Name="PriceProduct" Text="100" Foreground="#33bb5e" />
                     </TextBlock>
                 </StackPanel>
             </Border>

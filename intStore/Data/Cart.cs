@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace intStore
+namespace intStore.Data
 {
     using System;
     using System.Collections.Generic;
@@ -15,9 +15,9 @@ namespace intStore
     public partial class Cart
     {
         public int id_Cart { get; set; }
-        public Nullable<int> id_Customer { get; set; }
         public Nullable<int> id_Order { get; set; }
         public Nullable<int> id_OrdersWithCart { get; set; }
+        public Nullable<int> id_Customer { get; set; }
         public Nullable<int> id_Status { get; set; }
         public Nullable<int> Quantity { get; set; }
     

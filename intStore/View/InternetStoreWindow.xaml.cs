@@ -9,12 +9,9 @@ using System.Windows.Input;
 using intStore.Utils;
 using System.Data.SqlClient;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.IO;
-
-
-
-
+using System.Collections.ObjectModel;
+using intStore.Data;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 
 namespace intStore.View
 {
@@ -29,6 +26,8 @@ namespace intStore.View
         private Customers loggedInCustomer;
         private bool IsMaximized = false;
         private List<Product> filteredProducts = new List<Product>();
+        public ObservableCollection<Product> cartItemsWithImages = new ObservableCollection<Product>();
+        private ObservableCollection<Product> orderItemsWithImages = new ObservableCollection<Product>();
         public InternetStoreWindow(Customers customers)
         {
             InitializeComponent();
@@ -36,12 +35,43 @@ namespace intStore.View
             LoadCategoriesList();
             loggedInCustomer = customers;
             LoadCartItemsForUser(loggedInCustomer.id_Customers);
+            LoadOrderItemsForUser(loggedInCustomer.id_Customers);
             UpdateCartButton();
-            RefreshPage();
             LoadedText(customers);
-            ItemSource();
+            LoadFilterPrice();
         }
 
+        // Общая стоимость товара в корзине
+        private void RecalculateTotalPrice()
+        {
+
+            decimal totalPrice = Convert.ToDecimal(cartItemsWithImages.Sum(item => item.Price * item.Quantity));
+            Cost.Text = $"₽{totalPrice:F2}";
+
+
+            if (totalPrice > 1000)
+            {
+                BuyProductCart.Visibility = Visibility.Visible;
+                minPrice.Visibility = Visibility.Hidden;
+            }
+            else
+            {
+                BuyProductCart.Visibility = Visibility.Hidden;
+                minPrice.Visibility = Visibility.Visible;
+            }
+        }
+
+        // Привязка данных к CollectionViewSource и подключение фильтрации
+        private void LoadFilterPrice()
+        {
+            var viewSource = (CollectionViewSource)this.Resources["ProductCollection"];
+            viewSource.Source = productList;
+
+            var collectionView = CollectionViewSource.GetDefaultView(productList);
+            collectionView.Filter = ProductCollection_Filter;
+        }
+
+        // Данные для личного кабинета
         private void LoadedText(Customers customers)
         {
             DateReg.Text = $"{customers.RegisterDate:yyyy.MM.dd}";
@@ -49,71 +79,20 @@ namespace intStore.View
             Address.Text = $"{customers.Address}";
             UserName.Text = $"{customers.Name}";
             SurName.Text = $"{customers.SurName}";
-            PaymentsComboBox.SelectedValuePath = Convert.ToString(customers.id_Payments);
         }
 
-        //Обновление счётчика корзины...
+        // Обновление счётчика корзины...
         private void UpdateCartButton()
         {
             int itemsInCartCount;
             using (var context = new InternetStoreEntities1())
             {
-                itemsInCartCount = context.Cart.Count(item => item.id_Customer == loggedInCustomer.id_Customers);
+                itemsInCartCount = context.Cart.Count(item => item.id_Customer == loggedInCustomer.id_Customers && item.Status.NameStatus == "Не оформлен");
             }
             btnCart.Text = itemsInCartCount.ToString();
         }
 
-        //Отображение данных в корзине... 
-        private void LoadCartItemsForUser(int customerId)
-        {
-            ImageManipulation imageManipulation = new ImageManipulation();
-            using (var context = new InternetStoreEntities1())
-            {
-                var cartItemsForUser = context.Cart
-                    .Where(item => item.id_Customer == customerId)
-                    .Select(item => new
-                    {
-                        IdProduct = item.OrdersWithCart.id_OrderWithCart,
-                        ImageProductData = item.OrdersWithCart.Goods.ImageProduct,
-                        NameProduct = item.OrdersWithCart.Goods.NameProduct,
-                        Quantity = item.Quantity,
-                        Price = item.OrdersWithCart.Goods.Price,
-                        Status = item.Status.NameStatus,
-                        
-
-                    }).ToList();
-
-                    var cartItemsWithImages = cartItemsForUser
-                    .Select(item => new Product
-                    {
-                        id_Product = item.IdProduct,
-                        ImageProduct = imageManipulation.GetPhotoFromDataBase(item.ImageProductData),
-                        NameProduct = item.NameProduct,
-                        Quantity = item.Quantity,
-                        Price = item.Price,
-                        Status = item.Status,
-                        
-                    }).ToList();
-  
-                CartList.ItemsSource = cartItemsWithImages;
-                
-                decimal totalPrice = Convert.ToDecimal(cartItemsWithImages.Sum(item => item.Price * item.Quantity));
-                Cost.Text = $"₽{totalPrice:F2}";
-
-                if(totalPrice > 1000)
-                {
-                    BuyProductCart.Visibility = Visibility.Visible;
-                    minPrice.Visibility = Visibility.Hidden;
-                }
-                else
-                {
-                    BuyProductCart.Visibility = Visibility.Hidden;
-                    minPrice.Visibility = Visibility.Visible;
-                }
-            }
-        }
-
-        //Списки с товарами
+        // Отображение товаров
         private void LoadProductList()
         {
             var context = new InternetStoreEntities1();
@@ -135,12 +114,98 @@ namespace intStore.View
                     DateProduct = v.DateProduct,
                     ImageProduct = imageManipulation.GetPhotoFromDataBase(v.ImageProduct),
                 };
+
                 productList.Add(product);
             }
             ItemsList.ItemsSource = productList;
-
         }
 
+        // Отображение данных в корзине... 
+        private void LoadCartItemsForUser(int customerId)
+        {
+            ImageManipulation imageManipulation = new ImageManipulation();
+            using (var context = new InternetStoreEntities1())
+            {
+                var cartItemsForUser = context.Cart
+                    .Where(item => item.id_Customer == customerId && item.Status.NameStatus == "Не оформлен")
+                    .Select(item => new
+                    {
+                        IdProduct = item.OrdersWithCart.id_OrderWithCart,
+                        ImageProductData = item.OrdersWithCart.Goods.ImageProduct,
+                        NameProduct = item.OrdersWithCart.Goods.NameProduct,
+                        Quantity = item.Quantity,
+                        Price = item.OrdersWithCart.Goods.Price,
+                        Status = item.Status.NameStatus,
+
+                    }).ToList();
+
+                cartItemsWithImages.Clear();
+
+                foreach (var item in cartItemsForUser)
+                {
+                    Product product = new Product
+                    {
+                        id_Product = item.IdProduct,
+                        ImageProduct = imageManipulation.GetPhotoFromDataBase(item.ImageProductData),
+                        NameProduct = item.NameProduct,
+                        Quantity = item.Quantity,
+                        Price = item.Price,
+                        Status = item.Status,
+
+                    };
+                    cartItemsWithImages.Add(product);
+                }
+
+                CartList.ItemsSource = cartItemsWithImages;
+
+                RecalculateTotalPrice();
+            }
+        }
+
+        // Отображение данных в заказах
+        private void LoadOrderItemsForUser(int customerId)
+        {
+            ImageManipulation imageManipulation = new ImageManipulation();
+            using (var context = new InternetStoreEntities1())
+            {
+                var cartItemsForUser = context.Cart
+                    .Where(item => item.id_Customer == customerId && item.Status.NameStatus == "Оформлен")
+                    .Select(item => new
+                    {
+                        IdProduct = item.OrdersWithCart.Goods.id_Product,
+                        ImageProductData = item.OrdersWithCart.Goods.ImageProduct,
+                        NameProduct = item.OrdersWithCart.Goods.NameProduct,
+                        Quantity = item.Quantity,
+                        Price = item.OrdersWithCart.Goods.Price,
+                        Status = item.Status.NameStatus,
+                        DateOrder = item.Orders.OrderDate,
+
+                    }).ToList();
+
+                orderItemsWithImages.Clear();
+
+                foreach (var item in cartItemsForUser)
+                {
+                    Product product = new Product
+                    {
+                        id_Product = item.IdProduct,
+                        ImageProduct = imageManipulation.GetPhotoFromDataBase(item.ImageProductData),
+                        NameProduct = item.NameProduct,
+                        Quantity = item.Quantity,
+                        Price = item.Price,
+                        Status = item.Status,
+                        orderDate = item.DateOrder
+                    };
+                    orderItemsWithImages.Add(product);
+                }
+
+                OrdersList.ItemsSource = orderItemsWithImages;
+
+                RecalculateTotalPrice();
+            }
+        }
+
+        // Отображение категории
         private void LoadCategoriesList()
         {
             var context = new InternetStoreEntities1();
@@ -162,15 +227,32 @@ namespace intStore.View
         }
 
 
-        //Методы для кнопок с хранимыми процедурами внутри
+        // Методы для кнопок с хранимыми процедурами внутри
         private void AddProductToCartHandler(object sender, ProductEventArgs e)
         {
-            AddProductToCart(loggedInCustomer.id_Customers, e.Product.id_Product, e.Quantity);
-            MessageBox.Show("Товар был добавлен в корзину!");
-            
+            using (var context = new InternetStoreEntities1())
+            {
+                // Проверяем, есть ли уже товар с таким идентификатором в корзине
+                var existingCartItem = context.Cart.FirstOrDefault(item => item.OrdersWithCart.id_Product == e.Product.id_Product && item.Status.NameStatus == "Не оформлен");
+                if (existingCartItem != null)
+                {
+                    // Если товар уже есть в корзине, увеличиваем количество
+                    existingCartItem.Quantity += e.Quantity;
+                    context.SaveChanges();
+                    MessageBox.Show("Количество товара в корзине обновлено!");
+                }
+                else
+                {
+                    // Если товара нет в корзине, добавляем новый элемент
+                    AddProductToCart(loggedInCustomer.id_Customers, e.Product.id_Product, e.Quantity);
+                    MessageBox.Show("Товар был добавлен в корзину!");
+                }
+            }
+
             LoadCartItemsForUser(loggedInCustomer.id_Customers);
             UpdateCartButton();
         }
+
 
         private void AddProductToCart(int customerId, int productId, int quantity)
         {
@@ -195,17 +277,30 @@ namespace intStore.View
             }
         }
 
+        private void UpdateProductQuantity(int productId, int quantity)
+        {
+            using (var context = new InternetStoreEntities1())
+            {
+                var product = context.Goods.FirstOrDefault(p => p.id_Product == productId);
+                if (product != null)
+                {
+                    product.Quantity -= quantity;
+                    context.SaveChanges();
+                }
+            }
+        }
+
         private void BuyProduct(int customerId, int cartProductId)
         {
             using (var context = new InternetStoreEntities1())
             {
-                context.Database.ExecuteSqlCommand("EXEC MoveCartItemToOrder @CustomerId, @CartItemId",
+                context.Database.ExecuteSqlCommand("EXEC MoveCartItemToOrder @CustomerId, @OrderWithCatItemId",
                     new SqlParameter("@CustomerId", customerId),
-                    new SqlParameter("@CartItemId", cartProductId));
+                    new SqlParameter("@OrderWithCatItemId", cartProductId));
             }
         }
 
-        //Добавление товара в корзину, удаление
+        // Добавление товара в корзину, удаление
         private void AddProduct_Click(object sender, RoutedEventArgs e)
         {
             Button button = sender as Button;
@@ -248,28 +343,37 @@ namespace intStore.View
             }
         }
 
-        //Покупка товара, данные отправляется в заказы
+        // Покупка товара, данные отправляется в заказы
         private void BtnBuy_Click(object sender, RoutedEventArgs e)
         {
-            Button buttonBuy = sender as Button;
-            if (buttonBuy != null)
+            MessageBoxResult result = MessageBox.Show("Вы точно хотите приобрести все товары в корзине?", "Покупка товаров", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (result == MessageBoxResult.Yes)
             {
-                Product productToBuy = buttonBuy.CommandParameter as Product;
-                if (productToBuy != null)
-                {
-                        MessageBoxResult result = MessageBox.Show("Вы точно хотите приобрести данный товар?", "Покупка товара", MessageBoxButton.YesNo, MessageBoxImage.Question);
-                        if (result == MessageBoxResult.Yes)
-                        {
-                            BuyProduct(loggedInCustomer.id_Customers, productToBuy.id_Product);
-                            MessageBox.Show("Данный товар был приобретен, ваш статус заказа: оформлен", "Покупка товара завершена", MessageBoxButton.OK, MessageBoxImage.Information);
+                WinBeforeRegOrder winBeforeRegOrder = new WinBeforeRegOrder(loggedInCustomer, this);
+                winBeforeRegOrder.ShowDialog();
+                
+                //if()
 
-                            LoadCartItemsForUser(loggedInCustomer.id_Customers);
-                        }
+                foreach (var product in cartItemsWithImages)
+                {
+                    BuyProduct(loggedInCustomer.id_Customers, product.id_Product);
                 }
+
+                InformationPageOrders informationPageOrders = new InformationPageOrders(loggedInCustomer, this);
+                informationPageOrders.ShowDialog();
+
+                cartItemsWithImages.Clear();
+                CartList.ItemsSource = cartItemsWithImages;
+
+                RecalculateTotalPrice();
+                LoadOrderItemsForUser(loggedInCustomer.id_Customers);
+                UpdateCartButton();
+
+                
             }
         }
 
-        //Выбор определенной категории с товарами 
+        // Выбор определенной категории с товарами 
         private void BtnCategoriesProduct_Click(object sender, RoutedEventArgs e)
         {
             txtSearchCatalog.Visibility = Visibility.Visible;
@@ -297,7 +401,7 @@ namespace intStore.View
         }
 
 
-        //Кнопки для перехода между вкладками TabControl...
+        // Кнопки для перехода между вкладками TabControl...
         private void BtnMain_Click(object sender, RoutedEventArgs e)
         {
             string tabName = "MainPage";
@@ -513,33 +617,31 @@ namespace intStore.View
                 }
             }
         }
-        private void ItemSource()
-        {
-            using (var context = new InternetStoreEntities1())
-            {
-
-                var paymentsComboBox = context.Payments.Select(el => new PaymentModel { id_Payments = el.id_Payments, MethodName = el.MethodName }).ToList();
-
-                PaymentsComboBox.ItemsSource = paymentsComboBox;
-                PaymentsComboBox.DisplayMemberPath = "MethodName";
-                PaymentsComboBox.SelectedValuePath = "id_Payments";
-            }
-        }
-
         private void SaveBtn_Click(object sender, RoutedEventArgs e)
         {
             int customerId = loggedInCustomer.id_Customers;
+            string newPhone = NumberPhone.Text;
 
             using (var context = new InternetStoreEntities1())
             {
+                // Проверка, существует ли уже такой номер телефона у другого пользователя
+                var existingCustomer = context.Customers
+                    .FirstOrDefault(c => c.Phone == newPhone && c.id_Customers != customerId);
+
+                if (existingCustomer != null)
+                {
+                    MessageBox.Show("Этот номер телефона уже используется другим пользователем.");
+                    return;
+                }
+
+                // Получаем текущего пользователя
                 var cust = context.Customers.FirstOrDefault(c => c.id_Customers == customerId);
                 if (cust != null)
                 {
                     cust.Name = UserName.Text;
                     cust.SurName = SurName.Text;
-                    cust.Phone = NumberPhone.Text;
+                    cust.Phone = newPhone;
                     cust.Address = Address.Text;
-                    cust.id_Payments = Convert.ToInt32(PaymentsComboBox.SelectedValue);
 
                     context.SaveChanges();
                     MessageBox.Show("Данные были изменены");
@@ -549,6 +651,7 @@ namespace intStore.View
                     MessageBox.Show("Пользователь не найден.");
                 }
             }
+
         }
 
         private async void AddAddress_Click(object sender, RoutedEventArgs e)
@@ -588,57 +691,150 @@ namespace intStore.View
         private void BtnReportOrder_Click(object sender, RoutedEventArgs e)
         {
             ReportGenerate reportGenerate = new ReportGenerate(loggedInCustomer);
-            reportGenerate.GenerateFile(txtNameReport.Text);
-            RefreshPage();
+            reportGenerate.GenerateFile();
         }
 
-        private void BtnOrdersComboBox_Click(object sender, RoutedEventArgs e)
-        {
-            string selectedReport = (string)ReportOrderComboBox.SelectedItem;
-
-            if (!string.IsNullOrEmpty(selectedReport))
-            {
-                string filePath = $"\\intStore\\intStore\\bin\\Debug\\Report\\{loggedInCustomer.id_Customers}\\{selectedReport}.docx";
-
-                if (File.Exists(filePath))
-                {
-                    Process.Start(filePath);
-                }
-                else
-                {
-                    MessageBox.Show("Файл не найден.");
-                }
-            }
-            else
-            {
-                MessageBox.Show("Пожалуйста, выберите отчет.");
-            }
-        }
-
-        private void RefreshPage()
-        {
-            string customerDirectory = $"\\intStore\\intStore\\bin\\Debug\\Report\\{loggedInCustomer.id_Customers}";
-
-            ReportOrderComboBox.Items.Clear();
-
-            if (Directory.Exists(customerDirectory))
-            {
-                var reportFiles = Directory.GetFiles(customerDirectory, "*.docx");
-                foreach (var reportFile in reportFiles)
-                {
-                    ReportOrderComboBox.Items.Add(Path.GetFileNameWithoutExtension(reportFile));
-                }
-            }
-        }
-
+        //Кнопки уменьшения и увеличения товара в корзине
         private void MinusBtn_Click(object sender, RoutedEventArgs e)
         {
-            
+            var button = sender as Button;
+            if (button != null)
+            {
+                var textBox = button.Tag as TextBox;
+                if (textBox != null)
+                {
+                    if (int.TryParse(textBox.Text, out int quantity))
+                    {
+                        if (quantity > 1)
+                        {
+                            quantity--;
+                            textBox.Text = quantity.ToString();
+
+                            var product = button.DataContext as Product;
+                            if (product != null)
+                            {
+                                product.Quantity = quantity;
+                                SaveChangesToDatabase(product);
+                                LoadCartItemsForUser(loggedInCustomer.id_Customers);
+                                RecalculateTotalPrice();
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         private void PlusBtn_Click(object sender, RoutedEventArgs e)
         {
+            var button = sender as Button;
+            if (button != null)
+            {
+                var textBox = button.Tag as TextBox;
+                if (textBox != null)
+                {
+                    if (int.TryParse(textBox.Text, out int quantity))
+                    {
+                        quantity++;
+                        textBox.Text = quantity.ToString();
 
+                        var product = button.DataContext as Product;
+                        if (product != null)
+                        {
+                            product.Quantity = quantity;
+                            SaveChangesToDatabase(product);
+                            LoadCartItemsForUser(loggedInCustomer.id_Customers);
+                            RecalculateTotalPrice();
+                        }
+                    }
+                }
+            }
+            
         }
+
+        private void SaveChangesToDatabase(Product product)
+        {
+            using (var context = new InternetStoreEntities1())
+            {
+                var cartItem = context.Cart.FirstOrDefault(c => c.id_OrdersWithCart == product.id_Product);
+                if (cartItem != null)
+                {
+                    cartItem.Quantity = product.Quantity;
+
+                    try
+                    {
+                        context.SaveChanges();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Ошибка при сохранении изменений в базе данных: {ex.Message}");
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Товар не найден в корзине.");
+                }
+            }
+        }
+
+        // Обработчик события для изменения нижнего значения ползунка цены
+        private void PriceSlider_LowerValueChanged(object sender, RoutedEventArgs e)
+        {
+            MinPriceTextBox.Text = PriceSlider.LowerValue.ToString();
+            ApplyFilters();
+        }
+
+        // Обработчик события для изменения верхнего значения ползунка цены
+        private void PriceSlider_HigherValueChanged(object sender, RoutedEventArgs e)
+        {
+            MaxPriceTextBox.Text = PriceSlider.HigherValue.ToString();
+            ApplyFilters();
+        }
+
+        // Применение фильтра и обновление товаров 
+        private void ApplyFilters()
+        {
+            ICollectionView view = CollectionViewSource.GetDefaultView(ItemsList.ItemsSource);
+            if (view != null)
+            {
+                view.Filter = ProductCollection_Filter;
+                view.Refresh();
+            }
+        }
+
+        // Сброс фильтра цены
+        private void ResetFilter_Click(object sender, RoutedEventArgs e)
+        {
+            MinPriceTextBox.Text = "0";
+            MaxPriceTextBox.Text = "10000";
+            PriceSlider.LowerValue = 0;
+            PriceSlider.HigherValue = 10000;
+            ApplyFilters();
+        }
+
+        // Логика фильтрации для имени и цены
+        private bool ProductCollection_Filter(object item)
+        {
+            var product = item as Product;
+            if (product != null)
+            {
+                string filterText = txtSearchCart.Text.ToLower();
+                decimal minPrice = 0;
+                decimal maxPrice = decimal.MaxValue;
+
+                if (!string.IsNullOrEmpty(MinPriceTextBox.Text))
+                    decimal.TryParse(MinPriceTextBox.Text, out minPrice);
+
+                if (!string.IsNullOrEmpty(MaxPriceTextBox.Text))
+                    decimal.TryParse(MaxPriceTextBox.Text, out maxPrice);
+
+                bool matchesName = string.IsNullOrEmpty(filterText) || product.NameProduct.ToString().ToLower().Contains(filterText);
+                bool matchesPrice = product.Price >= minPrice && product.Price <= maxPrice;
+
+                return matchesName && matchesPrice;
+            }
+            return false;
+        }
+
     }
 }
+

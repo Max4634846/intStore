@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Windows;
+using intStore.Data;
+
 
 namespace intStore.Models
 {
@@ -15,7 +17,6 @@ namespace intStore.Models
                     MessageBox.Show("Данная почта уже используется");
                     return false;
                 }
-
 
                 var customer = new Customers
                 {

@@ -18,8 +18,12 @@ namespace intStore.Models
         public ImageSource ImageProduct { get; set; }
         public Nullable<int> id_Shipment { get; set; }
         public string Status{  get; set; }
+        public Nullable<System.DateTime> orderDate { get; set; }
+
 
         public virtual ICollection<OrdersWithCartModel> OrdersWithCartModel { get; set; }
         public virtual CategoriesModel Categories { get; set; }
+        public virtual OrdersWithCartModel Orders { get; set; }
+   
     }
 }

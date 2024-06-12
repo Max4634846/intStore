@@ -173,9 +173,6 @@
     <Reference Include="Syncfusion.Compression.Base, Version=22.1460.34.0, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
       <HintPath>..\packages\Syncfusion.Compression.Base.22.1.34\lib\net46\Syncfusion.Compression.Base.dll</HintPath>
     </Reference>
-    <Reference Include="Syncfusion.DocIO.Base, Version=22.1460.34.0, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
-      <HintPath>..\packages\Syncfusion.DocIO.Wpf.22.1.34\lib\net46\Syncfusion.DocIO.Base.dll</HintPath>
-    </Reference>
     <Reference Include="Syncfusion.Gauge.WPF, Version=22.1460.34.0, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
       <HintPath>..\packages\Syncfusion.Gauge.WPF.22.1.34\lib\net46\Syncfusion.Gauge.WPF.dll</HintPath>
     </Reference>
@@ -205,9 +202,6 @@
     </Reference>
     <Reference Include="Syncfusion.Shared.WPF, Version=22.1460.34.0, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
       <HintPath>..\packages\Syncfusion.Shared.WPF.22.1.34\lib\net46\Syncfusion.Shared.WPF.dll</HintPath>
-    </Reference>
-    <Reference Include="Syncfusion.Shared.WPF.Classic, Version=22.1460.34.0, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
-      <HintPath>..\packages\Syncfusion.Shared.WPF.Classic.22.1.34\lib\net46\Syncfusion.Shared.WPF.Classic.dll</HintPath>
     </Reference>
     <Reference Include="Syncfusion.XlsIO.Base, Version=22.1460.34.0, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
       <HintPath>..\packages\Syncfusion.XlsIO.Wpf.22.1.34\lib\net46\Syncfusion.XlsIO.Base.dll</HintPath>
@@ -287,32 +281,62 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Cart.cs">
+    <Compile Include="Data\Cart.cs">
       <DependentUpon>ModelInternetStore.tt</DependentUpon>
     </Compile>
-    <Compile Include="Categories.cs">
+    <Compile Include="Data\Categories.cs">
       <DependentUpon>ModelInternetStore.tt</DependentUpon>
     </Compile>
-    <Compile Include="Customers.cs">
+    <Compile Include="Data\Customers.cs">
       <DependentUpon>ModelInternetStore.tt</DependentUpon>
     </Compile>
-    <Compile Include="Goods.cs">
+    <Compile Include="Data\Goods.cs">
       <DependentUpon>ModelInternetStore.tt</DependentUpon>
     </Compile>
-    <Compile Include="ModelInternetStore.Context.cs">
+    <Compile Include="Data\ModelInternetStore.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>ModelInternetStore.Context.tt</DependentUpon>
     </Compile>
-    <Compile Include="ModelInternetStore.cs">
+    <Compile Include="Data\ModelInternetStore.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>ModelInternetStore.tt</DependentUpon>
     </Compile>
-    <Compile Include="ModelInternetStore.Designer.cs">
+    <Compile Include="Data\ModelInternetStore.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>ModelInternetStore.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Orders.cs">
+      <DependentUpon>ModelInternetStore.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\OrdersWithCart.cs">
+      <DependentUpon>ModelInternetStore.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Payments.cs">
+      <DependentUpon>ModelInternetStore.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Shipment.cs">
+      <DependentUpon>ModelInternetStore.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\sp_helpdiagramdefinition_Result.cs">
+      <DependentUpon>ModelInternetStore.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\sp_helpdiagrams_Result.cs">
+      <DependentUpon>ModelInternetStore.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Status.cs">
+      <DependentUpon>ModelInternetStore.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\StatusShipment.cs">
+      <DependentUpon>ModelInternetStore.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Suppliers.cs">
+      <DependentUpon>ModelInternetStore.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\sysdiagrams.cs">
+      <DependentUpon>ModelInternetStore.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\AuthService.cs" />
     <Compile Include="Models\CartModel.cs" />
@@ -323,44 +347,28 @@
     <Compile Include="Models\PaymentModel.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\ProductEventArgs.cs" />
-    <Compile Include="Orders.cs">
-      <DependentUpon>ModelInternetStore.tt</DependentUpon>
-    </Compile>
-    <Compile Include="OrdersWithCart.cs">
-      <DependentUpon>ModelInternetStore.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Payments.cs">
-      <DependentUpon>ModelInternetStore.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Shipment.cs">
-      <DependentUpon>ModelInternetStore.tt</DependentUpon>
-    </Compile>
-    <Compile Include="sp_helpdiagramdefinition_Result.cs">
-      <DependentUpon>ModelInternetStore.tt</DependentUpon>
-    </Compile>
-    <Compile Include="sp_helpdiagrams_Result.cs">
-      <DependentUpon>ModelInternetStore.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Status.cs">
-      <DependentUpon>ModelInternetStore.tt</DependentUpon>
-    </Compile>
-    <Compile Include="StatusShipment.cs">
-      <DependentUpon>ModelInternetStore.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Suppliers.cs">
-      <DependentUpon>ModelInternetStore.tt</DependentUpon>
-    </Compile>
-    <Compile Include="sysdiagrams.cs">
-      <DependentUpon>ModelInternetStore.tt</DependentUpon>
-    </Compile>
     <Compile Include="Utils\ImageManipulation.cs" />
     <Compile Include="Utils\ReportGenerate.cs" />
     <Compile Include="View\AddProductCart.xaml.cs">
       <DependentUpon>AddProductCart.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\InformationPageOrders.xaml.cs">
+      <DependentUpon>InformationPageOrders.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\InternetStoreWindow.xaml.cs">
       <DependentUpon>InternetStoreWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\WinBeforeRegOrder.xaml.cs">
+      <DependentUpon>WinBeforeRegOrder.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Style\StyleSlider.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\InformationPageOrders.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -397,6 +405,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\WinBeforeRegOrder.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -416,11 +428,11 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EntityDeploy Include="ModelInternetStore.edmx">
+    <EntityDeploy Include="Data\ModelInternetStore.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>ModelInternetStore.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <None Include="ModelInternetStore.edmx.diagram">
+    <None Include="Data\ModelInternetStore.edmx.diagram">
       <DependentUpon>ModelInternetStore.edmx</DependentUpon>
     </None>
     <None Include="packages.config" />
@@ -461,16 +473,20 @@
     <Resource Include="Images\Podpic.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ModelInternetStore.Context.tt">
+    <Resource Include="Images\OrdersComlished.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Data\ModelInternetStore.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>ModelInternetStore.edmx</DependentUpon>
       <LastGenOutput>ModelInternetStore.Context.cs</LastGenOutput>
     </Content>
-    <Content Include="ModelInternetStore.tt">
+    <Content Include="Data\ModelInternetStore.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>ModelInternetStore.edmx</DependentUpon>
       <LastGenOutput>ModelInternetStore.cs</LastGenOutput>
     </Content>
+    <Resource Include="Images\PaymentMethod.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Microsoft.Web.WebView2.1.0.2535.41\build\Microsoft.Web.WebView2.targets" Condition="Exists('..\packages\Microsoft.Web.WebView2.1.0.2535.41\build\Microsoft.Web.WebView2.targets')" />

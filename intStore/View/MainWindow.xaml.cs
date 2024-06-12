@@ -55,10 +55,22 @@ namespace intStore.View
                 MessageBox.Show("Все поля обязательны для заполнения!");
                 return;
             }
+            
+            if(!IsValidUserName(username))
+            {
+                MessageBox.Show("Некорректное имя. Пример: Max");
+                return;
+            }
 
             if (!IsValidEmail(email))
             {
-                MessageBox.Show("Некорректный email.");
+                MessageBox.Show("Некорректный email. Пример: max@gmail.com");
+                return;
+            }
+
+            if (!IsValidPassword(password))
+            {
+                MessageBox.Show("Некорректный пароль. Пример: *Max131");
                 return;
             }
 
@@ -69,10 +81,21 @@ namespace intStore.View
                 ClearTextBox();
             }
         }
+
+        private bool IsValidUserName(string username)
+        {
+            string pattern = @"^\S+$";
+            return Regex.IsMatch(username, pattern);
+        }
         private bool IsValidEmail(string email)
         {
-            string pattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$"; // Почта@gmail.com
+            string pattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$"; 
             return Regex.IsMatch(email, pattern);
+        }
+        private bool IsValidPassword(string password)
+        {
+            string pattern = @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"; 
+            return Regex.IsMatch(password, pattern);
         }
 
         private void ClearTextBox()

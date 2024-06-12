@@ -10,6 +10,7 @@
                 
                 <ResourceDictionary Source="Style/StyleBtn.xaml"/>
                 <ResourceDictionary Source="Style/StyleTextBox.xaml"/>
+                <ResourceDictionary Source="Style/StyleSlider.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

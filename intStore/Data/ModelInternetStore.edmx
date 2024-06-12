@@ -10,9 +10,9 @@
             <PropertyRef Name="id_Cart" />
           </Key>
           <Property Name="id_Cart" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="id_Customer" Type="int" />
           <Property Name="id_Order" Type="int" />
           <Property Name="id_OrdersWithCart" Type="int" />
+          <Property Name="id_Customer" Type="int" />
           <Property Name="id_Status" Type="int" />
           <Property Name="Quantity" Type="int" />
         </EntityType>
@@ -249,16 +249,9 @@
           <Parameter Name="ProductId" Type="int" Mode="In" />
           <Parameter Name="Quantity" Type="int" Mode="In" />
         </Function>
-        <Function Name="DeleteCartItem" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="CartId" Type="int" Mode="In" />
-        </Function>
         <Function Name="DeleteProductFromCart" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="CustomerId" Type="int" Mode="In" />
           <Parameter Name="ProductId" Type="int" Mode="In" />
-        </Function>
-        <Function Name="DeleteProductFromOrder" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="orderId" Type="int" Mode="In" />
-          <Parameter Name="customerId" Type="int" Mode="In" />
         </Function>
         <Function Name="fn_diagramobjects" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int" />
         <Function Name="MoveCartItemToOrder" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
@@ -359,9 +352,9 @@
             <PropertyRef Name="id_Cart" />
           </Key>
           <Property Name="id_Cart" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="id_Customer" Type="Int32" />
           <Property Name="id_Order" Type="Int32" />
           <Property Name="id_OrdersWithCart" Type="Int32" />
+          <Property Name="id_Customer" Type="Int32" />
           <Property Name="id_Status" Type="Int32" />
           <Property Name="Quantity" Type="Int32" />
           <NavigationProperty Name="Customers" Relationship="Self.FK_Cart_Customers" FromRole="Cart" ToRole="Customers" />
@@ -671,16 +664,9 @@
             <Parameter Name="ProductId" Mode="In" Type="Int32" />
             <Parameter Name="Quantity" Mode="In" Type="Int32" />
           </FunctionImport>
-          <FunctionImport Name="DeleteCartItem">
-            <Parameter Name="CartId" Mode="In" Type="Int32" />
-          </FunctionImport>
           <FunctionImport Name="DeleteProductFromCart">
             <Parameter Name="CustomerId" Mode="In" Type="Int32" />
             <Parameter Name="ProductId" Mode="In" Type="Int32" />
-          </FunctionImport>
-          <FunctionImport Name="DeleteProductFromOrder">
-            <Parameter Name="orderId" Mode="In" Type="Int32" />
-            <Parameter Name="customerId" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="MoveCartItemToOrder">
             <Parameter Name="CustomerId" Mode="In" Type="Int32" />
@@ -738,9 +724,9 @@
             <EntityTypeMapping TypeName="InternetStoreModel.Cart">
               <MappingFragment StoreEntitySet="Cart">
                 <ScalarProperty Name="id_Cart" ColumnName="id_Cart" />
-                <ScalarProperty Name="id_Customer" ColumnName="id_Customer" />
                 <ScalarProperty Name="id_Order" ColumnName="id_Order" />
                 <ScalarProperty Name="id_OrdersWithCart" ColumnName="id_OrdersWithCart" />
+                <ScalarProperty Name="id_Customer" ColumnName="id_Customer" />
                 <ScalarProperty Name="id_Status" ColumnName="id_Status" />
                 <ScalarProperty Name="Quantity" ColumnName="Quantity" />
               </MappingFragment>
@@ -866,9 +852,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="AddProductToCart" FunctionName="InternetStoreModel.Store.AddProductToCart" />
-          <FunctionImportMapping FunctionImportName="DeleteCartItem" FunctionName="InternetStoreModel.Store.DeleteCartItem" />
           <FunctionImportMapping FunctionImportName="DeleteProductFromCart" FunctionName="InternetStoreModel.Store.DeleteProductFromCart" />
-          <FunctionImportMapping FunctionImportName="DeleteProductFromOrder" FunctionName="InternetStoreModel.Store.DeleteProductFromOrder" />
           <FunctionImportMapping FunctionImportName="MoveCartItemToOrder" FunctionName="InternetStoreModel.Store.MoveCartItemToOrder" />
           <FunctionImportMapping FunctionImportName="sp_alterdiagram" FunctionName="InternetStoreModel.Store.sp_alterdiagram" />
           <FunctionImportMapping FunctionImportName="sp_creatediagram" FunctionName="InternetStoreModel.Store.sp_creatediagram" />
