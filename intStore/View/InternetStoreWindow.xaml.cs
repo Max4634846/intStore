@@ -352,8 +352,6 @@ namespace intStore.View
                 WinBeforeRegOrder winBeforeRegOrder = new WinBeforeRegOrder(loggedInCustomer, this);
                 winBeforeRegOrder.ShowDialog();
                 
-                //if()
-
                 foreach (var product in cartItemsWithImages)
                 {
                     BuyProduct(loggedInCustomer.id_Customers, product.id_Product);
@@ -368,8 +366,6 @@ namespace intStore.View
                 RecalculateTotalPrice();
                 LoadOrderItemsForUser(loggedInCustomer.id_Customers);
                 UpdateCartButton();
-
-                
             }
         }
 
@@ -834,7 +830,6 @@ namespace intStore.View
             }
             return false;
         }
-
     }
 }
 
