@@ -36,9 +36,9 @@
                     <TextBlock HorizontalAlignment="Left" Margin="30 0" FontSize="14" TextWrapping="Wrap" Height="20">
                      <Run Text="Курьер с вами свяжиться :) " />
                     </TextBlock>
-                    <TextBlock Margin="30 5 0 0" HorizontalAlignment="Left">
-                     <Run Text="Способ оплаты : " FontWeight="Bold" FontSize="18" />
-                     <Run x:Name="PaymentMethod" Text="Карта" Foreground="#33bb5e" FontSize="16" />
+                    <TextBlock HorizontalAlignment="Left" Margin="30 5" FontSize="14" TextWrapping="Wrap" Height="38" Width="250">
+                        <Run Text="Для выбора оплаты с вами свяжется" />
+                        <Run Text="служба доставки :) " Foreground="#33bb5e" />
                     </TextBlock>
                     <TextBlock Margin="30 5 0 0" HorizontalAlignment="Left">
                          <Run Text="Имя : " FontWeight="Bold" FontSize="18" />

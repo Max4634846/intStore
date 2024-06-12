@@ -349,9 +349,7 @@ namespace intStore.View
             MessageBoxResult result = MessageBox.Show("Вы точно хотите приобрести все товары в корзине?", "Покупка товаров", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
             {
-                WinBeforeRegOrder winBeforeRegOrder = new WinBeforeRegOrder(loggedInCustomer, this);
-                winBeforeRegOrder.ShowDialog();
-                
+        
                 foreach (var product in cartItemsWithImages)
                 {
                     BuyProduct(loggedInCustomer.id_Customers, product.id_Product);

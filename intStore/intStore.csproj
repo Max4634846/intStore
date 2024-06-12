@@ -358,9 +358,6 @@
     <Compile Include="View\InternetStoreWindow.xaml.cs">
       <DependentUpon>InternetStoreWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\WinBeforeRegOrder.xaml.cs">
-      <DependentUpon>WinBeforeRegOrder.xaml</DependentUpon>
-    </Compile>
     <Page Include="Style\StyleSlider.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -402,10 +399,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\InternetStoreWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View\WinBeforeRegOrder.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -24,7 +24,6 @@ namespace intStore.View
         {
             UserName.Text = $"{customer.Name}";
             Phone.Text = $"{customer.Phone}";
-            PaymentMethod.Text = $"{customer.Payments.MethodName}";
         }
 
         private void PriceProductOrder(ObservableCollection<Product> cartItemsWithImages)
