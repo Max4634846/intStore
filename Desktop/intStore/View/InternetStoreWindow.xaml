@@ -439,7 +439,7 @@
 
                                 <StackPanel>
                                     <TextBlock Text="Номер телефона"/>
-                                    <xctk:MaskedTextBox Mask="+7(000)000-00-00" x:Name="NumberPhone" Width="250" Style="{StaticResource textboxUsername}"/>
+                                    <TextBox  x:Name="NumberPhone" Width="250" Style="{StaticResource textboxUsername}"/>
 
                                     <TextBlock Text="Адрес"/>
                                     <TextBox x:Name="Address" IsReadOnly="True" Width="250" Style="{StaticResource textboxUsername}"/>

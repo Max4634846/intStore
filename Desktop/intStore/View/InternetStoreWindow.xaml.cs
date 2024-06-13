@@ -12,6 +12,8 @@ using System.ComponentModel;
 using System.Collections.ObjectModel;
 using intStore.Data;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
+using System.Text.RegularExpressions;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace intStore.View
 {
@@ -79,6 +81,12 @@ namespace intStore.View
             Address.Text = $"{customers.Address}";
             UserName.Text = $"{customers.Name}";
             SurName.Text = $"{customers.SurName}";
+        }
+
+        private bool IsValidNumberPhone(string phone)
+        {
+            string pattern = @"^(\+7|8)?[\s-]?\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{2}[\s-]?\d{2}$";
+            return Regex.IsMatch(phone, pattern);
         }
 
         // Обновление счётчика корзины...
@@ -346,6 +354,11 @@ namespace intStore.View
         // Покупка товара, данные отправляется в заказы
         private void BtnBuy_Click(object sender, RoutedEventArgs e)
         {
+            if(string.IsNullOrEmpty(NumberPhone.Text))
+            {
+                MessageBox.Show($"Заказ нельзя оформить так, как не был указан номер телефона в личном кабинете!", "Данные пусты", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                return;
+            }
             MessageBoxResult result = MessageBox.Show("Вы точно хотите приобрести все товары в корзине?", "Покупка товаров", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
             {
@@ -613,6 +626,12 @@ namespace intStore.View
         }
         private void SaveBtn_Click(object sender, RoutedEventArgs e)
         {
+            if (!IsValidNumberPhone(NumberPhone.Text))
+            {
+                MessageBox.Show("Некорректно введен номер телефона. Пример: 89085912345 ");
+                return;
+            }
+
             int customerId = loggedInCustomer.id_Customers;
             string newPhone = NumberPhone.Text;
 
