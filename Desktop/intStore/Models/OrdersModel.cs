@@ -5,16 +5,12 @@ namespace intStore.Models
 {
     public class OrdersModel
     {
-        public OrdersModel()
-        {
-            this.Cart = new HashSet<CartModel>();
-        }
-        public int id_Order { get; set; }
-        public Nullable<int> id_Cart { get; set; }
+        public int IdOrder { get; set; }
+        public Nullable<int> IdCart { get; set; }
         public Nullable<System.DateTime> OrderDate { get; set; }
-        public Nullable<int> id_StatusOrders { get; set; }
+        public Nullable<int> IdStatusOrders { get; set; }
         public Nullable<decimal> TotalAmount { get; set; }
-        public Nullable<int> id_Payments { get; set; }
+        public Nullable<int> IdPayments { get; set; }
 
         public virtual ICollection<CartModel> Cart { get; set; }
     }

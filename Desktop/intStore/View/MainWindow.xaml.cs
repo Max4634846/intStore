@@ -154,6 +154,10 @@ namespace intStore.View
             UpdatePlaceholderVisibilityReg();
         }
 
+        /// <summary>
+        /// Обновляет видимость текста для поля ввода пароля при авторизации.
+        /// Определяет, следует ли отображать текст в зависимости от того, пустое ли значение в поле ввода пароля.
+        /// </summary>
         private void UpdatePlaceholderVisibility()
         {
             var placeholderText = (TextBlock)passwordBox.Template.FindName("PlaceholderText", passwordBox);
@@ -162,6 +166,10 @@ namespace intStore.View
                 placeholderText.Visibility = string.IsNullOrEmpty(passwordBox.Password) ? Visibility.Visible : Visibility.Collapsed;
             }
         }
+        /// <summary>
+        /// Обновляет видимость текста для поля ввода пароля при регистрации.
+        /// Определяет, следует ли отображать текст в зависимости от того, пустое ли значение в поле ввода пароля.
+        /// </summary>
         private void UpdatePlaceholderVisibilityReg()
         {
             var placeholderText = (TextBlock)txtFilterPasswordReg.Template.FindName("PlaceholderText", txtFilterPasswordReg);

@@ -111,9 +111,9 @@ namespace intStore.View
             {
                 Product product = new Product
                 {
-                    id_Product = v.id_Product,
+                    IdProduct = v.id_Product,
                     NameProduct = v.NameProduct,
-                    id_Categories = v.Categories.id_Categories,
+                    IdCategories = v.Categories.id_Categories,
                     Description = v.Description,
                     NutritionalValue = v.NutritionalValue,
                     Weight = v.Weight,
@@ -153,7 +153,7 @@ namespace intStore.View
                 {
                     Product product = new Product
                     {
-                        id_Product = item.IdProduct,
+                        IdProduct = item.IdProduct,
                         ImageProduct = imageManipulation.GetPhotoFromDataBase(item.ImageProductData),
                         NameProduct = item.NameProduct,
                         Quantity = item.Quantity,
@@ -196,7 +196,7 @@ namespace intStore.View
                 {
                     Product product = new Product
                     {
-                        id_Product = item.IdProduct,
+                        IdProduct = item.IdProduct,
                         ImageProduct = imageManipulation.GetPhotoFromDataBase(item.ImageProductData),
                         NameProduct = item.NameProduct,
                         Quantity = item.Quantity,
@@ -224,7 +224,7 @@ namespace intStore.View
             {
                 CategoriesModel categoriesProduct = new CategoriesModel
                 {
-                    id_Categories = v.id_Categories,
+                    IdCategories = v.id_Categories,
                     NameCategories = v.NameCategories,
                     Desciptions = v.Desciptions,
                     ImageCategories = imageManipulation.GetPhotoFromDataBase(v.ImageCategories),
@@ -235,24 +235,25 @@ namespace intStore.View
         }
 
 
-        // Методы для кнопок с хранимыми процедурами внутри
+        /// <summary>
+        /// Проверка товара в корзине. Если есть то он просто увеличивается на один,при добавления такого же нового товара.
+        /// </summary>
+        /// <param name="sender">Объект, инициировавший событие (кнопка).</param>
+        /// <param name="e">Аргументы события, содержащие информацию о продукте и количестве.</param>
         private void AddProductToCartHandler(object sender, ProductEventArgs e)
         {
             using (var context = new InternetStoreEntities1())
             {
-                // Проверяем, есть ли уже товар с таким идентификатором в корзине
-                var existingCartItem = context.Cart.FirstOrDefault(item => item.OrdersWithCart.id_Product == e.Product.id_Product && item.Status.NameStatus == "Не оформлен");
+                var existingCartItem = context.Cart.FirstOrDefault(item => item.OrdersWithCart.id_Product == e.Product.IdProduct && item.Status.NameStatus == "Не оформлен");
                 if (existingCartItem != null)
                 {
-                    // Если товар уже есть в корзине, увеличиваем количество
                     existingCartItem.Quantity += e.Quantity;
                     context.SaveChanges();
                     MessageBox.Show("Количество товара в корзине обновлено!");
                 }
                 else
                 {
-                    // Если товара нет в корзине, добавляем новый элемент
-                    AddProductToCart(loggedInCustomer.id_Customers, e.Product.id_Product, e.Quantity);
+                    AddProductToCart(loggedInCustomer.id_Customers, e.Product.IdProduct, e.Quantity);
                     MessageBox.Show("Товар был добавлен в корзину!");
                 }
             }
@@ -261,7 +262,13 @@ namespace intStore.View
             UpdateCartButton();
         }
 
-
+        /// <summary>
+        /// Выполняет хранимую процедуру.
+        /// Добавляет продукты в корзину для определенного клиента.
+        /// </summary>
+        /// <param name="customerId">Идентификатор покупателя.</param>
+        /// <param name="productId">Идентификатор продукта.</param>
+        /// <param name="quantity">Количество продукта для добавления.</param>
         private void AddProductToCart(int customerId, int productId, int quantity)
         {
             using (var context = new InternetStoreEntities1())
@@ -285,24 +292,6 @@ namespace intStore.View
             }
         }
 
-        private void UpdateProductQuantity(int productId, int quantity)
-        {
-            using (var context = new InternetStoreEntities1())
-            {
-                var product = context.Goods.FirstOrDefault(p => p.id_Product == productId);
-                if (product != null)
-                {
-                    product.Quantity -= quantity;
-                    context.SaveChanges();
-                }
-            }
-        }
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="customerId"></param>
-        /// <param name="cartProductId"></param>
         private void MakingAnOrder(int customerId, int cartProductId)
         {
             using (var context = new InternetStoreEntities1())
@@ -313,7 +302,13 @@ namespace intStore.View
             }
         }
 
-        // Добавление товара в корзину, удаление
+        /// <summary>
+        /// Обработчик клика по кнопке "Добавить заказ в корзину".
+        /// При клике на кнопку извлекает выбранный продукт, открывает окно для добавления продукта в корзину
+        /// и подписывается на событие добавления продукта в корзину. После закрытия окна обновляет состояние корзины.
+        /// </summary>
+        /// <param name="sender">Объект, инициировавший событие (кнопка).</param>
+        /// <param name="e">Аргументы события.</param>
         private void AddProduct_Click(object sender, RoutedEventArgs e)
         {
             Button button = sender as Button;
@@ -334,6 +329,14 @@ namespace intStore.View
             }
         }
 
+        /// <summary>
+        /// Обработчик клика по кнопке "Удалить заказ".
+        /// При клике на кнопку запрашивает подтверждение пользователя перед удалением выбранного товара из корзины.
+        /// Если пользователь подтверждает удаление, товар удаляется из базы данных, выводится сообщение об успешном удалении,
+        /// и обновляется содержимое корзины на пользовательском интерфейсе.
+        /// </summary>
+        /// <param name="sender">Объект, инициировавший событие (кнопка).</param>
+        /// <param name="e">Аргументы события.</param>
         private void BtnDeleteProductCart_Click(object sender, RoutedEventArgs e)
         {
             Button button = sender as Button;
@@ -345,7 +348,7 @@ namespace intStore.View
                     MessageBoxResult result = MessageBox.Show("Вы точно хотите удалить товар?", "Удаление товара", MessageBoxButton.YesNo, MessageBoxImage.Question);
                     if (result == MessageBoxResult.Yes)
                     {
-                        DeleteProductFromCart(loggedInCustomer.id_Customers, productToDelete.id_Product);
+                        DeleteProductFromCart(loggedInCustomer.id_Customers, productToDelete.IdProduct);
                         MessageBox.Show("Товар был удален из корзины!", "Предупреждение об удалении товара", MessageBoxButton.OK, MessageBoxImage.Warning);
 
                         LoadCartItemsForUser(loggedInCustomer.id_Customers);
@@ -356,7 +359,17 @@ namespace intStore.View
             }
         }
 
-        // Покупка товара, данные отправляется в заказы
+        /// <summary>
+        /// Обработчик клика по кнопке "Оформить заказ".
+        /// При клике на кнопку проверяет наличие номера телефона в личном кабинете пользователя.
+        /// Если номер не указан, выводит сообщение об ошибке и прекращает оформление заказа.
+        /// Затем запрашивает подтверждение пользователя перед приобретением всех товаров в корзине.
+        /// Если пользователь подтверждает покупку, оформляет заказы для всех товаров в корзине с изображениями,
+        /// открывает страницу информации о заказах, очищает корзину, пересчитывает общую стоимость,
+        /// загружает заказы для текущего пользователя и обновляет информацию о корзине.
+        /// </summary>
+        /// <param name="sender">Объект, инициировавший событие (кнопка).</param>
+        /// <param name="e">Аргументы события.</param>
         private void BtnMakingAnOrder_Click(object sender, RoutedEventArgs e)
         {
             if(string.IsNullOrEmpty(NumberPhone.Text))
@@ -372,7 +385,7 @@ namespace intStore.View
         
                 foreach (var product in cartItemsWithImages)
                 {
-                    MakingAnOrder(loggedInCustomer.id_Customers, product.id_Product);
+                    MakingAnOrder(loggedInCustomer.id_Customers, product.IdProduct);
                 }
 
                 InformationPageOrders informationPageOrders = new InformationPageOrders(loggedInCustomer, this);
@@ -402,7 +415,7 @@ namespace intStore.View
                 CategoriesModel selectedCategory = button.CommandParameter as CategoriesModel;
                 if (selectedCategory != null)
                 {
-                    filteredProducts = productList.Where(product => product.id_Categories == selectedCategory.id_Categories).ToList();
+                    filteredProducts = productList.Where(product => product.IdCategories == selectedCategory.IdCategories).ToList();
                     TabItem tabProducts = mainTabControl.FindName("Product") as TabItem;
 
                     if (tabProducts != null)
@@ -524,15 +537,6 @@ namespace intStore.View
             Close();
         }
 
-        private void Border_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (e.LeftButton == MouseButtonState.Pressed)
-            {
-                this.DragMove();
-            }
-        }
-
-        //Сортировка товара по имени
         private void txtSearchCart_TextChanged(object sender, TextChangedEventArgs e)
         {
             string filterText = txtSearchCart.Text.ToLower();
@@ -581,7 +585,6 @@ namespace intStore.View
             }
         }
 
-
         private void txtSearchCatalog_TextChanged(object sender, TextChangedEventArgs e)
         {
             string filterText = txtSearchCatalog.Text.ToLower();
@@ -610,7 +613,6 @@ namespace intStore.View
             }
         }
 
-        //Масштабирование окна
         private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ClickCount == 2)
@@ -629,6 +631,13 @@ namespace intStore.View
 
                     IsMaximized = true;
                 }
+            }
+        }
+        private void Border_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                this.DragMove();
             }
         }
         private void SaveBtn_Click(object sender, RoutedEventArgs e)
@@ -674,13 +683,18 @@ namespace intStore.View
 
         }
 
+        /// <summary>
+        /// Обрабатывает клик по кнопке "Добавить адрес" с карты.
+        /// </summary>
+        /// <param name="sender">Обработчик события нажатие кнопки.</param>
+        /// <param name="e">Аргумент события.</param>
         private async void AddAddress_Click(object sender, RoutedEventArgs e)
         {
             string script = "document.querySelector('#searchbox input').value\r\n";
 
             if(string.IsNullOrEmpty(script))
             {
-                MessageBox.Show("Напиши в строку поиска");
+                MessageBox.Show("Напиши адрес в строку поиска");
             }
             else
             {
@@ -689,10 +703,16 @@ namespace intStore.View
             }
         }
 
+        /// <summary>
+        /// Обработчик предварительного ввода текста в поле имени пользователя.
+        /// Проверяет вводимый символ и разрешает его, если он соответствует заданным условиям,
+        /// методом IsTextAllowed. В противном случае символ не разрешается для ввода.
+        /// </summary>
+        /// <param name="sender">Объект, инициировавший событие (текстовое поле).</param>
+        /// <param name="e">Аргументы события, содержащие информацию о вводимом тексте.</param>
         private void UserName_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             e.Handled = !IsTextAllowed(e.Text);
-
         }
         private bool IsTextAllowed(string text)
         {
@@ -771,11 +791,15 @@ namespace intStore.View
             
         }
 
+        /// <summary>
+        /// Сохраняет изменения количества товара в базе данных.
+        /// </summary>
+        /// <param name="product">product, изменения которого необходимо сохранить.</param>
         private void SaveChangesToDatabase(Product product)
         {
             using (var context = new InternetStoreEntities1())
             {
-                var cartItem = context.Cart.FirstOrDefault(c => c.id_OrdersWithCart == product.id_Product);
+                var cartItem = context.Cart.FirstOrDefault(c => c.id_OrdersWithCart == product.IdProduct);
                 if (cartItem != null)
                 {
                     cartItem.Quantity = product.Quantity;
@@ -831,7 +855,11 @@ namespace intStore.View
             ApplyFilters();
         }
 
-        // Логика фильтрации для имени и цены
+        /// <summary>
+        ///  Фильтрует продукты на основе критериев поиска (названия) и диапазона цен.
+        /// </summary>
+        /// <param name="item">Элемент, который нужно отфильтровать, ожидается объект типа Product.</param>
+        /// <returns>True, если продукт соответствует критериям фильтра, иначе false.</returns>
         private bool ProductCollection_Filter(object item)
         {
             var product = item as Product;

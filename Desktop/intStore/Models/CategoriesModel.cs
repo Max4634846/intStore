@@ -5,7 +5,7 @@ namespace intStore.Models
 {
     public  class CategoriesModel
     {
-        public int id_Categories { get; set; }
+        public int IdCategories { get; set; }
         public string NameCategories { get; set; }
         public string Desciptions { get; set; }
         public ImageSource ImageCategories { get; set; }

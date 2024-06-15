@@ -5,10 +5,10 @@ namespace intStore.Models
 {
     public class CartModel
     {
-         public int id_Cart { get; set; }
-        public Nullable<int> id_Order { get; set; }
-        public Nullable<int> id_Customer { get; set; }
-        public int id_OrdersWithCart { get; set; }
+         public int IdCart { get; set; }
+        public Nullable<int> IdOrder { get; set; }
+        public Nullable<int> IdCustomer { get; set; }
+        public int IdOrdersWithCart { get; set; }
         public Nullable<int> Quantity { get; set; }
     
         public virtual Customer Customers { get; set; }

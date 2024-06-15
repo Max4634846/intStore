@@ -57,7 +57,7 @@ namespace intStore.Models
         {
             using(var connection = new InternetStoreEntities1())
             {
-                return connection.Customers.Include("Payments").FirstOrDefault(c => c.Email == email && c.Password == password);
+                return connection.Customers.FirstOrDefault(c => c.Email == email && c.Password == password);
             }
         }
         private bool IsValidUserName(string username)

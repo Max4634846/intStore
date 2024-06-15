@@ -6,8 +6,8 @@ namespace intStore.Models
 {
     public class Product
     {
-        public int id_Product { get; set; }
-        public int id_Categories { get; set; }
+        public int IdProduct { get; set; }
+        public int IdCategories { get; set; }
         public string NameProduct { get; set; }
         public string Description { get; set; }
         public string NutritionalValue { get; set; }
@@ -16,7 +16,7 @@ namespace intStore.Models
         public Nullable<int> Quantity { get; set; }
         public Nullable<System.DateTime> DateProduct { get; set; }
         public ImageSource ImageProduct { get; set; }
-        public Nullable<int> id_Shipment { get; set; }
+        public Nullable<int> IdShipment { get; set; }
         public string Status{  get; set; }
         public Nullable<System.DateTime> orderDate { get; set; }
 

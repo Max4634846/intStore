@@ -27,7 +27,6 @@ namespace intStore.View
             PriceProduct.Text = Convert.ToString($"{_currentProduct.Price:F2}₽");
         }
 
-        //Кнопки количества товара, уменьшение и увеличение товара
         private void PlusBtn_Click(object sender, RoutedEventArgs e)
         {
             if (int.TryParse(CheckNumber.Text, out int currentQuantity))
@@ -48,8 +47,15 @@ namespace intStore.View
                 }
             }
         }
-
-        //Кнопка добавления, закрытия и перетаскивания окна
+        /// <summary>
+        /// /// Обработчик клика по кнопке "Добавить товар в корзину".
+        /// Пытается преобразовать текст из поля CheckNumber в число для указания количества товара.
+        /// Если преобразование успешно, создает аргументы события ProductEventArgs с текущим продуктом и указанным количеством.
+        /// Затем вызывает событие ProductAddedToCart, уведомляя подписанные на него методы о добавлении товара в корзину,
+        /// и закрывает окно добавления товара. В случае неудачи при преобразовании отображает сообщение об ошибке.
+        /// </summary>
+        /// <param name="sender">Объект, инициировавший событие (кнопка).</param>
+        /// <param name="e">Аргументы события.</param>
         private void AddProductCart_Click(object sender, RoutedEventArgs e)
         {
             if (int.TryParse(CheckNumber.Text, out int quantity))
