@@ -70,7 +70,7 @@ namespace intStore.View
 
             if (!IsValidPassword(password))
             {
-                MessageBox.Show("Некорректный пароль. Пример: *Max131");
+                MessageBox.Show("Некорректный пароль. Пример: *Mm12311");
                 return;
             }
 

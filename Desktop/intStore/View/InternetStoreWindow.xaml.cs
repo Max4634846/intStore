@@ -297,8 +297,13 @@ namespace intStore.View
                 }
             }
         }
-
-        private void BuyProduct(int customerId, int cartProductId)
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="customerId"></param>
+        /// <param name="cartProductId"></param>
+        private void MakingAnOrder(int customerId, int cartProductId)
         {
             using (var context = new InternetStoreEntities1())
             {
@@ -352,20 +357,22 @@ namespace intStore.View
         }
 
         // Покупка товара, данные отправляется в заказы
-        private void BtnBuy_Click(object sender, RoutedEventArgs e)
+        private void BtnMakingAnOrder_Click(object sender, RoutedEventArgs e)
         {
             if(string.IsNullOrEmpty(NumberPhone.Text))
             {
-                MessageBox.Show($"Заказ нельзя оформить так, как не был указан номер телефона в личном кабинете!", "Данные пусты", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                MessageBox.Show($"Заказ нельзя оформить так, как не был указан номер " +
+                    $"телефона в личном кабинете!", "Данные пусты", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 return;
             }
-            MessageBoxResult result = MessageBox.Show("Вы точно хотите приобрести все товары в корзине?", "Покупка товаров", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            MessageBoxResult result = MessageBox.Show("Вы точно хотите" +
+                " приобрести все товары в корзине?", "Покупка товаров", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
             {
         
                 foreach (var product in cartItemsWithImages)
                 {
-                    BuyProduct(loggedInCustomer.id_Customers, product.id_Product);
+                    MakingAnOrder(loggedInCustomer.id_Customers, product.id_Product);
                 }
 
                 InformationPageOrders informationPageOrders = new InformationPageOrders(loggedInCustomer, this);

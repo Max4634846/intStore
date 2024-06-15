@@ -287,7 +287,7 @@
                                         HorizontalAlignment="Right" 
                                         Margin="15" 
                                         Style="{StaticResource BtnAddProducts}" 
-                                        Click="BtnBuy_Click" 
+                                        Click="BtnMakingAnOrder_Click" 
                                         CommandParameter="{Binding}"/>
                             </Grid>
                         </Border>
